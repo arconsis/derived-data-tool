@@ -1,0 +1,135 @@
+name: Create Release NEW
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: "Release version"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+jobs:
+  get-version:
+    uses: ./.github/workflows/job-get-version.yml
+    with:
+      release-type: ${{ inputs.release-type }}
+
+  create-release-branch:
+    needs: [get-version]
+    uses: ./.github/workflows/job-create-release-branch.yml
+    with:
+      release-version: ${{ needs.get-version.outputs.release-version }}
+      # is-reverting: false
+
+  build:
+    needs: [get-version, create-release-branch]
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.get-version.outputs.release-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: releases/${{ env.version }}
+
+      - name: Create SHA-1 for Package.resolved
+        id: cache-swift
+        run: |
+          md5=($(sha1sum Package.resolved))
+          echo $md5
+          echo "cache_sha1=$md5" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Swift
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ steps.cache-swift.outputs.cache_sha1 }}-swift
+
+      - name: webfactory/ssh-agent
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.COMMON_VAPOR_DEPLOY_KEY }}
+
+      - name: Resolve Dependencies
+        run: |
+          swift package resolve
+          echo "Swift packages were resolved" >> $GITHUB_STEP_SUMMARY
+
+      - name: Build
+        run: |
+          swift build -c release -Xswiftc -O --static-swift-stdlib
+          echo "Project was build successfully" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create staging directory
+        run: |
+          mkdir staging
+          cp "$(swift build -c release --show-bin-path)/Run" ./staging
+          find -L "$(swift build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./staging/ \;
+          [ -d ./Public ] && { mv ./Public ./staging/Public && chmod -R a-w ./staging/Public; } || true
+          [ -d ./Resources ] && { mv ./Resources ./staging/Resources && chmod -R a-w ./staging/Resources; } || true
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push (latest)
+        run: |
+          docker build --tag ghcr.io/elmoritz/newsletter-agent:latest .
+          docker push ghcr.io/elmoritz/newsletter-agent:latest
+          echo "New Docker container available: ghcr.io/elmoritz/newsletter-agent:latest" >> $GITHUB_STEP_SUMMARY
+
+      - name: Build & Push (current)
+        run: |
+          docker build --tag ghcr.io/elmoritz/newsletter-agent:${{ env.version }} .
+          docker push ghcr.io/elmoritz/newsletter-agent:${{ env.version }}
+          echo "New Docker container available: ghcr.io/elmoritz/newsletter-agent:${{ env.version }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: "Add tag to commit"
+        run: |
+          git tag ${{ env.version }}
+          git push --tags
+          echo "New tag (${{ env.version }}) was added to commit" >> $GITHUB_STEP_SUMMARY
+
+  publish:
+    name: Deploy Docker Container
+    needs: [build]
+    uses: ./.github/workflows/update-server-image.yml
+    with:
+      command-to-execute-in-root: "./restart_newsletter_server.sh"
+    secrets:
+      ssh_user: ${{ secrets.STAGING_SSH_USER }}
+      ssh_key: ${{ secrets.ACCESS_NETCUP_SERVER }}
+      ssh_host: ${{ secrets.STAGING_SSH_HOST }}
+
+  verify:
+    name: Check Reachability
+    needs: [publish]
+    runs-on: ubuntu-latest
+    steps:
+      - name: verify
+        run: echo "VERIFIED" >> $GITHUB_STEP_SUMMARY
+        
+
+  merge:
+    needs: [get-version, verify]
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.get-version.outputs.release-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: releases/${{ env.version }}
+
+      - name: merge bumped version back to main
+        uses: everlytic/branch-merge@1.1.5
+        with:
+          github_token: ${{ github.token }}
+          source_ref: releases/${{ env.version }}
+          target_branch: main
+          commit_message_template: "Merge branch 'releases/${{ env.version }}' into main "

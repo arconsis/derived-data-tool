@@ -1,0 +1,32 @@
+name: "[job] Swift version"
+
+on:
+  workflow_call:
+    outputs:
+      swift-version:
+        description: "Calculated Next Release Version"
+        value: ${{ jobs.get-swift-version.outputs.swift-version }}
+
+jobs:
+  get-swift-version:
+    name: GET
+    outputs:
+      swift-version: ${{ steps.determine-swift-version.outputs.swift_version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+
+      - name: extract first line from Package.swift
+        id: package-swift-first-line
+        run: echo "first_line=$(head -n 1 Package.swift)" >> $GITHUB_OUTPUT
+
+      - name: extract first line from Package.swift
+        id: determine-swift-version
+        run: |
+          if [[ "${{ steps.package-swift-first-line.outputs.first_line }}" =~ //\ swift-tools-version:\ ([0-9]+\.[0-9]+(\.[0-9]+)?) ]]; then
+            echo "swift-version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT" 
+            echo "Swift ${BASH_REMATCH[1]} Detected" >> $GITHUB_STEP_SUMMARY
+          else
+            exit 1
+          fi

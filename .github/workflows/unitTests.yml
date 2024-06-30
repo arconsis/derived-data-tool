@@ -1,0 +1,71 @@
+name: Run tests before merge
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened, ready_for_review, labeled]
+    branches:
+      - main
+    paths:
+      - Sources/**
+      - Resources/**
+      - Public/**
+      - Tests/**
+
+concurrency:
+  group: pr-unit-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Create SHA-1 for Package.resolved
+        run: |
+          md5=($(sha1sum Package.resolved))
+          echo $md5
+          echo "CACHE_SHA1=$md5" >> $GITHUB_ENV
+
+      - name: Cache Swift
+        id: cache-swift
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ env.CACHE_SHA1 }}-swift
+
+      - name: webfactory/ssh-agent
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.COMMON_VAPOR_DEPLOY_KEY }}
+      
+      - name: Resolve Dependencies
+        run: swift package resolve
+
+      - name: Build app
+        run: swift build
+
+      - name: start postgres container
+        id: docker-compose
+        run: |
+          docker run --name dev-postgres -e POSTGRES_PASSWORD=$DATABASE_PASSWORD -e POSTGRES_USER=$DATABASE_USERNAME -e POSTGRES_DB=$DATABASE_NAME -p 5432:5432 -d postgres
+        env:
+          DATABASE_USERNAME: github
+          DATABASE_PASSWORD: github_no_secret
+          DATABASE_NAME: testing
+
+      - name: Run Tests
+        run: swift test
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_USERNAME: github
+          DATABASE_PASSWORD: github_no_secret
+          DATABASE_NAME: testing
+          SYMMETRIC_KEY: YzI5dFpWOXpkSFZ3YVdSZmMzbHRaWFJ5YVdOZmEyVjU=
+          AUTHORIZATION_TOKEN: some_authorisation_token
+
+      - name: stop postgres container
+        if: ${{ ( success() || failure() ) && steps.docker-compose.outcome == 'success' }}
+        run: docker stop dev-postgres

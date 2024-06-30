@@ -1,0 +1,131 @@
+name: "Release creator"
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: "Release version"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  get-version:
+    uses: ./.github/workflows/job-get-version.yml
+    with:
+      release-type: ${{ inputs.release-type }}
+
+  create-release-branch:
+    needs: [get-version]
+    uses: ./.github/workflows/job-create-release-branch.yml
+    with:
+      release-version: ${{ needs.get-version.outputs.next-version }}
+      # is-reverting: false
+
+  get-swift-version:
+    needs: [get-version]
+    uses: ./.github/workflows/job-extract-swift-version.yml
+
+  build:
+    needs: [get-version, get-swift-version, create-release-branch]
+    runs-on: macos-12
+    env:
+      version: ${{ needs.get-version.outputs.next-version }}
+      swift_version: ${{ needs.get-swift-version.outputs.swift-version }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: releases/${{ env.version }}
+
+      - name: Create SHA-1 for Package.resolved
+        id: cache-swift
+        run: |
+          md5=($(shasum Package.resolved))
+          echo $md5
+          echo "cache_sha1=$md5" >> "$GITHUB_OUTPUT"
+
+      - uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: ${{ env.swift_version }}
+
+      - name: Cache Swift
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ steps.cache-swift.outputs.cache_sha1 }}-swift
+
+      - name: Resolve Dependencies
+        run: |
+          swift package resolve
+          echo "Swift packages were resolved" >> $GITHUB_STEP_SUMMARY
+
+      - name: build
+        id: filename
+        run: |
+          swift build -c release --arch x86_64 --arch arm64
+          echo "Release build successful" >> $GITHUB_STEP_SUMMARY
+
+      - name: create Artifact
+        id: create-zip-artifact
+        run: |
+          BUILD_PATH=$(swift build -c release --arch x86_64 --arch arm64 --show-bin-path)
+          mkdir ddFTW
+          cp $BUILD_PATH/App ./ddFTW/ddFTW
+          tar -czf "ddFTW.${{ env.version }}.tgz" ddFTW
+          echo "asset_path=./ddFTW.${{ env.version }}.tgz" >> "$GITHUB_OUTPUT"
+          echo "asset_name=./ddFTW.${{ env.version }}.tgz" >> "$GITHUB_OUTPUT"
+
+      - name: "Add tag to commit"
+        run: |
+          git tag ${{ env.version }}
+          git push --tags
+          echo "New tag (${{ env.version }}) was added to commit" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.version }}
+          release_name: Release ${{ env.version }}
+          draft: true
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ${{ steps.create-zip-artifact.outputs.asset_path }}
+          asset_name: ${{ steps.create-zip-artifact.outputs.asset_path }}
+          asset_content_type: application/gzip
+
+  delete-release-branch:
+    needs: [get-version, create-release-branch, build]
+    if: ${{ failure() }}
+    uses: ./.github/workflows/job-create-release-branch.yml
+    with:
+      release-version: ${{ needs.get-version.outputs.next-version }}
+      is-reverting: true
+  
+  delete-release-tag:
+    needs: [get-version, create-release-branch, build]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+
+      - name: delete ${{ needs.get-version.outputs.next-version }} tag
+        run: git push origin --delete ${{ needs.get-version.outputs.next-version }}
