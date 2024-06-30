@@ -1,0 +1,2109 @@
+[
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/AddVehicleTests.xctest\/AddVehicleTests",
+        "coveredLines": 3703,
+        "executableLines": 3811,
+        "lineCoverage": 0.97166098136971923,
+        "name": "AddVehicleTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Adyen\/Adyen.bundle\/Adyen",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Adyen.bundle"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Adyen\/Adyen.framework\/Adyen",
+        "coveredLines": 15,
+        "executableLines": 15449,
+        "lineCoverage": 0.00097093663020260206,
+        "name": "Adyen.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Adyen\/AdyenActions.bundle\/AdyenActions",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "AdyenActions.bundle"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Adyen\/AdyenCard.bundle\/AdyenCard",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "AdyenCard.bundle"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/AdyenNetworking\/AdyenNetworking.framework\/AdyenNetworking",
+        "coveredLines": 0,
+        "executableLines": 365,
+        "lineCoverage": 0,
+        "name": "AdyenNetworking.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Apollo\/Apollo.framework\/Apollo",
+        "coveredLines": 212,
+        "executableLines": 3454,
+        "lineCoverage": 0.061378112333526344,
+        "name": "Apollo.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/AppCenter\/AppCenterDistributeResources.bundle\/AppCenterDistributeResources",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "AppCenterDistributeResources.bundle"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/AppServicesTests.xctest\/AppServicesTests",
+        "coveredLines": 2125,
+        "executableLines": 2400,
+        "lineCoverage": 0.88541666666666663,
+        "name": "AppServicesTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ApplicationFramework.app\/ApplicationFramework",
+        "coveredLines": 0,
+        "executableLines": 7,
+        "lineCoverage": 0,
+        "name": "ApplicationFramework.app"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Auth0\/Auth0.framework\/Auth0",
+        "coveredLines": 490,
+        "executableLines": 2764,
+        "lineCoverage": 0.1772793053545586,
+        "name": "Auth0.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/BDUITests.xctest\/BDUITests",
+        "coveredLines": 232,
+        "executableLines": 236,
+        "lineCoverage": 0.98305084745762716,
+        "name": "BDUITests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/BookingTests.xctest\/BookingTests",
+        "coveredLines": 6271,
+        "executableLines": 6931,
+        "lineCoverage": 0.90477564564997837,
+        "name": "BookingTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/BusinessAsterixCNTests.xctest\/BusinessAsterixCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "BusinessAsterixCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/BusinessPortfolioCNTests.xctest\/BusinessPortfolioCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "BusinessPortfolioCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/CarPlayAutomakerServiceTests.xctest\/CarPlayAutomakerServiceTests",
+        "coveredLines": 5,
+        "executableLines": 5,
+        "lineCoverage": 1,
+        "name": "CarPlayAutomakerServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/CarPlayAutomakerTests.xctest\/CarPlayAutomakerTests",
+        "coveredLines": 5,
+        "executableLines": 5,
+        "lineCoverage": 1,
+        "name": "CarPlayAutomakerTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ChargingCNTests.xctest\/ChargingCNTests",
+        "coveredLines": 5,
+        "executableLines": 5,
+        "lineCoverage": 1,
+        "name": "ChargingCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ChargingCoreTests.xctest\/ChargingCoreTests",
+        "coveredLines": 2316,
+        "executableLines": 2455,
+        "lineCoverage": 0.94338085539714867,
+        "name": "ChargingCoreTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ChargingDataTests.xctest\/ChargingDataTests",
+        "coveredLines": 2311,
+        "executableLines": 2420,
+        "lineCoverage": 0.95495867768595044,
+        "name": "ChargingDataTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ChargingPresentationTests.xctest\/ChargingPresentationTests",
+        "coveredLines": 6380,
+        "executableLines": 7039,
+        "lineCoverage": 0.90637874698110532,
+        "name": "ChargingPresentationTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ChinaServicesTests.xctest\/ChinaServicesTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "ChinaServicesTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/CocoaMQTT\/CocoaMQTT.framework\/CocoaMQTT",
+        "coveredLines": 0,
+        "executableLines": 4520,
+        "lineCoverage": 0,
+        "name": "CocoaMQTT.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Collar\/Collar.bundle\/Collar",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Collar.bundle"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Collar\/Collar.framework\/Collar",
+        "coveredLines": 0,
+        "executableLines": 700,
+        "lineCoverage": 0,
+        "name": "Collar.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/CommonTests.xctest\/CommonTests",
+        "coveredLines": 1144,
+        "executableLines": 1178,
+        "lineCoverage": 0.97113752122241082,
+        "name": "CommonTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ConnectStoreServiceTests.xctest\/ConnectStoreServiceTests",
+        "coveredLines": 262,
+        "executableLines": 350,
+        "lineCoverage": 0.74857142857142855,
+        "name": "ConnectStoreServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ConnectTests.xctest\/ConnectTests",
+        "coveredLines": 28337,
+        "executableLines": 29245,
+        "lineCoverage": 0.96895195759958963,
+        "name": "ConnectTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/CustomerRelationCNTests.xctest\/CustomerRelationCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "CustomerRelationCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/DealerServiceTests.xctest\/DealerServiceTests",
+        "coveredLines": 53,
+        "executableLines": 116,
+        "lineCoverage": 0.45689655172413796,
+        "name": "DealerServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/DirectCommunicationTests.xctest\/DirectCommunicationTests",
+        "coveredLines": 540,
+        "executableLines": 550,
+        "lineCoverage": 0.98181818181818181,
+        "name": "DirectCommunicationTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/DiscoverServicesTests.xctest\/DiscoverServicesTests",
+        "coveredLines": 249,
+        "executableLines": 305,
+        "lineCoverage": 0.81639344262295077,
+        "name": "DiscoverServicesTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/DiscoverTests.xctest\/DiscoverTests",
+        "coveredLines": 2987,
+        "executableLines": 3163,
+        "lineCoverage": 0.94435662345874172,
+        "name": "DiscoverTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/FleetAgentTests.xctest\/FleetAgentTests",
+        "coveredLines": 6347,
+        "executableLines": 6612,
+        "lineCoverage": 0.95992135511191767,
+        "name": "FleetAgentTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Google-Maps-iOS-Utils\/GoogleMapsUtils.framework\/GoogleMapsUtils",
+        "coveredLines": 0,
+        "executableLines": 3158,
+        "lineCoverage": 0,
+        "name": "GoogleMapsUtils.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/HomeChargingCoreTests.xctest\/HomeChargingCoreTests",
+        "coveredLines": 1186,
+        "executableLines": 1230,
+        "lineCoverage": 0.96422764227642277,
+        "name": "HomeChargingCoreTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/HomeChargingDataTests.xctest\/HomeChargingDataTests",
+        "coveredLines": 250,
+        "executableLines": 301,
+        "lineCoverage": 0.83056478405315615,
+        "name": "HomeChargingDataTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/HomeChargingPresentationTests.xctest\/HomeChargingPresentationTests",
+        "coveredLines": 486,
+        "executableLines": 563,
+        "lineCoverage": 0.86323268206039072,
+        "name": "HomeChargingPresentationTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/JOSESwift\/JOSESwift.framework\/JOSESwift",
+        "coveredLines": 972,
+        "executableLines": 3391,
+        "lineCoverage": 0.28664110881745797,
+        "name": "JOSESwift.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/JTAppleCalendar\/JTAppleCalendar.framework\/JTAppleCalendar",
+        "coveredLines": 532,
+        "executableLines": 3087,
+        "lineCoverage": 0.17233560090702948,
+        "name": "JTAppleCalendar.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/JWTDecode\/JWTDecode.framework\/JWTDecode",
+        "coveredLines": 0,
+        "executableLines": 123,
+        "lineCoverage": 0,
+        "name": "JWTDecode.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/LiveChatCNTests.xctest\/LiveChatCNTests",
+        "coveredLines": 263,
+        "executableLines": 341,
+        "lineCoverage": 0.77126099706744866,
+        "name": "LiveChatCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/lottie-ios\/Lottie.framework\/Lottie",
+        "coveredLines": 0,
+        "executableLines": 16067,
+        "lineCoverage": 0,
+        "name": "Lottie.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MapCNTests.xctest\/MapCNTests",
+        "coveredLines": 19,
+        "executableLines": 19,
+        "lineCoverage": 1,
+        "name": "MapCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MapServiceTests.xctest\/MapServiceTests",
+        "coveredLines": 257,
+        "executableLines": 257,
+        "lineCoverage": 1,
+        "name": "MapServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MapTests.xctest\/MapTests",
+        "coveredLines": 1806,
+        "executableLines": 1883,
+        "lineCoverage": 0.95910780669144979,
+        "name": "MapTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MessageCenterCNTests.xctest\/MessageCenterCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "MessageCenterCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MockBffServiceTests.xctest\/MockBffServiceTests",
+        "coveredLines": 215,
+        "executableLines": 219,
+        "lineCoverage": 0.9817351598173516,
+        "name": "MockBffServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MockBffTests.xctest\/MockBffTests",
+        "coveredLines": 5,
+        "executableLines": 5,
+        "lineCoverage": 1,
+        "name": "MockBffTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MyPorscheCNTests.xctest\/MyPorscheCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "MyPorscheCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MyPorschePersistenceTestsHostApp.app\/PlugIns\/MyPorschePersistenceTests.xctest\/MyPorschePersistenceTests",
+        "coveredLines": 1,
+        "executableLines": 1,
+        "lineCoverage": 1,
+        "name": "MyPorschePersistenceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MyPorschePersistenceTestsHostApp.app\/MyPorschePersistenceTestsHostApp",
+        "coveredLines": 16,
+        "executableLines": 40,
+        "lineCoverage": 0.40000000000000002,
+        "name": "MyPorschePersistenceTestsHostApp.app"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/MyPorscheTests.xctest\/MyPorscheTests",
+        "coveredLines": 5775,
+        "executableLines": 6174,
+        "lineCoverage": 0.93537414965986398,
+        "name": "MyPorscheTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/NativeRegistrationServiceTests.xctest\/NativeRegistrationServiceTests",
+        "coveredLines": 317,
+        "executableLines": 409,
+        "lineCoverage": 0.77506112469437649,
+        "name": "NativeRegistrationServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/NativeRegistrationTests.xctest\/NativeRegistrationTests",
+        "coveredLines": 2390,
+        "executableLines": 2826,
+        "lineCoverage": 0.84571832979476291,
+        "name": "NativeRegistrationTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/NetworkTests.xctest\/NetworkTests",
+        "coveredLines": 3906,
+        "executableLines": 4156,
+        "lineCoverage": 0.9398460057747835,
+        "name": "NetworkTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/OHHTTPStubs\/OHHTTPStubs.framework\/OHHTTPStubs",
+        "coveredLines": 541,
+        "executableLines": 925,
+        "lineCoverage": 0.58486486486486489,
+        "name": "OHHTTPStubs.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ObjcExceptionBridging\/ObjcExceptionBridging.framework\/ObjcExceptionBridging",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "ObjcExceptionBridging.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFAddVehicle.framework\/PAFAddVehicle",
+        "coveredLines": 1646,
+        "executableLines": 8064,
+        "lineCoverage": 0.20411706349206349,
+        "name": "PAFAddVehicle.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFAppServices.framework\/PAFAppServices",
+        "coveredLines": 1761,
+        "executableLines": 6461,
+        "lineCoverage": 0.27255842748800496,
+        "name": "PAFAppServices.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFBDUI.framework\/PAFBDUI",
+        "coveredLines": 60,
+        "executableLines": 156,
+        "lineCoverage": 0.38461538461538464,
+        "name": "PAFBDUI.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFBooking.framework\/PAFBooking",
+        "coveredLines": 5829,
+        "executableLines": 10148,
+        "lineCoverage": 0.57439889633425301,
+        "name": "PAFBooking.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFBusinessAsterixCN.framework\/PAFBusinessAsterixCN",
+        "coveredLines": 0,
+        "executableLines": 12445,
+        "lineCoverage": 0,
+        "name": "PAFBusinessAsterixCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFBusinessPortfolioCN.framework\/PAFBusinessPortfolioCN",
+        "coveredLines": 0,
+        "executableLines": 2768,
+        "lineCoverage": 0,
+        "name": "PAFBusinessPortfolioCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFCarPlayAutomaker.framework\/PAFCarPlayAutomaker",
+        "coveredLines": 0,
+        "executableLines": 2928,
+        "lineCoverage": 0,
+        "name": "PAFCarPlayAutomaker.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFCarPlayAutomakerService.framework\/PAFCarPlayAutomakerService",
+        "coveredLines": 0,
+        "executableLines": 1460,
+        "lineCoverage": 0,
+        "name": "PAFCarPlayAutomakerService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFChargingCN.framework\/PAFChargingCN",
+        "coveredLines": 0,
+        "executableLines": 13492,
+        "lineCoverage": 0,
+        "name": "PAFChargingCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFChargingCore.framework\/PAFChargingCore",
+        "coveredLines": 1075,
+        "executableLines": 1389,
+        "lineCoverage": 0.77393808495320371,
+        "name": "PAFChargingCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFChargingData.framework\/PAFChargingData",
+        "coveredLines": 1852,
+        "executableLines": 3028,
+        "lineCoverage": 0.61162483487450459,
+        "name": "PAFChargingData.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFChargingPresentation.framework\/PAFChargingPresentation",
+        "coveredLines": 5593,
+        "executableLines": 29811,
+        "lineCoverage": 0.1876153097849787,
+        "name": "PAFChargingPresentation.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFChinaServices.framework\/PAFChinaServices",
+        "coveredLines": 214,
+        "executableLines": 1208,
+        "lineCoverage": 0.17715231788079469,
+        "name": "PAFChinaServices.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFCommon.framework\/PAFCommon",
+        "coveredLines": 1304,
+        "executableLines": 2182,
+        "lineCoverage": 0.59761686526122826,
+        "name": "PAFCommon.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFCommonMock.framework\/PAFCommonMock",
+        "coveredLines": 79,
+        "executableLines": 127,
+        "lineCoverage": 0.62204724409448819,
+        "name": "PAFCommonMock.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFCommonXCTest.framework\/PAFCommonXCTest",
+        "coveredLines": 461,
+        "executableLines": 1424,
+        "lineCoverage": 0.3237359550561798,
+        "name": "PAFCommonXCTest.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFConnect.framework\/PAFConnect",
+        "coveredLines": 18042,
+        "executableLines": 61888,
+        "lineCoverage": 0.29152662874870733,
+        "name": "PAFConnect.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFConnectStoreService.framework\/PAFConnectStoreService",
+        "coveredLines": 212,
+        "executableLines": 1083,
+        "lineCoverage": 0.19575253924284394,
+        "name": "PAFConnectStoreService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFCustomerRelationCN.framework\/PAFCustomerRelationCN",
+        "coveredLines": 0,
+        "executableLines": 13032,
+        "lineCoverage": 0,
+        "name": "PAFCustomerRelationCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDealerCore.framework\/PAFDealerCore",
+        "coveredLines": 109,
+        "executableLines": 191,
+        "lineCoverage": 0.5706806282722513,
+        "name": "PAFDealerCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDealerCoreMock.framework\/PAFDealerCoreMock",
+        "coveredLines": 87,
+        "executableLines": 87,
+        "lineCoverage": 1,
+        "name": "PAFDealerCoreMock.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDealerService.framework\/PAFDealerService",
+        "coveredLines": 206,
+        "executableLines": 2093,
+        "lineCoverage": 0.09842331581462016,
+        "name": "PAFDealerService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDealerServiceMock.framework\/PAFDealerServiceMock",
+        "coveredLines": 49,
+        "executableLines": 50,
+        "lineCoverage": 0.97999999999999998,
+        "name": "PAFDealerServiceMock.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDirectCommunication.framework\/PAFDirectCommunication",
+        "coveredLines": 531,
+        "executableLines": 761,
+        "lineCoverage": 0.69776609724047312,
+        "name": "PAFDirectCommunication.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDiscover.framework\/PAFDiscover",
+        "coveredLines": 6124,
+        "executableLines": 9878,
+        "lineCoverage": 0.61996355537558212,
+        "name": "PAFDiscover.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFDiscoverServices.framework\/PAFDiscoverServices",
+        "coveredLines": 467,
+        "executableLines": 1419,
+        "lineCoverage": 0.32910500352360816,
+        "name": "PAFDiscoverServices.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFFleetAgent.framework\/PAFFleetAgent",
+        "coveredLines": 5424,
+        "executableLines": 8045,
+        "lineCoverage": 0.67420758234928524,
+        "name": "PAFFleetAgent.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFGSDKLogger.framework\/PAFGSDKLogger",
+        "coveredLines": 0,
+        "executableLines": 84,
+        "lineCoverage": 0,
+        "name": "PAFGSDKLogger.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFHomeChargingCore.framework\/PAFHomeChargingCore",
+        "coveredLines": 382,
+        "executableLines": 404,
+        "lineCoverage": 0.9455445544554455,
+        "name": "PAFHomeChargingCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFHomeChargingData.framework\/PAFHomeChargingData",
+        "coveredLines": 415,
+        "executableLines": 1188,
+        "lineCoverage": 0.34932659932659932,
+        "name": "PAFHomeChargingData.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFHomeChargingPresentation.framework\/PAFHomeChargingPresentation",
+        "coveredLines": 571,
+        "executableLines": 8732,
+        "lineCoverage": 0.065391662849289975,
+        "name": "PAFHomeChargingPresentation.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFLiveChatCN.framework\/PAFLiveChatCN",
+        "coveredLines": 517,
+        "executableLines": 3366,
+        "lineCoverage": 0.15359477124183007,
+        "name": "PAFLiveChatCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMap.framework\/PAFMap",
+        "coveredLines": 2198,
+        "executableLines": 14040,
+        "lineCoverage": 0.15655270655270656,
+        "name": "PAFMap.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMapCN.framework\/PAFMapCN",
+        "coveredLines": 0,
+        "executableLines": 6468,
+        "lineCoverage": 0,
+        "name": "PAFMapCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMapService.framework\/PAFMapService",
+        "coveredLines": 118,
+        "executableLines": 738,
+        "lineCoverage": 0.15989159891598917,
+        "name": "PAFMapService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMessageCenterCN.framework\/PAFMessageCenterCN",
+        "coveredLines": 0,
+        "executableLines": 1618,
+        "lineCoverage": 0,
+        "name": "PAFMessageCenterCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMockBff.framework\/PAFMockBff",
+        "coveredLines": 0,
+        "executableLines": 34,
+        "lineCoverage": 0,
+        "name": "PAFMockBff.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMockBffService.framework\/PAFMockBffService",
+        "coveredLines": 124,
+        "executableLines": 190,
+        "lineCoverage": 0.65263157894736845,
+        "name": "PAFMockBffService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMyPorsche.framework\/PAFMyPorsche",
+        "coveredLines": 3688,
+        "executableLines": 12633,
+        "lineCoverage": 0.29193382411145413,
+        "name": "PAFMyPorsche.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFMyPorscheCN.framework\/PAFMyPorscheCN",
+        "coveredLines": 0,
+        "executableLines": 4402,
+        "lineCoverage": 0,
+        "name": "PAFMyPorscheCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFNativeRegistration.framework\/PAFNativeRegistration",
+        "coveredLines": 3520,
+        "executableLines": 7067,
+        "lineCoverage": 0.49808971274939862,
+        "name": "PAFNativeRegistration.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFNativeRegistrationService.framework\/PAFNativeRegistrationService",
+        "coveredLines": 480,
+        "executableLines": 545,
+        "lineCoverage": 0.88073394495412849,
+        "name": "PAFNativeRegistrationService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFNetwork.framework\/PAFNetwork",
+        "coveredLines": 2193,
+        "executableLines": 3332,
+        "lineCoverage": 0.65816326530612246,
+        "name": "PAFNetwork.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFNetworkMock.framework\/PAFNetworkMock",
+        "coveredLines": 302,
+        "executableLines": 605,
+        "lineCoverage": 0.49917355371900829,
+        "name": "PAFNetworkMock.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPCM.framework\/PAFPCM",
+        "coveredLines": 1059,
+        "executableLines": 8616,
+        "lineCoverage": 0.12291086350974931,
+        "name": "PAFPCM.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPOIFavorites.framework\/PAFPOIFavorites",
+        "coveredLines": 0,
+        "executableLines": 886,
+        "lineCoverage": 0,
+        "name": "PAFPOIFavorites.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPOIManagementService.framework\/PAFPOIManagementService",
+        "coveredLines": 0,
+        "executableLines": 886,
+        "lineCoverage": 0,
+        "name": "PAFPOIManagementService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPOISyncService.framework\/PAFPOISyncService",
+        "coveredLines": 478,
+        "executableLines": 1998,
+        "lineCoverage": 0.23923923923923923,
+        "name": "PAFPOISyncService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPaymentServiceCN.framework\/PAFPaymentServiceCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "PAFPaymentServiceCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPersistence.framework\/PAFPersistence",
+        "coveredLines": 478,
+        "executableLines": 1559,
+        "lineCoverage": 0.30660679923027584,
+        "name": "PAFPersistence.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFPostCN.framework\/PAFPostCN",
+        "coveredLines": 0,
+        "executableLines": 1233,
+        "lineCoverage": 0,
+        "name": "PAFPostCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFQRCodeLogin.framework\/PAFQRCodeLogin",
+        "coveredLines": 0,
+        "executableLines": 554,
+        "lineCoverage": 0,
+        "name": "PAFQRCodeLogin.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFRHMIService.framework\/PAFRHMIService",
+        "coveredLines": 102,
+        "executableLines": 583,
+        "lineCoverage": 0.17495711835334476,
+        "name": "PAFRHMIService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFRemoteParkAssistant.framework\/PAFRemoteParkAssistant",
+        "coveredLines": 127,
+        "executableLines": 5569,
+        "lineCoverage": 0.02280481235410307,
+        "name": "PAFRemoteParkAssistant.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFRemoteParkAssistantService.framework\/PAFRemoteParkAssistantService",
+        "coveredLines": 11,
+        "executableLines": 6121,
+        "lineCoverage": 0.0017970919784348963,
+        "name": "PAFRemoteParkAssistantService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFRoadsideAssistance.framework\/PAFRoadsideAssistance",
+        "coveredLines": 5266,
+        "executableLines": 14114,
+        "lineCoverage": 0.37310471871900242,
+        "name": "PAFRoadsideAssistance.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFRoutingCore.framework\/PAFRoutingCore",
+        "coveredLines": 215,
+        "executableLines": 1141,
+        "lineCoverage": 0.18843120070113936,
+        "name": "PAFRoutingCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFRoutingService.framework\/PAFRoutingService",
+        "coveredLines": 4,
+        "executableLines": 437,
+        "lineCoverage": 0.0091533180778032037,
+        "name": "PAFRoutingService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFScaffold.framework\/PAFScaffold",
+        "coveredLines": 198,
+        "executableLines": 1719,
+        "lineCoverage": 0.11518324607329843,
+        "name": "PAFScaffold.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFShareExtensionKit.framework\/PAFShareExtensionKit",
+        "coveredLines": 0,
+        "executableLines": 617,
+        "lineCoverage": 0,
+        "name": "PAFShareExtensionKit.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFSubscription.framework\/PAFSubscription",
+        "coveredLines": 18927,
+        "executableLines": 24374,
+        "lineCoverage": 0.77652416509395261,
+        "name": "PAFSubscription.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFSubscriptionService.framework\/PAFSubscriptionService",
+        "coveredLines": 857,
+        "executableLines": 1630,
+        "lineCoverage": 0.52576687116564413,
+        "name": "PAFSubscriptionService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFTrackYourDream.framework\/PAFTrackYourDream",
+        "coveredLines": 2521,
+        "executableLines": 5761,
+        "lineCoverage": 0.43759763929873285,
+        "name": "PAFTrackYourDream.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFUIAnimations.framework\/PAFUIAnimations",
+        "coveredLines": 0,
+        "executableLines": 891,
+        "lineCoverage": 0,
+        "name": "PAFUIAnimations.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFUIComponents.framework\/PAFUIComponents",
+        "coveredLines": 8906,
+        "executableLines": 32283,
+        "lineCoverage": 0.27587275036396863,
+        "name": "PAFUIComponents.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFUser.framework\/PAFUser",
+        "coveredLines": 1453,
+        "executableLines": 2516,
+        "lineCoverage": 0.57750397456279812,
+        "name": "PAFUser.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFUserManual.framework\/PAFUserManual",
+        "coveredLines": 5287,
+        "executableLines": 13467,
+        "lineCoverage": 0.39258929234424889,
+        "name": "PAFUserManual.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFUserMock.framework\/PAFUserMock",
+        "coveredLines": 106,
+        "executableLines": 123,
+        "lineCoverage": 0.86178861788617889,
+        "name": "PAFUserMock.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFVehicle.framework\/PAFVehicle",
+        "coveredLines": 5137,
+        "executableLines": 10916,
+        "lineCoverage": 0.47059362403810917,
+        "name": "PAFVehicle.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFVehicleCN.framework\/PAFVehicleCN",
+        "coveredLines": 0,
+        "executableLines": 221,
+        "lineCoverage": 0,
+        "name": "PAFVehicleCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFVehicleMock.framework\/PAFVehicleMock",
+        "coveredLines": 1440,
+        "executableLines": 2018,
+        "lineCoverage": 0.71357779980178393,
+        "name": "PAFVehicleMock.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFVehicleOrder.framework\/PAFVehicleOrder",
+        "coveredLines": 721,
+        "executableLines": 3710,
+        "lineCoverage": 0.19433962264150945,
+        "name": "PAFVehicleOrder.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFVehicleOrderService.framework\/PAFVehicleOrderService",
+        "coveredLines": 704,
+        "executableLines": 863,
+        "lineCoverage": 0.81575898030127458,
+        "name": "PAFVehicleOrderService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFVehicleOrderServiceCore.framework\/PAFVehicleOrderServiceCore",
+        "coveredLines": 26,
+        "executableLines": 225,
+        "lineCoverage": 0.11555555555555555,
+        "name": "PAFVehicleOrderServiceCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PAFWelfareCN.framework\/PAFWelfareCN",
+        "coveredLines": 0,
+        "executableLines": 1887,
+        "lineCoverage": 0,
+        "name": "PAFWelfareCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PCMTests.xctest\/PCMTests",
+        "coveredLines": 737,
+        "executableLines": 741,
+        "lineCoverage": 0.99460188933873139,
+        "name": "PCMTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/POIFavoritesTests.xctest\/POIFavoritesTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "POIFavoritesTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/POIManagementServiceTests.xctest\/POIManagementServiceTests",
+        "coveredLines": 19,
+        "executableLines": 19,
+        "lineCoverage": 1,
+        "name": "POIManagementServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/POISyncServiceTests.xctest\/POISyncServiceTests",
+        "coveredLines": 357,
+        "executableLines": 403,
+        "lineCoverage": 0.88585607940446653,
+        "name": "POISyncServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PaymentServiceCNTests.xctest\/PaymentServiceCNTests",
+        "coveredLines": 5,
+        "executableLines": 5,
+        "lineCoverage": 1,
+        "name": "PaymentServiceCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PhoneNumberKit\/PhoneNumberKit.framework\/PhoneNumberKit",
+        "coveredLines": 654,
+        "executableLines": 2175,
+        "lineCoverage": 0.30068965517241381,
+        "name": "PhoneNumberKit.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_ApplicationFramework.framework\/Pods_ApplicationFramework",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_ApplicationFramework.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFAddVehicle.framework\/Pods_PAFAddVehicle",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFAddVehicle.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFAddVehicle_AddVehicleTests.framework\/Pods_PAFAddVehicle_AddVehicleTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFAddVehicle_AddVehicleTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFAppServices.framework\/Pods_PAFAppServices",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFAppServices.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFAppServices_AppServicesTests.framework\/Pods_PAFAppServices_AppServicesTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFAppServices_AppServicesTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBDUI.framework\/Pods_PAFBDUI",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBDUI.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBDUI_BDUITests.framework\/Pods_PAFBDUI_BDUITests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBDUI_BDUITests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBooking.framework\/Pods_PAFBooking",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBooking.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBooking_BookingTests.framework\/Pods_PAFBooking_BookingTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBooking_BookingTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBusinessAsterixCN.framework\/Pods_PAFBusinessAsterixCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBusinessAsterixCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBusinessAsterixCN_BusinessAsterixCNTests.framework\/Pods_PAFBusinessAsterixCN_BusinessAsterixCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBusinessAsterixCN_BusinessAsterixCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBusinessPortfolioCN.framework\/Pods_PAFBusinessPortfolioCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBusinessPortfolioCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFBusinessPortfolioCN_BusinessPortfolioCNTests.framework\/Pods_PAFBusinessPortfolioCN_BusinessPortfolioCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFBusinessPortfolioCN_BusinessPortfolioCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCarPlayAutomaker.framework\/Pods_PAFCarPlayAutomaker",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCarPlayAutomaker.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCarPlayAutomakerService.framework\/Pods_PAFCarPlayAutomakerService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCarPlayAutomakerService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCarPlayAutomakerService_CarPlayAutomakerServiceTests.framework\/Pods_PAFCarPlayAutomakerService_CarPlayAutomakerServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCarPlayAutomakerService_CarPlayAutomakerServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCarPlayAutomaker_CarPlayAutomakerTests.framework\/Pods_PAFCarPlayAutomaker_CarPlayAutomakerTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCarPlayAutomaker_CarPlayAutomakerTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingCN.framework\/Pods_PAFChargingCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingCN_ChargingCNTests.framework\/Pods_PAFChargingCN_ChargingCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingCN_ChargingCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingCore.framework\/Pods_PAFChargingCore",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingCore_ChargingCoreTests.framework\/Pods_PAFChargingCore_ChargingCoreTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingCore_ChargingCoreTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingData.framework\/Pods_PAFChargingData",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingData.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingData_ChargingDataTests.framework\/Pods_PAFChargingData_ChargingDataTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingData_ChargingDataTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingPresentation.framework\/Pods_PAFChargingPresentation",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingPresentation.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChargingPresentation_ChargingPresentationTests.framework\/Pods_PAFChargingPresentation_ChargingPresentationTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChargingPresentation_ChargingPresentationTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChinaServices.framework\/Pods_PAFChinaServices",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChinaServices.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFChinaServices_ChinaServicesTests.framework\/Pods_PAFChinaServices_ChinaServicesTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFChinaServices_ChinaServicesTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCommon.framework\/Pods_PAFCommon",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCommon.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCommonXCTest.framework\/Pods_PAFCommonXCTest",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCommonXCTest.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCommon_CommonTests.framework\/Pods_PAFCommon_CommonTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCommon_CommonTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFConnect.framework\/Pods_PAFConnect",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFConnect.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFConnectStoreService.framework\/Pods_PAFConnectStoreService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFConnectStoreService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFConnectStoreService_ConnectStoreServiceTests.framework\/Pods_PAFConnectStoreService_ConnectStoreServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFConnectStoreService_ConnectStoreServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFConnect_ConnectTests.framework\/Pods_PAFConnect_ConnectTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFConnect_ConnectTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCustomerRelationCN.framework\/Pods_PAFCustomerRelationCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCustomerRelationCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFCustomerRelationCN_CustomerRelationCNTests.framework\/Pods_PAFCustomerRelationCN_CustomerRelationCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFCustomerRelationCN_CustomerRelationCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDealerCore.framework\/Pods_PAFDealerCore",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDealerCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDealerService.framework\/Pods_PAFDealerService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDealerService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDealerService_DealerServiceTests.framework\/Pods_PAFDealerService_DealerServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDealerService_DealerServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDirectCommunication.framework\/Pods_PAFDirectCommunication",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDirectCommunication.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDirectCommunication_DirectCommunicationTests.framework\/Pods_PAFDirectCommunication_DirectCommunicationTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDirectCommunication_DirectCommunicationTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDiscover.framework\/Pods_PAFDiscover",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDiscover.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDiscoverServices.framework\/Pods_PAFDiscoverServices",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDiscoverServices.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDiscoverServices_DiscoverServicesTests.framework\/Pods_PAFDiscoverServices_DiscoverServicesTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDiscoverServices_DiscoverServicesTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFDiscover_DiscoverTests.framework\/Pods_PAFDiscover_DiscoverTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFDiscover_DiscoverTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFFleetAgent.framework\/Pods_PAFFleetAgent",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFFleetAgent.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFFleetAgent_FleetAgentTests.framework\/Pods_PAFFleetAgent_FleetAgentTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFFleetAgent_FleetAgentTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFGSDKLogger.framework\/Pods_PAFGSDKLogger",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFGSDKLogger.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFHomeChargingCore.framework\/Pods_PAFHomeChargingCore",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFHomeChargingCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFHomeChargingCore_HomeChargingCoreTests.framework\/Pods_PAFHomeChargingCore_HomeChargingCoreTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFHomeChargingCore_HomeChargingCoreTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFHomeChargingData.framework\/Pods_PAFHomeChargingData",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFHomeChargingData.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFHomeChargingData_HomeChargingDataTests.framework\/Pods_PAFHomeChargingData_HomeChargingDataTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFHomeChargingData_HomeChargingDataTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFHomeChargingPresentation.framework\/Pods_PAFHomeChargingPresentation",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFHomeChargingPresentation.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFHomeChargingPresentation_HomeChargingPresentationTests.framework\/Pods_PAFHomeChargingPresentation_HomeChargingPresentationTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFHomeChargingPresentation_HomeChargingPresentationTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFLiveChatCN.framework\/Pods_PAFLiveChatCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFLiveChatCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFLiveChatCN_LiveChatCNTests.framework\/Pods_PAFLiveChatCN_LiveChatCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFLiveChatCN_LiveChatCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMap.framework\/Pods_PAFMap",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMap.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMapCN.framework\/Pods_PAFMapCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMapCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMapCN_MapCNTests.framework\/Pods_PAFMapCN_MapCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMapCN_MapCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMapService.framework\/Pods_PAFMapService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMapService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMapService_MapServiceTests.framework\/Pods_PAFMapService_MapServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMapService_MapServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMap_MapTests.framework\/Pods_PAFMap_MapTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMap_MapTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMessageCenterCN.framework\/Pods_PAFMessageCenterCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMessageCenterCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMessageCenterCN_MessageCenterCNTests.framework\/Pods_PAFMessageCenterCN_MessageCenterCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMessageCenterCN_MessageCenterCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMockBff.framework\/Pods_PAFMockBff",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMockBff.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMockBffService.framework\/Pods_PAFMockBffService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMockBffService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMockBffService_MockBffServiceTests.framework\/Pods_PAFMockBffService_MockBffServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMockBffService_MockBffServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMockBff_MockBffTests.framework\/Pods_PAFMockBff_MockBffTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMockBff_MockBffTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMyPorsche.framework\/Pods_PAFMyPorsche",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMyPorsche.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMyPorscheCN.framework\/Pods_PAFMyPorscheCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMyPorscheCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMyPorscheCN_MyPorscheCNTests.framework\/Pods_PAFMyPorscheCN_MyPorscheCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMyPorscheCN_MyPorscheCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMyPorsche_MyPorschePersistenceTests.framework\/Pods_PAFMyPorsche_MyPorschePersistenceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMyPorsche_MyPorschePersistenceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMyPorsche_MyPorschePersistenceTestsHostApp.framework\/Pods_PAFMyPorsche_MyPorschePersistenceTestsHostApp",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMyPorsche_MyPorschePersistenceTestsHostApp.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFMyPorsche_MyPorscheTests.framework\/Pods_PAFMyPorsche_MyPorscheTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFMyPorsche_MyPorscheTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFNativeRegistration.framework\/Pods_PAFNativeRegistration",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFNativeRegistration.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFNativeRegistrationService.framework\/Pods_PAFNativeRegistrationService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFNativeRegistrationService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFNativeRegistrationService_NativeRegistrationServiceTests.framework\/Pods_PAFNativeRegistrationService_NativeRegistrationServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFNativeRegistrationService_NativeRegistrationServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFNativeRegistration_NativeRegistrationTests.framework\/Pods_PAFNativeRegistration_NativeRegistrationTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFNativeRegistration_NativeRegistrationTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFNetwork.framework\/Pods_PAFNetwork",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFNetwork.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFNetwork_NetworkTests.framework\/Pods_PAFNetwork_NetworkTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFNetwork_NetworkTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPCM.framework\/Pods_PAFPCM",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPCM.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPCM_PCMTests.framework\/Pods_PAFPCM_PCMTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPCM_PCMTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPOIFavorites.framework\/Pods_PAFPOIFavorites",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPOIFavorites.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPOIFavorites_POIFavoritesTests.framework\/Pods_PAFPOIFavorites_POIFavoritesTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPOIFavorites_POIFavoritesTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPOIManagementService.framework\/Pods_PAFPOIManagementService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPOIManagementService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPOIManagementService_POIManagementServiceTests.framework\/Pods_PAFPOIManagementService_POIManagementServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPOIManagementService_POIManagementServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPOISyncService.framework\/Pods_PAFPOISyncService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPOISyncService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPOISyncService_POISyncServiceTests.framework\/Pods_PAFPOISyncService_POISyncServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPOISyncService_POISyncServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPaymentServiceCN.framework\/Pods_PAFPaymentServiceCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPaymentServiceCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPaymentServiceCN_PaymentServiceCNTests.framework\/Pods_PAFPaymentServiceCN_PaymentServiceCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPaymentServiceCN_PaymentServiceCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPersistence.framework\/Pods_PAFPersistence",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPersistence.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPostCN.framework\/Pods_PAFPostCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPostCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFPostCN_PostCNTests.framework\/Pods_PAFPostCN_PostCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFPostCN_PostCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFQRCodeLogin.framework\/Pods_PAFQRCodeLogin",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFQRCodeLogin.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFQRCodeLogin_QRCodeLoginTests.framework\/Pods_PAFQRCodeLogin_QRCodeLoginTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFQRCodeLogin_QRCodeLoginTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRHMIService.framework\/Pods_PAFRHMIService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRHMIService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRHMIService_RHMIServiceTests.framework\/Pods_PAFRHMIService_RHMIServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRHMIService_RHMIServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRemoteParkAssistant.framework\/Pods_PAFRemoteParkAssistant",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRemoteParkAssistant.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRemoteParkAssistantService.framework\/Pods_PAFRemoteParkAssistantService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRemoteParkAssistantService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRemoteParkAssistant_RemoteParkAssistantTests.framework\/Pods_PAFRemoteParkAssistant_RemoteParkAssistantTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRemoteParkAssistant_RemoteParkAssistantTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRoadsideAssistance.framework\/Pods_PAFRoadsideAssistance",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRoadsideAssistance.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRoadsideAssistance_RoadsideAssistanceTests.framework\/Pods_PAFRoadsideAssistance_RoadsideAssistanceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRoadsideAssistance_RoadsideAssistanceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRoutingCore.framework\/Pods_PAFRoutingCore",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRoutingCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRoutingCore_RoutingCoreTests.framework\/Pods_PAFRoutingCore_RoutingCoreTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRoutingCore_RoutingCoreTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRoutingService.framework\/Pods_PAFRoutingService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRoutingService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFRoutingService_RoutingServiceTests.framework\/Pods_PAFRoutingService_RoutingServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFRoutingService_RoutingServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFScaffold.framework\/Pods_PAFScaffold",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFScaffold.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFScaffold_ScaffoldTests.framework\/Pods_PAFScaffold_ScaffoldTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFScaffold_ScaffoldTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFShareExtensionKit.framework\/Pods_PAFShareExtensionKit",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFShareExtensionKit.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFSubscription.framework\/Pods_PAFSubscription",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFSubscription.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFSubscriptionService.framework\/Pods_PAFSubscriptionService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFSubscriptionService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFSubscriptionService_SubscriptionServiceTests.framework\/Pods_PAFSubscriptionService_SubscriptionServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFSubscriptionService_SubscriptionServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFSubscription_SubscriptionTests.framework\/Pods_PAFSubscription_SubscriptionTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFSubscription_SubscriptionTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFTrackYourDream.framework\/Pods_PAFTrackYourDream",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFTrackYourDream.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFTrackYourDream_TrackYourDreamTests.framework\/Pods_PAFTrackYourDream_TrackYourDreamTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFTrackYourDream_TrackYourDreamTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUIAnimations.framework\/Pods_PAFUIAnimations",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUIAnimations.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUIAnimations_UIAnimationsTests.framework\/Pods_PAFUIAnimations_UIAnimationsTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUIAnimations_UIAnimationsTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUIComponents.framework\/Pods_PAFUIComponents",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUIComponents.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUIComponents_UIComponentsTests.framework\/Pods_PAFUIComponents_UIComponentsTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUIComponents_UIComponentsTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUser.framework\/Pods_PAFUser",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUser.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUserManual.framework\/Pods_PAFUserManual",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUserManual.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUserManual_UserManualTests.framework\/Pods_PAFUserManual_UserManualTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUserManual_UserManualTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFUser_UserTests.framework\/Pods_PAFUser_UserTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFUser_UserTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicle.framework\/Pods_PAFVehicle",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicle.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleCN.framework\/Pods_PAFVehicleCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleCN_VehicleCNTests.framework\/Pods_PAFVehicleCN_VehicleCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleCN_VehicleCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleOrder.framework\/Pods_PAFVehicleOrder",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleOrder.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleOrderService.framework\/Pods_PAFVehicleOrderService",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleOrderService.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleOrderServiceCore.framework\/Pods_PAFVehicleOrderServiceCore",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleOrderServiceCore.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleOrderService_VehicleOrderServiceTests.framework\/Pods_PAFVehicleOrderService_VehicleOrderServiceTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleOrderService_VehicleOrderServiceTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicleOrder_VehicleOrderTests.framework\/Pods_PAFVehicleOrder_VehicleOrderTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicleOrder_VehicleOrderTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFVehicle_VehicleTests.framework\/Pods_PAFVehicle_VehicleTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFVehicle_VehicleTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFWelfareCN.framework\/Pods_PAFWelfareCN",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFWelfareCN.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/Pods_PAFWelfareCN_WelfareCNTests.framework\/Pods_PAFWelfareCN_WelfareCNTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "Pods_PAFWelfareCN_WelfareCNTests.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/PostCNTests.xctest\/PostCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "PostCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/QRCodeLoginTests.xctest\/QRCodeLoginTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "QRCodeLoginTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/RHMIServiceTests.xctest\/RHMIServiceTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "RHMIServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/RemoteParkAssistantTests.xctest\/RemoteParkAssistantTests",
+        "coveredLines": 174,
+        "executableLines": 175,
+        "lineCoverage": 0.99428571428571433,
+        "name": "RemoteParkAssistantTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/RoadsideAssistanceTests.xctest\/RoadsideAssistanceTests",
+        "coveredLines": 6233,
+        "executableLines": 6670,
+        "lineCoverage": 0.93448275862068964,
+        "name": "RoadsideAssistanceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/RoutingCoreTests.xctest\/RoutingCoreTests",
+        "coveredLines": 1,
+        "executableLines": 1,
+        "lineCoverage": 1,
+        "name": "RoutingCoreTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/RoutingServiceTests.xctest\/RoutingServiceTests",
+        "coveredLines": 1,
+        "executableLines": 1,
+        "lineCoverage": 1,
+        "name": "RoutingServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SLPaymentSDK\/SLPaymentSDK.framework\/SLPaymentSDK",
+        "coveredLines": 129,
+        "executableLines": 5009,
+        "lineCoverage": 0.025753643441804752,
+        "name": "SLPaymentSDK.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SLPaymentSDK\/SLPaymentSDKResources.bundle\/SLPaymentSDKResources",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "SLPaymentSDKResources.bundle"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ScaffoldTests.xctest\/ScaffoldTests",
+        "coveredLines": 371,
+        "executableLines": 468,
+        "lineCoverage": 0.79273504273504269,
+        "name": "ScaffoldTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SimpleKeychain\/SimpleKeychain.framework\/SimpleKeychain",
+        "coveredLines": 0,
+        "executableLines": 248,
+        "lineCoverage": 0,
+        "name": "SimpleKeychain.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SnapshotTesting\/SnapshotTesting.framework\/SnapshotTesting",
+        "coveredLines": 1070,
+        "executableLines": 4394,
+        "lineCoverage": 0.24351388256713702,
+        "name": "SnapshotTesting.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SubscriptionServiceTests.xctest\/SubscriptionServiceTests",
+        "coveredLines": 170,
+        "executableLines": 174,
+        "lineCoverage": 0.97701149425287359,
+        "name": "SubscriptionServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SubscriptionTests.xctest\/SubscriptionTests",
+        "coveredLines": 13789,
+        "executableLines": 14727,
+        "lineCoverage": 0.9363074624838732,
+        "name": "SubscriptionTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/SwiftKeychainWrapper\/SwiftKeychainWrapper.framework\/SwiftKeychainWrapper",
+        "coveredLines": 0,
+        "executableLines": 405,
+        "lineCoverage": 0,
+        "name": "SwiftKeychainWrapper.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/TrackYourDreamTests.xctest\/TrackYourDreamTests",
+        "coveredLines": 2333,
+        "executableLines": 2409,
+        "lineCoverage": 0.96845163968451642,
+        "name": "TrackYourDreamTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/TrustKit\/TrustKit.framework\/TrustKit",
+        "coveredLines": 426,
+        "executableLines": 1880,
+        "lineCoverage": 0.22659574468085106,
+        "name": "TrustKit.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/UIAnimationsTests.xctest\/UIAnimationsTests",
+        "coveredLines": 0,
+        "executableLines": 0,
+        "lineCoverage": 0,
+        "name": "UIAnimationsTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/UIComponentsTests.xctest\/UIComponentsTests",
+        "coveredLines": 1308,
+        "executableLines": 1337,
+        "lineCoverage": 0.97830964846671653,
+        "name": "UIComponentsTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/UserManualTests.xctest\/UserManualTests",
+        "coveredLines": 5497,
+        "executableLines": 5987,
+        "lineCoverage": 0.9181560046767997,
+        "name": "UserManualTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/UserTests.xctest\/UserTests",
+        "coveredLines": 3350,
+        "executableLines": 3573,
+        "lineCoverage": 0.93758746151693251,
+        "name": "UserTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/VehicleCNTests.xctest\/VehicleCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "VehicleCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/VehicleOrderServiceTests.xctest\/VehicleOrderServiceTests",
+        "coveredLines": 912,
+        "executableLines": 1050,
+        "lineCoverage": 0.86857142857142855,
+        "name": "VehicleOrderServiceTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/VehicleOrderTests.xctest\/VehicleOrderTests",
+        "coveredLines": 615,
+        "executableLines": 742,
+        "lineCoverage": 0.82884097035040427,
+        "name": "VehicleOrderTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/VehicleTests.xctest\/VehicleTests",
+        "coveredLines": 8381,
+        "executableLines": 8782,
+        "lineCoverage": 0.95433841949442044,
+        "name": "VehicleTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/WelfareCNTests.xctest\/WelfareCNTests",
+        "coveredLines": 4,
+        "executableLines": 4,
+        "lineCoverage": 1,
+        "name": "WelfareCNTests.xctest"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/XCGLogger\/XCGLogger.framework\/XCGLogger",
+        "coveredLines": 509,
+        "executableLines": 1768,
+        "lineCoverage": 0.28789592760180993,
+        "name": "XCGLogger.framework"
+    },
+    {
+        "buildProductPath": "\/Users\/elmoritz\/Developer\/arconsis\/Porsche\/ios-app-framework\/app\/ApplicationFramework\/DerivedData\/ApplicationFramework\/Build\/Products\/Debug-iphonesimulator\/ZIPFoundation\/ZIPFoundation.framework\/ZIPFoundation",
+        "coveredLines": 670,
+        "executableLines": 2254,
+        "lineCoverage": 0.29724933451641528,
+        "name": "ZIPFoundation.framework"
+    }
+]
