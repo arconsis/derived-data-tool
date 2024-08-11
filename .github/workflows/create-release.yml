@@ -19,20 +19,20 @@ concurrency:
 
 jobs:
   get-version:
-    uses: ./.github/workflows/job-get-version.yml
+    uses: ./.github/workflows/actions/job-get-version.yml
     with:
       release-type: ${{ inputs.release-type }}
 
   create-release-branch:
     needs: [get-version]
-    uses: ./.github/workflows/job-create-release-branch.yml
+    uses: ./.github/workflows/actions/job-create-release-branch.yml
     with:
       release-version: ${{ needs.get-version.outputs.next-version }}
       # is-reverting: false
 
   get-swift-version:
     needs: [get-version]
-    uses: ./.github/workflows/job-extract-swift-version.yml
+    uses: ./.github/workflows/actions/job-extract-swift-version.yml
 
   build:
     needs: [get-version, get-swift-version, create-release-branch]
@@ -114,7 +114,7 @@ jobs:
   delete-release-branch:
     needs: [get-version, create-release-branch, build]
     if: ${{ failure() }}
-    uses: ./.github/workflows/job-create-release-branch.yml
+    uses: ./.github/workflows/actions/job-create-release-branch.yml
     with:
       release-version: ${{ needs.get-version.outputs.next-version }}
       is-reverting: true

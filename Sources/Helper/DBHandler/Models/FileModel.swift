@@ -5,6 +5,7 @@
 //  Created by Moritz Ellerbrock on 26.04.24.
 //
 
+import Foundation
 import FluentKit
 
 final class FileModel: Model {

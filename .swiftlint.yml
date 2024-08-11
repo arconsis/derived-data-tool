@@ -104,6 +104,7 @@ only_rules:
 excluded:
   - .derivedData/
   - .build/
+  - swiftpm/
   - DerivedData/
   - tools/
   - utils/
@@ -114,12 +115,6 @@ identifier_name:
   excluded:
     - id
 
-line_length:
-  warning: 150
-  error: 150
-  ignores_function_declarations: true
-  ignores_comments: true
-  ignores_urls: true
 function_body_length:
   warning: 300
   error: 300

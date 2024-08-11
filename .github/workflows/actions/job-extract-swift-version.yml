@@ -1,4 +1,4 @@
-name: "[job] Swift version"
+name: "🏋🏻‍♀️ Swift version"
 
 on:
   workflow_call:

@@ -14,13 +14,13 @@ on:
           - patch
 jobs:
   get-version:
-    uses: ./.github/workflows/job-get-version.yml
+    uses: ./.github/workflows/actions/job-get-version.yml
     with:
       release-type: ${{ inputs.release-type }}
 
   create-release-branch:
     needs: [get-version]
-    uses: ./.github/workflows/job-create-release-branch.yml
+    uses: ./.github/workflows/actions/job-create-release-branch.yml
     with:
       release-version: ${{ needs.get-version.outputs.release-version }}
       # is-reverting: false
