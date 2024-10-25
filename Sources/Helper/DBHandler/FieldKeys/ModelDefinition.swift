@@ -16,12 +16,7 @@ enum ModelDefinition {
             static var type: FieldKey { "type" }
             static var url: FieldKey { "url" }
             static var application: FieldKey { "application" }
-
-
-
-
-
-            static var coverage: FieldKey { "coverage_id" }
+            static var coverage: FieldKey { "coverage" }
         }
     }
 

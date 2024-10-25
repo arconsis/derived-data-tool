@@ -1,0 +1,57 @@
+name: "Next release version"
+description: "This action will generate the next release version according to the release-type"
+
+inputs:
+  release-type:
+    description: "Should be one of the following: major, minor, patch"
+    required: true
+outputs:
+  next-version:
+    description: "Calculated Next Release Version"
+    value: ${{ steps.get-version.outputs.release-version }}
+  current-version:
+    description: "Receive current Verison"
+    value: ${{ steps.get-version.outputs.current-version }}
+
+runs:
+  using: composite
+  steps:
+    - name: git checkout
+      uses: actions/checkout@v4
+
+    - name: fetch version
+      id: last-version
+      shell: bash
+      run: |
+        echo "Current version found: $(cat .version)" >> $GITHUB_STEP_SUMMARY
+        echo "version=$(cat .version)" >> "$GITHUB_OUTPUT"
+
+    - name: Get next version
+      id: next-version
+      uses: "WyriHaximus/github-action-next-semvers@v1"
+      with:
+        version: ${{ steps.last-version.outputs.version }}
+
+    - name: calculate next version
+      id: release-version
+      shell: bash
+      run: |
+        if $IS_MAJOR_RELEASE; then
+          echo "New major release will be created with version $MAJOR_VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "release=$MAJOR_VERSION" >> "$GITHUB_OUTPUT"
+        elif $IS_MINOR_RELEASE; then
+          echo "New minor release will be created with version $MINOR_VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "release=$MINOR_VERSION" >> "$GITHUB_OUTPUT"
+        elif $IS_PATCH_RELEASE; then
+          echo "New patch release will be created with version $PATCH_VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "release=$PATCH_VERSION" >> "$GITHUB_OUTPUT"
+        else
+          exit 1
+        fi
+      env:
+        IS_MAJOR_RELEASE: ${{ inputs.release-type == 'major' }}
+        MAJOR_VERSION: ${{ steps.next-version.outputs.major }}
+        IS_MINOR_RELEASE: ${{ inputs.release-type == 'minor' }}
+        MINOR_VERSION: ${{ steps.next-version.outputs.minor }}
+        IS_PATCH_RELEASE: ${{ inputs.release-type == 'patch' }}
+        PATCH_VERSION: ${{ steps.next-version.outputs.patch }}

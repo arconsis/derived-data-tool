@@ -14,20 +14,19 @@ on:
           - patch
 jobs:
   get-version:
-    uses: ./.github/workflows/actions/job-get-version.yml
+    uses: ./.github/actions/get-version
     with:
       release-type: ${{ inputs.release-type }}
 
   create-release-branch:
     needs: [get-version]
-    uses: ./.github/workflows/actions/job-create-release-branch.yml
+    uses: ./.github/actions/create-release-branch
     with:
       release-version: ${{ needs.get-version.outputs.release-version }}
-      # is-reverting: false
 
   build:
     needs: [get-version, create-release-branch]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       version: ${{ needs.get-version.outputs.release-version }}
     steps:
@@ -35,23 +34,8 @@ jobs:
         with:
           ref: releases/${{ env.version }}
 
-      - name: Create SHA-1 for Package.resolved
-        id: cache-swift
-        run: |
-          md5=($(sha1sum Package.resolved))
-          echo $md5
-          echo "cache_sha1=$md5" >> "$GITHUB_OUTPUT"
-
-      - name: Cache Swift
-        uses: actions/cache@v3
-        with:
-          path: .build
-          key: ${{ steps.cache-swift.outputs.cache_sha1 }}-swift
-
-      - name: webfactory/ssh-agent
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.COMMON_VAPOR_DEPLOY_KEY }}
+      - name: Resolve swift dependency cache
+        uses: ./.github/actions/create-swift-dependency-cache
 
       - name: Resolve Dependencies
         run: |

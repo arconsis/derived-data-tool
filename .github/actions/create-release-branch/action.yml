@@ -1,0 +1,58 @@
+name: "Create a new release branch"
+description: "This action will create a new branch for the current release and delete it if something goes wrong"
+
+
+inputs:
+  release-version:
+    required: true
+    description: "string formatted version number for the next release"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+    
+    - name: create branch (releases/${{ inputs.release-version }})
+      shell: bash
+      run: git branch releases/${{ inputs.release-version }}
+
+    - name: checkout branch (releases/${{ inputs.release-version }})
+      shell: bash
+      run: git checkout releases/${{ inputs.release-version }}
+
+    - name: publish branch (releases/${{ inputs.release-version }})
+      shell: bash
+      run: git push --set-upstream origin releases/${{ inputs.release-version }}
+
+    - name: update version-file
+      shell: bash
+      run: |
+        echo ${{ inputs.release-version }} > .version
+
+    - name: update version in app
+      shell: bash
+      working-directory: ./Sources/App/
+      run: |
+        sed "s#version: \".*\"#version: \"${{ inputs.release-version }}\"#" "App.swift" >> new_App.swift
+        rm ./App.swift
+        mv ./new_App.swift ./App.swift
+
+    - name: git status after changes
+      shell: bash
+      run: git status
+
+    - name: commit bumped version
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "[BOT] update App version to ${{ inputs.release-version }}"
+        commit_user_name: "github-release[bot]"
+        commit_user_email: github.release@elmoritz.eu
+        commit_author: Moritz Ellerbrock <github@elmoritz.eu>
+
+    - name: onFailure delete branch
+      shell: bash
+      if: failure()
+      run: |
+        echo "# ABORT: New release will be stopped" >> $GITHUB_STEP_SUMMARY
+        git push origin --delete releases/${{ inputs.release-version }} || true
+        echo "New release branch (releases/${{ inputs.release-version }}) was deleted" >> $GITHUB_STEP_SUMMARY

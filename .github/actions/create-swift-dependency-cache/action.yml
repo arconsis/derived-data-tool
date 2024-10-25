@@ -1,0 +1,19 @@
+name: "Generate or Retrieve Cached Dependencies"
+description: "This action tries to retrieve the cache from github, if impossible it will generate it from scratch"
+
+runs:
+  using: composite
+  steps:
+  - name: Create SHA-1 for Package.resolved
+    id: cache-swift
+    shell: bash
+    run: |
+      md5=($(sha1sum Package.resolved))
+      echo $md5
+      echo "cache_sha1=$md5" >> "$GITHUB_OUTPUT"
+
+  - name: Cache Swift
+    uses: actions/cache@v3
+    with:
+      path: .build
+      key: ${{ steps.cache-swift.outputs.cache_sha1 }}-swift
