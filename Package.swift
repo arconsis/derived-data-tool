@@ -30,6 +30,7 @@ let package = Package(
         .asyncAlgorithmsPackage(),
         .fluent(),
         .postgresDriver(),
+        .duckDB(),
         .sqlDriver(),
         .globPatternPackage(),
         .swiftHTMLPackage(),
@@ -125,6 +126,7 @@ let package = Package(
                 .fluent(),
                 .postgresDriver(),
                 .sqlDriver(),
+                .duckDB(),
                 .globPattern(),
                 .shared(),
                 .swiftHTML(),
@@ -230,6 +232,10 @@ extension PackageDescription.Package.Dependency {
     static func swiftTUI() -> Package.Dependency {
         Package.Dependency.package(url: "https://github.com/rensbreur/SwiftTUI.git", branch: "main")
     }
+
+    static func duckDB() -> Package.Dependency {
+        Package.Dependency.package(url: "https://github.com/duckdb/duckdb-swift.git", from: "1.1.3")
+    }
 }
 
 extension PackageDescription.Target.Dependency {
@@ -289,6 +295,10 @@ extension PackageDescription.Target.Dependency {
 
     static func swiftTUI() -> Self {
         PackageDescription.Target.Dependency.product(name: "SwiftTUI", package: "SwiftTUI")
+    }
+
+    static func duckDB() -> Self {
+        PackageDescription.Target.Dependency.product(name: "DuckDB", package: "duckdb-swift")
     }
 }
 
