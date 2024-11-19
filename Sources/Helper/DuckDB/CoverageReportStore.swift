@@ -19,15 +19,22 @@ public struct DBKey {
     }
 }
 
+public enum StorageFactory {
+    public static func makeStore(dbType: DuckDBConnection.DBTType) async throws -> CoverageReportStore {
+        try await CoverageReportStoreImpl.makeStore(dbType: dbType)
+    }
+
+    public static func makeKey(from date: Foundation.Date, application: String) -> DBKey {
+        DBKey(date: date, application: application)
+    }
+}
+
 public protocol CoverageReportStore {
     func getAllEntries(for application: String?) async throws -> [DuckDBCoverage]
     func getEntry(for key: DBKey) async throws -> CoverageReport?
     func addEntry(_ entry: CoverageReport, for key: DBKey) async throws
     func replaceEntry(_ entry: CoverageReport, for key: DBKey) async throws
     func removeEntry(for key: DBKey) async throws
-
-    static func makeKey(from date: Foundation.Date, application: String) -> DBKey
-    static func makeStore(dbType: DuckDBConnection.DBTType) async throws -> CoverageReportStore
 }
 
 extension CoverageReportStore {
@@ -35,15 +42,11 @@ extension CoverageReportStore {
         try await getAllEntries(for: nil)
     }
 
-    public static func makeKey(from date: Foundation.Date, application: String) -> DBKey {
-        DBKey(date: date, application: application)
-    }
-
     public static func makeStore(dbType: DuckDBConnection.DBTType) async throws -> CoverageReportStore {
         let dbConnector = try DuckDBConnection(with: dbType)
         let store = try CoverageReportStoreImpl(duckDBConnection: dbConnector)
 
-        try await store.setup()
+        try? await store.setup()
 
         return store
     }
@@ -129,9 +132,10 @@ extension CoverageReportStoreImpl: CoverageReportStore {
     }
 
     public func addEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
-        var query = Query().insert(into: table, values: [applicationField.name: key.application,
-                                                         dateField.name: key.value,
-                                                         coverageField.name: encode(entry)]).build()
+        let query = Query()
+            .insert(into: table, values: [applicationField.name: key.application,
+                                          dateField.name: key.value,
+                                          coverageField.name: encode(entry)]).build()
 
         _ = try await connection().query(query)
     }

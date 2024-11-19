@@ -117,6 +117,26 @@ public struct CoverageReport: Coverage {
     }
 }
 
+extension CoverageReport {
+    /// Returns a new `CoverageReport` with the file paths modified to remove the given prefix.
+    public func removingCommonPrefix(_ commonPrefix: String) -> CoverageReport {
+        // Map over all targets and modify their file paths.
+        let updatedTargets = targets.map { target in
+            Target(
+                name: target.name,
+                files: target.files.map { file in
+                    File(
+                        name: file.name,
+                        path: file.path.replacingOccurrences(of: commonPrefix, with: ""),
+                        functions: file.functions
+                    )
+                }
+            )
+        }
+        return CoverageReport(targets: updatedTargets)
+    }
+}
+
 // MARK: - Target
 
 public struct Target: Coverage {

@@ -4,6 +4,7 @@ import Compare
 import Config
 import Coverage
 import Foundation
+import Migrate
 import Prototype
 import Report
 
@@ -21,6 +22,7 @@ struct App: AsyncParsableCommand {
                 CoverageCommand.self,
                 PrototypeCommand.self,
                 BuildCommand.self,
+                MigrateCommand.self,
                 ConfigCommand.self,
                 ReportCommand.self,
                 CompareCommand.self,

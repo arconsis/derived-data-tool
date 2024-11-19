@@ -10,6 +10,7 @@ extension PackageDescription.Target {
     static let config = TargetDefinition(name: "Config", path: "Sources/Command/Config")
     static let compare = TargetDefinition(name: "Compare", path: "Sources/Command/Compare")
     static let coverage = TargetDefinition(name: "Coverage", path: "Sources/Command/Coverage")
+    static let migrate = TargetDefinition(name: "Migrate", path: "Sources/Command/Migrate")
     static let dependencyInjection = TargetDefinition(name: "DependencyInjection", path: "Sources/DependencyInjection")
     static let helper = TargetDefinition(name: "Helper", path: "Sources/Helper")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
@@ -26,30 +27,24 @@ let package = Package(
     dependencies: [
         .argumentParserPackage(),
         .asyncAlgorithmsPackage(),
-//        .fluent(),
-//        .postgresDriver(),
         .duckDB(),
-//        .sqlDriver(),
         .globPatternPackage(),
         .swiftHTMLPackage(),
-//        .swiftSlashPackage(),
         .yamsPackage(),
-//        .swiftTUI(),
-//        .swifql(),
     ],
     targets: [
         .executableTarget(
             name: MyPackage.app.name,
             dependencies: [
                 .argumentParser(),
-//                .swiftTUI(),
                 .archive(),
-                .coverage(),
-                .compare(),
-                .dependencyInjection(),
-                .prototype(),
                 .build(),
+                .compare(),
                 .config(),
+                .coverage(),
+                .dependencyInjection(),
+                .migrate(),
+                .prototype(),
                 .report(),
             ],
             path: MyPackage.app.path
@@ -65,6 +60,13 @@ let package = Package(
             ],
             resources: [
                 .process("Resources/input.json"),
+            ]
+        ),
+        MyPackage.migrate.toTarget(
+            dependencies: [
+                .argumentParser(),
+                .dependencyInjection(),
+                .helper(),
             ]
         ),
         MyPackage.compare.toTarget(
@@ -112,16 +114,11 @@ let package = Package(
             dependencies: [
                 .asyncAlgorithms(),
                 .dependencyInjection(),
-//                .fluent(),
-//                .postgresDriver(),
-//                .sqlDriver(),
                 .duckDB(),
                 .globPattern(),
                 .shared(),
                 .swiftHTML(),
-//                .swiftSlash(),
                 .yams(),
-//                .swifql(),
             ],
             resources: [
                 .process("Resources/ccConfig.yml"),
@@ -145,6 +142,7 @@ let package = Package(
             dependencies: [
                 .coverage(),
                 .compare(),
+                .migrate(),
                 .build(),
                 .config(),
             ],
@@ -204,33 +202,9 @@ extension PackageDescription.Package.Dependency {
         PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0")
     }
 
-//    static func swiftSlashPackage() -> Package.Dependency {
-//        PPD.package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0")
-//    }
-
-//    static func fluent() -> Package.Dependency {
-//        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.1")
-//    }
-
-//    static func postgresDriver() -> Package.Dependency {
-//        PPD.package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0")
-//    }
-    
-//    static func sqlDriver() -> Package.Dependency {
-//        Package.Dependency.package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0")
-//    }
-
-//    static func swiftTUI() -> Package.Dependency {
-//        Package.Dependency.package(url: "https://github.com/rensbreur/SwiftTUI.git", branch: "main")
-//    }
-
     static func duckDB() -> Package.Dependency {
         Package.Dependency.package(url: "https://github.com/duckdb/duckdb-swift.git", from: "1.1.3")
     }
-
-//    static func swifql() -> Package.Dependency {
-//        .package(url: "https://github.com/MihaelIsaev/SwifQL.git", from: "2.0.0-beta.3.21.0")
-//    }
 }
 
 extension PackageDescription.Target.Dependency {
@@ -261,37 +235,9 @@ extension PackageDescription.Target.Dependency {
         Target.Dependency.product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
     }
 
-    /// ThirdParty: SwiftSlash Package (use as target.dependency)
-//    static func swiftSlash() -> Target.Dependency {
-//        Target.Dependency.product(name: "SwiftSlash", package: "SwiftSlash")
-//    }
-
-//    static func postgresKit() -> Target.Dependency {
-//        Target.Dependency.product(name: "PostgresKit", package: "postgres-kit")
-//    }
-//    static func fluent() -> Self {
-//        PackageDescription.Target.Dependency.product(name: "HummingbirdFluent", package: "hummingbird-fluent")
-//    }
-
-//    static func postgresDriver() -> Target.Dependency {
-//        Target.Dependency.product(name: "FluentPostgresDriver", package: "fluent-postgres-driver")
-//    }
-
-//    static func sqlDriver() -> Self {
-//        PackageDescription.Target.Dependency.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
-//    }
-
-//    static func swiftTUI() -> Self {
-//        PackageDescription.Target.Dependency.product(name: "SwiftTUI", package: "SwiftTUI")
-//    }
-
     static func duckDB() -> Self {
         PackageDescription.Target.Dependency.product(name: "DuckDB", package: "duckdb-swift")
     }
-
-//    static func swifql() -> Self {
-//        PackageDescription.Target.Dependency.product(name: "SwifQL", package: "SwifQL")
-//    }
 }
 
 extension PackageDescription.Target.Dependency {
@@ -317,6 +263,11 @@ extension PackageDescription.Target.Dependency {
     /// SubCommand: `coverage`: command to generate coverage report
     static func coverage() -> Target.Dependency {
         Target.Dependency.target(name: "Coverage")
+    }
+
+    /// SubCommand: `migrate`: command to generate migrate from old json storage to new database approach
+    static func migrate() -> Target.Dependency {
+        Target.Dependency.target(name: "Migrate")
     }
 
     /// SubCommand: `compare`: command to compare coverage reports

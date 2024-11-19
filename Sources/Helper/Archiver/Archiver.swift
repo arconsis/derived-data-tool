@@ -28,6 +28,7 @@ public class Archiver: HelperProtocol {
     private let archiveUrl: URL
     private var archives: [ArchivedFile] = []
     private let coder = CoverageMetaReportCoder()
+    private var isSetup: Bool = false
 
     public var sortedArchivedUrls: [URL] {
         sortedArchives.map { $0.url }
@@ -57,17 +58,22 @@ public class Archiver: HelperProtocol {
     public func lastReport(before creationDate: Date = Date()) throws -> CoverageMetaReport? {
         let relevantArchives = sortedArchives.filter { !Calendar.current.isDate($0.date, equalTo: creationDate, toGranularity: .day) }
         guard let archive = relevantArchives.first else { return nil }
-        return try retrieveReport(for: archive)
+        return try report(for: archive)
     }
 
     public func allReports() throws -> [CoverageMetaReport] {
-        try archives.map { try retrieveReport(for: $0) }
+        try archives.map { try report(for: $0) }
+    }
+
+    public func report(for archive: ArchivedFile) throws -> CoverageMetaReport {
+        return try coder.decode(contentOf: archive.url)
     }
 }
 
 private extension Archiver {
     func setScannedArchiveDirectory() async throws {
         archives = await scanArchiveDirectory()
+        isSetup = true
     }
 
     func scanArchiveDirectory() async -> [ArchivedFile] {
@@ -83,11 +89,9 @@ private extension Archiver {
         return URL(fileReferenceLiteralResourceName: "")
     }
 
-    func retrieveReport(for archive: ArchivedFile) throws -> CoverageMetaReport {
-        return try coder.decode(contentOf: archive.url)
-    }
 
     func prepareExistingArchives(lastReportDate: Date) async throws {
+        await prepareArchiver()
         archives = archives.filter { !Calendar.current.isDate($0.date, equalTo: lastReportDate, toGranularity: .day) }
         for archive in archives where !archive.isCompressed {
             let report: CoverageMetaReport = try coder.decode(contentOf: archive.url)
@@ -105,13 +109,20 @@ private extension Archiver {
         let url = archiveUrl.appending(pathComponent: filename)
         try fileHandler.writeData(data, at: url)
     }
+
+    func prepareArchiver() async {
+        if isSetup { return }
+        else {
+            try? await setup()
+        }
+    }
 }
 
 public extension Archiver {
     struct ArchivedFile {
-        let url: URL
-        let isCompressed: Bool
-        let date: Date
+        public let url: URL
+        public let isCompressed: Bool
+        public let date: Date
 
         init?(url: URL) {
             self.url = url
