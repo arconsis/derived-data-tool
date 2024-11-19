@@ -7,18 +7,31 @@
 
 import Foundation
 
+
 public enum DateFormat: CaseIterable {
+    /// yyyy-MM-dd
     case yearMontDay
+    /// yyyy-MM-dd HH:mm:ss
     case YearMonthDayHoursMinutesSeconds
+    /// yyyy.MM.dd_HH-mm-ss-ZZZZ
     case YearMonthDayHoursMinutesSecondsAndTimeZone
+    /// dd/MM/yyyy
     case dayMonthYear
+    /// dd MMM yyyy
     case dayAbbreviatedMonthYear
+    /// MMMM dd, yyyy
     case fullMonthDayYear
+    /// EEEE, MMMM dd, yyyy
     case fullWeekdayFullMonthNameDayYear
+    /// h:mm a
     case hoursMinutesWithAmPmIndicator
+    /// HH:mm:ss
     case hoursMinutesSecondsIn24hFormat
+    /// yyyy-MM-dd'T'HH:mm:ss.SSSZ
     case iso8601Format
+    /// MMM dd, yyyy 'at' h:mm a
     case abbreviatedMonthDayYearTimeInAmPmFormat
+    /// MMM dd, yyyy 'at' h:mm:ss
     case abbreviatedMonthDayYearTimeIn24hFormat
 
     private var format: String {
@@ -52,6 +65,8 @@ public enum DateFormat: CaseIterable {
 
     private var dateFormatter: DateFormatter {
         let dateformatter = DateFormatter()
+        dateformatter.calendar = Calendar(identifier: .gregorian)
+        dateformatter.timeZone = TimeZone(secondsFromGMT: 0)
         dateformatter.dateFormat = format
         return dateformatter
     }

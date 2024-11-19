@@ -21,7 +21,7 @@ extension PackageDescription.Target {
 typealias MyPackage = PackageDescription.Target
 
 let package = Package(
-    name: "CodeCoverage",
+    name: "DerivedDataTool",
     platforms: [
         .macOS(.v14),
     ],
@@ -168,6 +168,7 @@ let package = Package(
             path: "Tests/HelperTests",
             resources: [
                 .process("Resources/TestData.json"),
+                .process("Resources/TestData-tiny.json"),
             ]
         ),
 
