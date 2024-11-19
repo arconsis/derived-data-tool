@@ -14,8 +14,6 @@ extension PackageDescription.Target {
     static let helper = TargetDefinition(name: "Helper", path: "Sources/Helper")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
-    static let uiComponents = TargetDefinition(name: "UIComponents", path: "Sources/Repositories/UIComponents")
-    static let ui = TargetDefinition(name: "UI", path: "Sources/Command/UI")
 }
 
 typealias MyPackage = PackageDescription.Target
@@ -28,22 +26,23 @@ let package = Package(
     dependencies: [
         .argumentParserPackage(),
         .asyncAlgorithmsPackage(),
-        .fluent(),
-        .postgresDriver(),
+//        .fluent(),
+//        .postgresDriver(),
         .duckDB(),
-        .sqlDriver(),
+//        .sqlDriver(),
         .globPatternPackage(),
         .swiftHTMLPackage(),
-        .swiftSlashPackage(),
+//        .swiftSlashPackage(),
         .yamsPackage(),
-        .swiftTUI(),
+//        .swiftTUI(),
+//        .swifql(),
     ],
     targets: [
         .executableTarget(
             name: MyPackage.app.name,
             dependencies: [
                 .argumentParser(),
-                .swiftTUI(),
+//                .swiftTUI(),
                 .archive(),
                 .coverage(),
                 .compare(),
@@ -52,7 +51,6 @@ let package = Package(
                 .build(),
                 .config(),
                 .report(),
-                .ui(),
             ],
             path: MyPackage.app.path
         ),
@@ -109,29 +107,21 @@ let package = Package(
             .helper(),
         ]),
 
-        MyPackage.ui.toTarget(dependencies: [
-            .argumentParser(),
-            .swiftTUI(),
-            .uiComponents(),
-            .helper(),
-        ]),
         // MARK: HELPER
-        MyPackage.uiComponents.toTarget(dependencies: [
-            .swiftTUI(),
-        ]),
         MyPackage.helper.toTarget(
             dependencies: [
                 .asyncAlgorithms(),
                 .dependencyInjection(),
-                .fluent(),
-                .postgresDriver(),
-                .sqlDriver(),
+//                .fluent(),
+//                .postgresDriver(),
+//                .sqlDriver(),
                 .duckDB(),
                 .globPattern(),
                 .shared(),
                 .swiftHTML(),
-                .swiftSlash(),
+//                .swiftSlash(),
                 .yams(),
+//                .swifql(),
             ],
             resources: [
                 .process("Resources/ccConfig.yml"),
@@ -214,29 +204,33 @@ extension PackageDescription.Package.Dependency {
         PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0")
     }
 
-    static func swiftSlashPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0")
-    }
+//    static func swiftSlashPackage() -> Package.Dependency {
+//        PPD.package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0")
+//    }
 
-    static func fluent() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.1")
-    }
+//    static func fluent() -> Package.Dependency {
+//        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.1")
+//    }
 
-    static func postgresDriver() -> Package.Dependency {
-        PPD.package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0")
-    }
+//    static func postgresDriver() -> Package.Dependency {
+//        PPD.package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0")
+//    }
     
-    static func sqlDriver() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0")
-    }
+//    static func sqlDriver() -> Package.Dependency {
+//        Package.Dependency.package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0")
+//    }
 
-    static func swiftTUI() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/rensbreur/SwiftTUI.git", branch: "main")
-    }
+//    static func swiftTUI() -> Package.Dependency {
+//        Package.Dependency.package(url: "https://github.com/rensbreur/SwiftTUI.git", branch: "main")
+//    }
 
     static func duckDB() -> Package.Dependency {
         Package.Dependency.package(url: "https://github.com/duckdb/duckdb-swift.git", from: "1.1.3")
     }
+
+//    static func swifql() -> Package.Dependency {
+//        .package(url: "https://github.com/MihaelIsaev/SwifQL.git", from: "2.0.0-beta.3.21.0")
+//    }
 }
 
 extension PackageDescription.Target.Dependency {
@@ -268,39 +262,36 @@ extension PackageDescription.Target.Dependency {
     }
 
     /// ThirdParty: SwiftSlash Package (use as target.dependency)
-    static func swiftSlash() -> Target.Dependency {
-        Target.Dependency.product(name: "SwiftSlash", package: "SwiftSlash")
-    }
+//    static func swiftSlash() -> Target.Dependency {
+//        Target.Dependency.product(name: "SwiftSlash", package: "SwiftSlash")
+//    }
 
 //    static func postgresKit() -> Target.Dependency {
 //        Target.Dependency.product(name: "PostgresKit", package: "postgres-kit")
 //    }
-    static func fluent() -> Self {
-        PackageDescription.Target.Dependency.product(name: "HummingbirdFluent", package: "hummingbird-fluent")
-    }
-//    static func fluent() -> Target.Dependency {
-//        Target.Dependency.product(name: "Fluent", package: "fluent")
+//    static func fluent() -> Self {
+//        PackageDescription.Target.Dependency.product(name: "HummingbirdFluent", package: "hummingbird-fluent")
 //    }
 
-//    static func fluentKit() -> Target.Dependency {
-//        Target.Dependency.product(name: "FluentKit", package: "fluent-kit")
+//    static func postgresDriver() -> Target.Dependency {
+//        Target.Dependency.product(name: "FluentPostgresDriver", package: "fluent-postgres-driver")
 //    }
 
-    static func postgresDriver() -> Target.Dependency {
-        Target.Dependency.product(name: "FluentPostgresDriver", package: "fluent-postgres-driver")
-    }
+//    static func sqlDriver() -> Self {
+//        PackageDescription.Target.Dependency.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
+//    }
 
-    static func sqlDriver() -> Self {
-        PackageDescription.Target.Dependency.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
-    }
-
-    static func swiftTUI() -> Self {
-        PackageDescription.Target.Dependency.product(name: "SwiftTUI", package: "SwiftTUI")
-    }
+//    static func swiftTUI() -> Self {
+//        PackageDescription.Target.Dependency.product(name: "SwiftTUI", package: "SwiftTUI")
+//    }
 
     static func duckDB() -> Self {
         PackageDescription.Target.Dependency.product(name: "DuckDB", package: "duckdb-swift")
     }
+
+//    static func swifql() -> Self {
+//        PackageDescription.Target.Dependency.product(name: "SwifQL", package: "SwifQL")
+//    }
 }
 
 extension PackageDescription.Target.Dependency {
@@ -319,11 +310,6 @@ extension PackageDescription.Target.Dependency {
     /// Shared-DTOs: includes all `objects` that are needed in different packages
     static func shared() -> Target.Dependency {
         Target.Dependency.target(name: "Shared")
-    }
-
-    /// Repository: `UIComponents`: repository for UIComponents
-    static func uiComponents() -> Target.Dependency {
-        Target.Dependency.target(name: "UIComponents")
     }
 
     // MARK: Executable Commands
@@ -361,11 +347,6 @@ extension PackageDescription.Target.Dependency {
     /// SubCommand: `archiveTester`: command to test new stuff easily
     static func archive() -> Target.Dependency {
         Target.Dependency.target(name: "Archive")
-    }
-
-    /// SubCommand: `UI`: command to use UI
-    static func ui() -> Target.Dependency {
-        Target.Dependency.target(name: "UI")
     }
 }
 

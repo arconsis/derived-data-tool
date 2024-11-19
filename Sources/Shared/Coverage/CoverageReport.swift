@@ -37,16 +37,12 @@ public extension Coverage {
     }
 
     func decodeReport(from contentData: Data) throws -> TargetReports {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return try decoder.decode(TargetReports.self, from: contentData)
+        return try SingleDecoder.shared.decode(TargetReports.self, from: contentData)
     }
 
     func formattedJsonContent(from report: JSONReport, prettyPrint: Bool = true) -> String? {
         do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            let data = try encoder.encode(report)
+            let data = try SingleEncoder.shared.encode(report)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: prettyPrint ? .prettyPrinted : .sortedKeys)
             return String(decoding: jsonData, as: UTF8.self)

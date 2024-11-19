@@ -22,8 +22,7 @@ extension Template {
     }
 
     static func decode(json: Data) throws -> Self {
-        let decoder = JSONDecoder()
-        let dict = try decoder.decode([String: String].self, from: json)
+        let dict = try SingleDecoder.shared.decode([String: String].self, from: json)
         return decode(dict: dict)
     }
 

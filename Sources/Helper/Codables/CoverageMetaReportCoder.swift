@@ -24,14 +24,6 @@ struct CoverageMetaReportCoder {
 
     @Injected(\.logger) var logger
 
-    // MARK: - Decoder
-
-    private var decoder: JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
-    }
-
     func decode(contentOf url: URL) throws -> CoverageMetaReport {
         logger.log("DECODE:", url.lastPathComponent)
         do {
@@ -68,9 +60,9 @@ struct CoverageMetaReportCoder {
 
             let jsonSerializedData = try JSONSerialization.data(withJSONObject: jsonObject, options: .sortedKeys)
 
-            var coverageMetaReport = try? decoder.decode(CoverageMetaReport.self, from: jsonSerializedData)
+            var coverageMetaReport = try? SingleDecoder.shared.decode(CoverageMetaReport.self, from: jsonSerializedData)
             if coverageMetaReport == nil {
-                coverageMetaReport = try decoder.decode(CoverageMetaReport.self, from: data)
+                coverageMetaReport = try SingleDecoder.shared.decode(CoverageMetaReport.self, from: data)
             }
 
             return coverageMetaReport
@@ -96,9 +88,9 @@ struct CoverageMetaReportCoder {
 
             let jsonSerializedData = try JSONSerialization.data(withJSONObject: jsonObject, options: .sortedKeys)
 
-            var coverageMetaReport = try? decoder.decode(CoverageMetaReport.self, from: jsonSerializedData)
+            var coverageMetaReport = try? SingleDecoder.shared.decode(CoverageMetaReport.self, from: jsonSerializedData)
             if coverageMetaReport == nil {
-                coverageMetaReport = try decoder.decode(CoverageMetaReport.self, from: jsonData)
+                coverageMetaReport = try SingleDecoder.shared.decode(CoverageMetaReport.self, from: jsonData)
             }
 
             return coverageMetaReport
@@ -111,11 +103,10 @@ struct CoverageMetaReportCoder {
     // MARK: - ENCODER
 
     func encode(_ report: CoverageMetaReport, compressed: Bool = true) throws -> Data {
-        let encoder = JSONEncoder()
+        var encoder = SingleEncoder.shared
         if !compressed {
             encoder.outputFormatting = .prettyPrinted
         }
-        encoder.dateEncodingStrategy = .iso8601
         let data = try encoder.encode(report)
         if compressed {
             return try Compressor.compress(data)

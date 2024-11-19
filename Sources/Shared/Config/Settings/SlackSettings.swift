@@ -27,8 +27,7 @@ public struct SlackSettings: SettingsObjectify {
             throw SlackSettingsError.missing(key: Self.format)
         }
 
-        let decoder = JSONDecoder()
-        guard let jsonObject = try? decoder.decode([String: String].self, from: data) else {
+        guard let jsonObject = try? SingleDecoder.shared.decode([String: String].self, from: data) else {
             throw SlackSettingsError.missing(key: Self.format)
         }
 
@@ -40,8 +39,7 @@ public struct SlackSettings: SettingsObjectify {
 
         dict[Self.webhookKey] = webhookEnvironmentVariable
 
-        let encoder = JSONEncoder()
-        let jsonData = try encoder.encode(format)
+        let jsonData = try SingleEncoder.shared.encode(format)
         let json = String(data: jsonData, encoding: .utf8)
 
         dict[Self.format] = json

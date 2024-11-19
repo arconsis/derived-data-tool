@@ -20,18 +20,6 @@ final class CompressionTests: XCTestCase {
         let embedded: EmbeddedTestObject
     }
 
-    let jsonDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
-    }()
-
-    let jsonEncoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        return encoder
-    }()
-
     var fileHandler: FileHandler!
 
     static func makeObject() -> TestObject {
@@ -42,7 +30,7 @@ final class CompressionTests: XCTestCase {
         fileHandler = .init()
 
         let testObject = Self.makeObject()
-        let jsonObject = try jsonEncoder.encode(testObject)
+        let jsonObject = try SingleEncoder.shared.encode(testObject)
 
         let compressedData = try Compressor.compress(jsonObject)
 
@@ -56,7 +44,7 @@ final class CompressionTests: XCTestCase {
 
         let uncompressedData = try Compressor.decompress(data)
 
-        let uncompressedObject = try jsonDecoder.decode(TestObject.self, from: uncompressedData)
+        let uncompressedObject = try SingleDecoder.shared.decode(TestObject.self, from: uncompressedData)
 
         XCTAssertEqual(testObject, uncompressedObject)
 
@@ -76,12 +64,12 @@ final class CompressionTests: XCTestCase {
 
             let urlData = try Data(contentsOf: url)
 
-            guard let savedReport = try? jsonDecoder.decode(CoverageMetaReport.self, from: urlData) else {
+            guard let savedReport = try? SingleDecoder.shared.decode(CoverageMetaReport.self, from: urlData) else {
                 XCTFail("Resource Content is missing")
                 return
             }
 
-            let jsonData = try jsonEncoder.encode(savedReport)
+            let jsonData = try SingleEncoder.shared.encode(savedReport)
             print("RAW data: \(jsonData.count)")
 
             let compressedData = try Compressor.compress(jsonData)
@@ -99,7 +87,7 @@ final class CompressionTests: XCTestCase {
             print("RAW data: \(uncompressedData.count)")
             if uncompressedData.count != jsonData.count { print("RAW diff: \(uncompressedData.count - jsonData.count)") }
 
-            let uncompressedJsonObject = try jsonDecoder.decode(CoverageMetaReport.self, from: uncompressedData)
+            let uncompressedJsonObject = try SingleDecoder.shared.decode(CoverageMetaReport.self, from: uncompressedData)
 
             XCTAssertEqual(savedReport, uncompressedJsonObject)
 

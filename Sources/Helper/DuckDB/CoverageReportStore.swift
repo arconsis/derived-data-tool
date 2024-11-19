@@ -20,10 +20,10 @@ public struct DBKey {
 }
 
 public protocol CoverageReportStore {
-    func getAllEntries(for application: String) async throws -> [CoverageReport]
+    func getAllEntries(for application: String?) async throws -> [DuckDBCoverage]
     func getEntry(for key: DBKey) async throws -> CoverageReport?
     func addEntry(_ entry: CoverageReport, for key: DBKey) async throws
-    func updateEntry(_ entry: CoverageReport, for key: DBKey) async throws
+    func replaceEntry(_ entry: CoverageReport, for key: DBKey) async throws
     func removeEntry(for key: DBKey) async throws
 
     static func makeKey(from date: Foundation.Date, application: String) -> DBKey
@@ -31,6 +31,10 @@ public protocol CoverageReportStore {
 }
 
 extension CoverageReportStore {
+    public func getAllEntries() async throws -> [DuckDBCoverage] {
+        try await getAllEntries(for: nil)
+    }
+
     public static func makeKey(from date: Foundation.Date, application: String) -> DBKey {
         DBKey(date: date, application: application)
     }
@@ -46,6 +50,10 @@ extension CoverageReportStore {
 }
 
 public final class CoverageReportStoreImpl {
+    private let table: Query.Table = .named("coverage_reports")
+    private let applicationField: Query.Field = .named("application", type: "VARCHAR(255) NOT NULL")
+    private let dateField: Query.Field = .named("date", type: "VARCHAR(16) NOT NULL UNIQUE PRIMARY KEY")
+    private let coverageField: Query.Field = .named("coverage", type: "JSON NOT NULL")
 
     let duckDBConnection: DuckDBConnection
 
@@ -58,90 +66,93 @@ public final class CoverageReportStoreImpl {
     }
 
     func setup() async throws {
-        do {
-            _ = try duckDBConnection.connection.query(
-            """
-                CREATE TABLE coverage_reports (
-                application VARCHAR(255) NOT NULL,
-                date VARCHAR(15) NOT NULL UNIQUE,
-                coverage JSON NOT NULL,
-                PRIMARY KEY (date)
-                );
-            """
-            )
-        } catch {
-            print(error)
-            throw error
-        }
+        let query = Query()
+            .create(table: table,
+                    with: applicationField,
+                    dateField,
+                    coverageField)
+            .build()
+
+        _ = try duckDBConnection.connection.query(query)
     }
 }
 
 extension CoverageReportStoreImpl: CoverageReportStore {
-    public func getAllEntries(for application: String) async throws -> [Shared.CoverageReport] {
-        let result = try await connection().query("""
-            SELECT * FROM coverage_reports
-            GROUP BY date
-            ORDER BY date;
-        """)
+    public func getAllEntries(for application: String?) async throws -> [Shared.DuckDBCoverage] {
+        var queryBuilder = Query()
+            .getAll(from: table)
 
-        print(result)
+        if let application, !application.isEmpty {
+            queryBuilder = queryBuilder.whereCondition(.equals(applicationField, application))
+        }
 
-        return []
+        let query = queryBuilder.build()
+        let result = try await connection().query(query)
+
+        let applicationColumn = result[0].cast(to: String.self)
+        let dateColumn = result[1].cast(to: String.self)
+        let coverageColumn = result[2].cast(to: String.self)
+
+        let dataFrame = DataFrame(columns: [
+            TabularData.Column(applicationColumn).eraseToAnyColumn(),
+            TabularData.Column(dateColumn).eraseToAnyColumn(),
+            TabularData.Column(coverageColumn).eraseToAnyColumn(),
+        ])
+
+        var dCoverage: [Shared.DuckDBCoverage] = []
+        for row in dataFrame.rows {
+            guard
+                let application = row[applicationField.name, String.self],
+                let dateString = row[dateField.name, String.self],
+                let date = DateFormat.yearMontDay.date(from: dateString),
+                let json = row[coverageField.name, String.self],
+                let coverage = decode(json)
+            else {
+                continue
+            }
+
+            dCoverage.append(.init(application: application, date: date, coverage: coverage))
+
+        }
+
+        return dCoverage
     }
 
     public func getEntry(for key: DBKey) async throws -> Shared.CoverageReport? {
-        let result = try await connection().query("""
-        SELECT coverage
-        FROM coverage_reports
-        WHERE date = \(key.value);
-        """)
-
-        print(result)
-        return nil
+        let query = Query()
+            .select(coverageField)
+            .from(table)
+            .whereCondition(.equals(dateField, key.value))
+            .build()
+        let result = try await connection().query(query)
+        return decode(result.first)
     }
 
     public func addEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
-        do {
-            let result = try await connection().query(
-                "INSERT INTO coverage_reports (application, date, coverage) VALUES (\(key.application), \(key.value), \(encodeToJSONString(entry));")
+        var query = Query().insert(into: table, values: [applicationField.name: key.application,
+                                                         dateField.name: key.value,
+                                                         coverageField.name: encode(entry)]).build()
 
-            print(result)
-            print("DONE")
-        } catch {
-            print(error)
-            print(encodeToJSONString(entry))
-            throw error
-        }
+        _ = try await connection().query(query)
     }
 
-    public func updateEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
-        let result = try await connection().query("""
-        INSERT INTO coverage_reports (application, date, coverage)
-        VALUES (\(key.application), \(key.value), \(entry)
-        ON DUPLICATE KEY UPDATE
-        coverage = VALUES(\(entry));
-        """)
-
-        print(result)
-        print("DONE")
+    public func replaceEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
+        try await removeEntry(for: key)
+        try await addEntry(entry, for: key)
     }
 
     public func removeEntry(for key: DBKey) async throws {
-        let result = try await connection().query("""
-        DELETE FROM coverage_reports 
-        WHERE date = \(key.value);
+        let query = Query()
+            .delete(from: table)
+            .whereCondition(.equals(dateField, key.value))
+            .build()
 
-        """)
-
-        print(result)
-        print("DONE")
+        _ = try await connection().query(query)
     }
 
-    private func encodeToJSONString(_ value: Codable) -> String {
+    private func encode(_ value: Codable) -> String {
         do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            let data = try encoder.encode(value)
+            let data = try SingleEncoder.shared.encode(value)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .sortedKeys)
             return String(decoding: jsonData, as: UTF8.self)
@@ -150,5 +161,31 @@ extension CoverageReportStoreImpl: CoverageReportStore {
         }
     }
 
+    private func decode(_ resultElement: ResultSet.Element?) -> Shared.CoverageReport? {
+        guard let resultElement else { return nil }
+        let coverageColumn = resultElement.cast(to: String.self)
+        let dataFrame = DataFrame(columns: [
+            TabularData.Column(coverageColumn).eraseToAnyColumn()
+        ])
+
+        guard
+            let firstObject = dataFrame.columns.first,
+            let object = firstObject.assumingType(String.self).first,
+            let jsonString = object
+        else {
+            return nil
+        }
+
+        return decode(jsonString)
+    }
+
+    private func decode(_ json: String) -> Shared.CoverageReport? {
+        do {
+            guard let data = json.data(using: .utf8) else { return nil }
+            return try SingleDecoder.shared.decode(Shared.CoverageReport.self, from: data)
+        } catch {
+            return nil
+        }
+    }
 
 }

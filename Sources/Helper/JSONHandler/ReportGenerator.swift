@@ -47,9 +47,7 @@ public enum ReportGenerator {
     }
 
     public static func decodeReport(from contentData: Data) -> Result<JSONReport, CCCLIError> {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        if let report = try? decoder.decode(JSONReport.self, from: contentData) {
+        if let report = try? SingleDecoder.shared.decode(JSONReport.self, from: contentData) {
             return .success(report)
         }
 
@@ -102,9 +100,7 @@ extension ReportGenerator {
 
     @available(*, deprecated, message: "use Result-version")
     public static func decodeReport(from contentData: Data) throws -> JSONReport {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        if let report = try? decoder.decode(JSONReport.self, from: contentData) {
+        if let report = try? SingleDecoder.shared.decode(JSONReport.self, from: contentData) {
             return report
         }
 
@@ -123,12 +119,11 @@ public extension ReportGenerator {
 
 private extension ReportGenerator {
     static func decode<T: Decodable>(_ data: Data) throws -> T {
-        try JSONDecoder().decode(T.self, from: data)
+        try SingleDecoder.shared.decode(T.self, from: data)
     }
 
     static func encode(_ encodable: any Encodable) throws -> Data {
-        let encoder = JSONEncoder()
-        return try encoder.encode(encodable)
+        return try SingleEncoder.shared.encode(encodable)
     }
 
     static func encode(targetReports: TargetReports) throws -> Data {
