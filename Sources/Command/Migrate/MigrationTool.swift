@@ -77,6 +77,7 @@ extension MigrationTool: Runnable {
                 let coverageReport = report.coverage.removingCommonPrefix(commonPrefix)
 
                 let key = StorageFactory.makeKey(from: report.fileInfo.date, application: report.fileInfo.application)
+                // TODO: if for any reason the key already exists, we have to create a strategy for this and handle it 😩
                 try await storage.addEntry(coverageReport, for: key)
 
                 try fileHandler.deleteFile(at: archive.url)
