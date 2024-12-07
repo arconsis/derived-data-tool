@@ -103,7 +103,7 @@ struct CoverageMetaReportCoder {
     // MARK: - ENCODER
 
     func encode(_ report: CoverageMetaReport, compressed: Bool = true) throws -> Data {
-        var encoder = SingleEncoder.shared
+        let encoder = SingleEncoder.shared
         if !compressed {
             encoder.outputFormatting = .prettyPrinted
         }

@@ -25,18 +25,18 @@ let package = Package(
         .macOS(.v14),
     ],
     dependencies: [
-        .argumentParserPackage(),
-        .asyncAlgorithmsPackage(),
-        .duckDB(),
-        .globPatternPackage(),
-        .swiftHTMLPackage(),
-        .yamsPackage(),
+        AppDependencies.argumentParser.package,
+        AppDependencies.asyncAlgorithms.package,
+        AppDependencies.duckDB.package,
+        AppDependencies.globPattern.package,
+        AppDependencies.swiftHTML.package,
+        AppDependencies.yams.package,
     ],
     targets: [
         .executableTarget(
             name: MyPackage.app.name,
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .archive(),
                 .build(),
                 .compare(),
@@ -54,7 +54,7 @@ let package = Package(
 
         MyPackage.coverage.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ],
@@ -64,14 +64,14 @@ let package = Package(
         ),
         MyPackage.migrate.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.compare.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .shared(),
                 .helper(),
@@ -79,46 +79,46 @@ let package = Package(
         ),
         MyPackage.build.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.config.toTarget(dependencies: [
-            .argumentParser(),
+            AppDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
         ]
         ),
         MyPackage.report.toTarget(dependencies: [
-            .argumentParser(),
+            AppDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
         ]),
         MyPackage.prototype.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.archive.toTarget(dependencies: [
-            .argumentParser(),
+            AppDependencies.argumentParser.target,
             .helper(),
         ]),
 
         // MARK: HELPER
         MyPackage.helper.toTarget(
             dependencies: [
-                .asyncAlgorithms(),
+                AppDependencies.asyncAlgorithms.target,
+                AppDependencies.duckDB.target,
+                AppDependencies.globPattern.target,
+                AppDependencies.swiftHTML.target,
+                AppDependencies.yams.target,
                 .dependencyInjection(),
-                .duckDB(),
-                .globPattern(),
                 .shared(),
-                .swiftHTML(),
-                .yams(),
             ],
             resources: [
                 .process("Resources/ccConfig.yml"),
@@ -174,71 +174,6 @@ let package = Package(
         ),
     ]
 )
-
-extension PackageDescription.Package.Dependency {
-    typealias PPD = PackageDescription.Package.Dependency
-    /// ext. Dependency: ArgumentParser Package (use as package.dependency)
-    static func argumentParserPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0")
-    }
-
-    /// ext. Dependency: SwiftHtml Package (use as package.dependency)
-    static func swiftHTMLPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0")
-    }
-
-    /// ext. Dependency: Yams Package (use as package.dependency)
-    static func yamsPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5")
-    }
-
-    /// ext. Dependency: GlobPattern Package (use as package.dependency)
-    static func globPatternPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/ChimeHQ/GlobPattern", from: "0.1.1")
-    }
-
-    /// ext. Dependency: AsyncAlgorithms Package (use as package.dependency)
-    static func asyncAlgorithmsPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0")
-    }
-
-    static func duckDB() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/duckdb/duckdb-swift.git", from: "1.1.3")
-    }
-}
-
-extension PackageDescription.Target.Dependency {
-    // MARK: ThirdPArty Dependencies
-
-    /// ThirdParty: ArgumentParser Package (use as target.dependency)
-    static func argumentParser() -> Target.Dependency {
-        Target.Dependency.product(name: "ArgumentParser", package: "swift-argument-parser")
-    }
-
-    /// ThirdParty: SwiftHtml Package (use as target.dependency)
-    static func swiftHTML() -> Target.Dependency {
-        Target.Dependency.product(name: "SwiftHtml", package: "swift-html")
-    }
-
-    /// ThirdParty: Yams Package (use as target.dependency)
-    static func yams() -> Target.Dependency {
-        Target.Dependency.product(name: "Yams", package: "yams")
-    }
-
-    /// ThirdParty: GlobPattern Package (use as target.dependency)
-    static func globPattern() -> Target.Dependency {
-        Target.Dependency.product(name: "GlobPattern", package: "GlobPattern")
-    }
-
-    /// ThirdParty: AsyncAlgorithms Package (use as target.dependency)
-    static func asyncAlgorithms() -> Target.Dependency {
-        Target.Dependency.product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
-    }
-
-    static func duckDB() -> Self {
-        PackageDescription.Target.Dependency.product(name: "DuckDB", package: "duckdb-swift")
-    }
-}
 
 extension PackageDescription.Target.Dependency {
     // MARK: Internal packages
@@ -355,5 +290,59 @@ struct TargetDefinition {
                 swiftSettings: swiftSettings,
                 linkerSettings: linkerSettings,
                 plugins: plugins)
+    }
+}
+
+enum AppDependencies {
+    typealias PPD = PackageDescription.Package.Dependency
+
+    struct Reference {
+        let package: Package.Dependency
+        let target: PackageDescription.Target.Dependency
+    }
+
+    static var argumentParser: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/apple/swift-argument-parser.git", exact: "1.5.0"),
+            target: Target.Dependency.product(name: "ArgumentParser", package: "swift-argument-parser")
+        )
+    }
+
+    static var swiftHTML: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
+            target: Target.Dependency.product(name: "SwiftHtml", package: "swift-html")
+        )
+    }
+
+    /// ext. Dependency: Yams Package (use as package.dependency)
+    static var yams: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5"),
+            target: Target.Dependency.product(name: "Yams", package: "yams")
+        )
+    }
+
+    /// ext. Dependency: GlobPattern Package (use as package.dependency)
+    static var globPattern: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/ChimeHQ/GlobPattern", from: "0.1.1"),
+            target: Target.Dependency.product(name: "GlobPattern", package: "GlobPattern")
+        )
+    }
+
+    /// ext. Dependency: AsyncAlgorithms Package (use as package.dependency)
+    static var asyncAlgorithms: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0"),
+            target: Target.Dependency.product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
+        )
+    }
+
+    static var duckDB: Reference {
+        .init(
+            package: Package.Dependency.package(url: "https://github.com/duckdb/duckdb-swift.git", from: "1.1.3"),
+            target: PackageDescription.Target.Dependency.product(name: "DuckDB", package: "duckdb-swift")
+        )
     }
 }

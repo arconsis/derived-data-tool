@@ -59,10 +59,13 @@ struct Query {
     }
 
     // MARK: - CREATE TABLE
-    func create(table: Table, with fields: Field...) -> Self {
+    func create(table: Table, with fields: Field..., constraints: [String] = []) -> Self {
         var newQuery = self
         let fieldsDefinition = fields.map { "\($0.name) \($0.type ?? "TEXT")" }.joined(separator: ", ")
-        newQuery.components = ["CREATE TABLE \(table.name) (\(fieldsDefinition))"]
+        let constraintsString = constraints.joined(separator: ", ")
+        newQuery.components = [
+            "CREATE TABLE \(table.name) (\(fieldsDefinition)\(constraintsString.isEmpty ? "" : ", \(constraintsString)"))"
+        ]
         return newQuery
     }
 
@@ -127,49 +130,45 @@ extension Query.Table {
 }
 
 extension Query.Condition {
-    static func equals(_ field: Query.Field, _ value: String) -> Query.Condition {
-        Query.Condition(statement: "\(field.name) = '\(value)'")
+    static func equals(_ field: Query.Field, _ value: Any) -> Query.Condition {
+        Query.Condition(statement: "\(field.name) = \(formatValue(value))")
     }
 
     static func greaterThan(_ field: Query.Field, _ value: Int) -> Query.Condition {
         Query.Condition(statement: "\(field.name) > \(value)")
     }
+
+    private static func formatValue(_ value: Any) -> String {
+        if let string = value as? String {
+            return "'\(string)'"
+        } else {
+            return "\(value)"
+        }
+    }
 }
 
-// MARK: - Usage Example
+// MARK: - Database Schema
 
-//func main() {
-//    let usersTable = Table.named("users")
-//    let idField = Field.named("id", type: "INTEGER PRIMARY KEY")
-//    let nameField = Field.named("name", type: "TEXT")
-//    let ageField = Field.named("age", type: "INTEGER")
-//
-//    // Create Table
-//    var createTableQuery = Query()
-//        .createTable(usersTable, with: idField, nameField, ageField)
-//    print(createTableQuery.build())
-//
-//    // Insert Into Table
-//    var insertQuery = Query()
-//        .insertInto(usersTable, values: ["id": 1, "name": "Alice", "age": 30])
-//    print(insertQuery.build())
-//
-//    // Update Table
-//    var updateQuery = Query()
-//        .update(usersTable, set: ["name": "Alice Updated", "age": 31])
-//        .whereCondition(.equals(nameField, "Alice"))
-//    print(updateQuery.build())
-//
-//    // Delete From Table
-//    var deleteQuery = Query()
-//        .deleteFrom(usersTable)
-//        .whereCondition(.equals(nameField, "Alice Updated"))
-//    print(deleteQuery.build())
-//
-//    // Get All from Table
-//    var getAllQuery = Query()
-//        .getAll(from: usersTable)
-//    print(getAllQuery.build())
-//}
-//
-//main()
+extension Query {
+    static func createCoverageReportsTable() -> Query {
+        Query()
+            .create(
+                table: .named("CoverageReports"),
+                with: .named("id", type: "INTEGER NOT NULL PRIMARY KEY"),
+                      .named("date", type: "VARCHAR(500) NOT NULL UNIQUE")
+            )
+    }
+
+    static func createTargetsTable() -> Query {
+        Query()
+            .create(
+                table: .named("Targets"),
+                with: .named("id", type: "INTEGER NOT NULL PRIMARY KEY"),
+                      .named("coverage_report_id", type: "INTEGER NOT NULL"),
+                      .named("name", type: "VARCHAR(500) NOT NULL"),
+                      .named("executable_lines", type: "INTEGER NOT NULL"),
+                      .named("covered_lines", type: "INTEGER NOT NULL"),
+                constraints: ["FOREIGN KEY (coverage_report_id) REFERENCES CoverageReports (id)"]
+            )
+    }
+}

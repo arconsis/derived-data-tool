@@ -1,56 +1,14 @@
 //
 //  File.swift
-//  CodeCoverage
+//  DerivedDataTool
 //
-//  Created by Moritz Ellerbrock on 18.11.24.
+//  Created by Moritz Ellerbrock on 06.12.24.
 //
 
 import Foundation
 import DuckDB
 import Shared
 import TabularData
-
-public struct DBKey {
-    let value: String
-    let application: String
-    init (date: Foundation.Date, application: String) {
-        value = DateFormat.yearMontDay.string(from: date)
-        self.application = application
-    }
-}
-
-public enum StorageFactory {
-    public static func makeStore(dbType: DuckDBConnection.DBTType) async throws -> CoverageReportStore {
-        try await CoverageReportStoreImpl.makeStore(dbType: dbType)
-    }
-
-    public static func makeKey(from date: Foundation.Date, application: String) -> DBKey {
-        DBKey(date: date, application: application)
-    }
-}
-
-public protocol CoverageReportStore {
-    func getAllEntries(for application: String?) async throws -> [DuckDBCoverage]
-    func getEntry(for key: DBKey) async throws -> CoverageReport?
-    func addEntry(_ entry: CoverageReport, for key: DBKey) async throws
-    func replaceEntry(_ entry: CoverageReport, for key: DBKey) async throws
-    func removeEntry(for key: DBKey) async throws
-}
-
-extension CoverageReportStore {
-    public func getAllEntries() async throws -> [DuckDBCoverage] {
-        try await getAllEntries(for: nil)
-    }
-
-    public static func makeStore(dbType: DuckDBConnection.DBTType) async throws -> CoverageReportStore {
-        let dbConnector = try DuckDBConnection(with: dbType)
-        let store = try CoverageReportStoreImpl(duckDBConnection: dbConnector)
-
-        try? await store.setup()
-
-        return store
-    }
-}
 
 public final class CoverageReportStoreImpl {
     private let table: Query.Table = .named("coverage_reports")
@@ -81,7 +39,7 @@ public final class CoverageReportStoreImpl {
 }
 
 extension CoverageReportStoreImpl: CoverageReportStore {
-    public func getAllEntries(for application: String?) async throws -> [Shared.DuckDBCoverage] {
+    public func getAllEntries(for application: String?) async throws -> [DuckDBCoverage] {
         var queryBuilder = Query()
             .getAll(from: table)
 
@@ -102,7 +60,7 @@ extension CoverageReportStoreImpl: CoverageReportStore {
             TabularData.Column(coverageColumn).eraseToAnyColumn(),
         ])
 
-        var dCoverage: [Shared.DuckDBCoverage] = []
+        var dCoverage: [DuckDBCoverage] = []
         for row in dataFrame.rows {
             guard
                 let application = row[applicationField.name, String.self],
@@ -191,5 +149,4 @@ extension CoverageReportStoreImpl: CoverageReportStore {
             return nil
         }
     }
-
 }
