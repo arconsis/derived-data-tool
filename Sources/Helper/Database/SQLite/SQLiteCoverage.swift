@@ -6,19 +6,44 @@
 //
 
 import Foundation
+import Shared
 
-public struct SQLiteCoverage: Identifiable, Codable {
-    public struct Target: Identifiable, Codable {
-        public let id: Int
-        public let coverageReportID: Int
-        public let name: String
-        public let executableLines: Int
-        public let coveredLines: Int
+struct SQLiteCoverage: Identifiable, Codable {
+    struct Target: Identifiable, Codable {
+        let id: Int?
+        let coverageReportID: Int?
+        let name: String
+        let executableLines: Int
+        let coveredLines: Int
     }
 
-    public let id: Int
-    public let date: String
-    public internal(set) var targets: [Target]
+    let id: Int?
+    let date: String
+    var targets: [Target]
 }
 
 
+extension SQLiteCoverage {
+    init(with coverageReport: CoverageMetaReport) {
+        self.id = nil
+        self.date = DateFormat.yearMontDay.string(from: coverageReport.fileInfo.date)
+        self.targets = coverageReport.coverage.targets.map { .init(with: $0) }
+    }
+
+    func toDTO() -> CoverageReport {
+        .init(id: id!, date: date, targets: targets.map { $0.toDTO() })
+    }
+}
+
+extension SQLiteCoverage.Target {
+    init(with target: Shared.Target) {
+        self.id = nil
+        self.coverageReportID = nil
+        self.name = target.name
+        self.executableLines = target.executableLines
+        self.coveredLines = target.coveredLines
+    }
+    func toDTO() -> CoverageReport.Target {
+        .init(id: id!, coverageReportID: coverageReportID!, name: name, executableLines: executableLines, coveredLines: coveredLines)
+    }
+}

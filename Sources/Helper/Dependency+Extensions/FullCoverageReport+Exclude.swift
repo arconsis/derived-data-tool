@@ -1,5 +1,5 @@
 //
-//  CoverageReport+Exclude.swift
+//  FullCoverageReport+Exclude.swift
 //
 //
 //  Created by Moritz Ellerbrock on 11.05.23.
@@ -9,7 +9,7 @@ import DependencyInjection
 import Foundation
 import Shared
 
-public extension CoverageReport {
+public extension FullCoverageReport {
     private var logger: Loggerable {
         InjectedValues[\.logger]
     }

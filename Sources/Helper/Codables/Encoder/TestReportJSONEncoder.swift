@@ -17,7 +17,7 @@ struct TestReportJSONEncoder: TestReportEncoder {
         try encodeCoverage(target)
     }
 
-    func encode(_ coverageReport: CoverageReport) throws -> String {
+    func encode(_ coverageReport: FullCoverageReport) throws -> String {
         try encodeCoverage(coverageReport)
     }
 

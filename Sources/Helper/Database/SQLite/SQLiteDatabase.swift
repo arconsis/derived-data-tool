@@ -121,14 +121,19 @@ class SQLiteDatabase {
     }
 
     // Convenience functions:
-    func fetchCoverageReport(byID id: Int) throws -> [SQLiteCoverage] {
-        return try fetchCoverageReports(filter: .id(id))
+    func fetchCoverageReport(byID id: Int) throws -> CoverageReport? {
+        let reports: [SQLiteCoverage] = try fetchCoverageReports(filter: .id(id))
+        return reports.first?.toDTO()
     }
 
-    func fetchCoverageReports(onDate date: Date) throws -> SQLiteCoverage? {
+    func fetchCoverageReports(onDate date: Date) throws -> CoverageReport? {
         let dateString: String = DateFormat.yearMontDay.string(from: date)
         let reports: [SQLiteCoverage] = try fetchCoverageReports(filter: .date(dateString))
-        return reports.first
+        return reports.first?.toDTO()
+    }
+
+    func addCoverageReport(_ report: FullCoverageReport) throws {
+
     }
 
     // MARK: - SQLite Errors

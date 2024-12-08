@@ -17,13 +17,13 @@ public enum TestReportDecoderError: Error {
 }
 
 public protocol TestReportEncoder {
-    func encode(_: CoverageReport) throws -> String
+    func encode(_: FullCoverageReport) throws -> String
     func encode(_: TargetReports) throws -> String
     func encode(_: File) throws -> String
     func encode(_: Target) throws -> String
 }
 
 public protocol TestReportDecoder {
-    func decode(_: String) throws -> CoverageReport
+    func decode(_: String) throws -> FullCoverageReport
     func decode(_: String) throws -> TargetReports
 }

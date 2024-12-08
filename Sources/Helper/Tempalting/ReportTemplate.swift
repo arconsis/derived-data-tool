@@ -105,7 +105,7 @@ extension Template {
             }
         }
 
-        private func list(in report: CoverageReport, previous _: CoverageReport?) throws -> [Target] {
+        private func list(in report: FullCoverageReport, previous _: FullCoverageReport?) throws -> [Target] {
             switch list {
             case .date,
                  .compare:
@@ -147,7 +147,7 @@ extension Template {
             }
         }
 
-        private func compare(in _: CoverageReport, previous _: CoverageReport?) -> [ComparingTargets] {
+        private func compare(in _: FullCoverageReport, previous _: FullCoverageReport?) -> [ComparingTargets] {
             return []
         }
 

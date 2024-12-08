@@ -79,7 +79,7 @@ extension CoverageReportStoreImpl: CoverageReportStore {
         return dCoverage
     }
 
-    public func getEntry(for key: DBKey) async throws -> Shared.CoverageReport? {
+    public func getEntry(for key: DBKey) async throws -> Shared.FullCoverageReport? {
         let query = Query()
             .select(coverageField)
             .from(table)
@@ -89,7 +89,7 @@ extension CoverageReportStoreImpl: CoverageReportStore {
         return decode(result.first)
     }
 
-    public func addEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
+    public func addEntry(_ entry: Shared.FullCoverageReport, for key: DBKey) async throws {
         let query = Query()
             .insert(into: table, values: [applicationField.name: key.application,
                                           dateField.name: key.value,
@@ -98,7 +98,7 @@ extension CoverageReportStoreImpl: CoverageReportStore {
         _ = try await connection().query(query)
     }
 
-    public func replaceEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
+    public func replaceEntry(_ entry: Shared.FullCoverageReport, for key: DBKey) async throws {
         try await removeEntry(for: key)
         try await addEntry(entry, for: key)
     }
@@ -123,7 +123,7 @@ extension CoverageReportStoreImpl: CoverageReportStore {
         }
     }
 
-    private func decode(_ resultElement: ResultSet.Element?) -> Shared.CoverageReport? {
+    private func decode(_ resultElement: ResultSet.Element?) -> Shared.FullCoverageReport? {
         guard let resultElement else { return nil }
         let coverageColumn = resultElement.cast(to: String.self)
         let dataFrame = DataFrame(columns: [
@@ -141,10 +141,10 @@ extension CoverageReportStoreImpl: CoverageReportStore {
         return decode(jsonString)
     }
 
-    private func decode(_ json: String) -> Shared.CoverageReport? {
+    private func decode(_ json: String) -> Shared.FullCoverageReport? {
         do {
             guard let data = json.data(using: .utf8) else { return nil }
-            return try SingleDecoder.shared.decode(Shared.CoverageReport.self, from: data)
+            return try SingleDecoder.shared.decode(Shared.FullCoverageReport.self, from: data)
         } catch {
             return nil
         }

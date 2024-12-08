@@ -10,9 +10,9 @@ import Shared
 
 public protocol CoverageReportStore {
     func getAllEntries(for application: String?) async throws -> [DuckDBCoverage]
-    func getEntry(for key: DBKey) async throws -> CoverageReport?
-    func addEntry(_ entry: CoverageReport, for key: DBKey) async throws
-    func replaceEntry(_ entry: CoverageReport, for key: DBKey) async throws
+    func getEntry(for key: DBKey) async throws -> FullCoverageReport?
+    func addEntry(_ entry: FullCoverageReport, for key: DBKey) async throws
+    func replaceEntry(_ entry: FullCoverageReport, for key: DBKey) async throws
     func removeEntry(for key: DBKey) async throws
 }
 

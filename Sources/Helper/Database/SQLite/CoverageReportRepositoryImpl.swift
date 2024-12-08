@@ -28,11 +28,11 @@ extension CoverageReportRepositoryImpl: CoverageReportRepository {
         fatalError("Not yet implemented")
     }
 
-    func addEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
+    func addEntry(_ entry: Shared.FullCoverageReport, for key: DBKey) async throws {
         fatalError("Not yet implemented")
     }
 
-    func replaceEntry(_ entry: Shared.CoverageReport, for key: DBKey) async throws {
+    func replaceEntry(_ entry: Shared.FullCoverageReport, for key: DBKey) async throws {
         fatalError("Not yet implemented")
     }
 

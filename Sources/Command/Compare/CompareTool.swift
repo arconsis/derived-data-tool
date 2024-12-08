@@ -83,7 +83,7 @@ private extension CompareTool {
         await fileHandler.findXCResultfiles(at: url)
     }
 
-    func coverageReport(for xcFile: XCResultFile) async throws -> CoverageReport {
+    func coverageReport(for xcFile: XCResultFile) async throws -> FullCoverageReport {
         let jsonResult = await tools.xccov(filePath: xcFile.url)
         guard
             let json = jsonResult.value,

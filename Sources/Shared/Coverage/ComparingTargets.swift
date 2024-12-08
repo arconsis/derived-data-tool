@@ -30,7 +30,7 @@ public struct ComparingTargets {
         return combinations
     }
 
-    public static func combine(_ current: CoverageReport, _ previous: CoverageReport?) -> [ComparingTargets] {
+    public static func combine(_ current: FullCoverageReport, _ previous: FullCoverageReport?) -> [ComparingTargets] {
         return combine(current.targets, previous?.targets)
     }
 
