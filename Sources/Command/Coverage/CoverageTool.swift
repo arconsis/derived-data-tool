@@ -150,8 +150,7 @@ private extension CoverageTool {
         return codeCoverageReports
     }
 
-    func process(_ coverageReports: [CoverageMetaReport],
-                 rootUrl _: URL) async throws
+    func process(_ coverageReports: [CoverageMetaReport], rootUrl _: URL) async throws
     {
         guard coverageReports.count >= 1 else { throw CoverageError.noResultsToWorkWith }
 

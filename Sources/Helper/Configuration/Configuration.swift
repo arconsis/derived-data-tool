@@ -79,7 +79,7 @@ extension ConfigFactory {
     enum ConfigFactoryError: Errorable {
         case noConfigFileFoundAt(String)
 
-        var printsHelp: Bool { true }
-        var errorDescription: String? { localizedDescription }
+        var printsHelp: Bool { false }
+        var errorDescription: String? { "Config file not found. It is needed for any furhter operation." }
     }
 }

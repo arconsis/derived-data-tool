@@ -64,8 +64,8 @@ public final class ReportCommand: AsyncParsableCommand {
                 parameters["coverage"] = ""
             }
 
-            let data = try JSONEncoder().encode(parameters)
-            let object = try JSONDecoder().decode(SlackHttpBody.self, from: data)
+            let data = try SingleEncoder.shared.encode(parameters)
+            let object = try SingleDecoder.shared.decode(SlackHttpBody.self, from: data)
 
             let request = try await tools.postRequest(with: object)
 
@@ -176,7 +176,7 @@ extension ReportCommand.ReportCommandToolWrapper {
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
         request.timeoutInterval = 20
 
-        guard let body = try? JSONEncoder().encode(object) else {
+        guard let body = try? SingleEncoder.shared.encode(object) else {
             throw ReportError.invalidPayload
         }
 

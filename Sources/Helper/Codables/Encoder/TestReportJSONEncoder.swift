@@ -17,14 +17,12 @@ struct TestReportJSONEncoder: TestReportEncoder {
         try encodeCoverage(target)
     }
 
-    func encode(_ coverageReport: CoverageReport) throws -> String {
+    func encode(_ coverageReport: FullCoverageReport) throws -> String {
         try encodeCoverage(coverageReport)
     }
 
     func encode(_ targetReports: TargetReports) throws -> String {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(targetReports)
+        let data = try SingleEncoder.shared.encode(targetReports)
         guard let value = String(data: data, encoding: .utf8) else {
             throw TestReportEncoderError.unknown
         }
@@ -32,9 +30,7 @@ struct TestReportJSONEncoder: TestReportEncoder {
     }
 
     private func encodeCoverage(_ coverage: any Coverage) throws -> String {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(coverage)
+        let data = try SingleEncoder.shared.encode(coverage)
         guard let value = String(data: data, encoding: .utf8) else {
             throw TestReportEncoderError.unknown
         }

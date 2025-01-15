@@ -10,48 +10,42 @@ extension PackageDescription.Target {
     static let config = TargetDefinition(name: "Config", path: "Sources/Command/Config")
     static let compare = TargetDefinition(name: "Compare", path: "Sources/Command/Compare")
     static let coverage = TargetDefinition(name: "Coverage", path: "Sources/Command/Coverage")
+    static let migrate = TargetDefinition(name: "Migrate", path: "Sources/Command/Migrate")
     static let dependencyInjection = TargetDefinition(name: "DependencyInjection", path: "Sources/DependencyInjection")
     static let helper = TargetDefinition(name: "Helper", path: "Sources/Helper")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
-    static let uiComponents = TargetDefinition(name: "UIComponents", path: "Sources/Repositories/UIComponents")
-    static let ui = TargetDefinition(name: "UI", path: "Sources/Command/UI")
 }
 
 typealias MyPackage = PackageDescription.Target
 
 let package = Package(
-    name: "CodeCoverage",
+    name: "DerivedDataTool",
     platforms: [
         .macOS(.v14),
     ],
     dependencies: [
-        .argumentParserPackage(),
-        .asyncAlgorithmsPackage(),
-        .fluent(),
-        .postgresDriver(),
-        .sqlDriver(),
-        .globPatternPackage(),
-        .swiftHTMLPackage(),
-        .swiftSlashPackage(),
-        .yamsPackage(),
-        .swiftTUI(),
+        AppDependencies.argumentParser.package,
+        AppDependencies.asyncAlgorithms.package,
+        AppDependencies.duckDB.package,
+        AppDependencies.globPattern.package,
+        AppDependencies.swiftHTML.package,
+        AppDependencies.yams.package,
     ],
     targets: [
         .executableTarget(
             name: MyPackage.app.name,
             dependencies: [
-                .argumentParser(),
-                .swiftTUI(),
+                AppDependencies.argumentParser.target,
                 .archive(),
-                .coverage(),
-                .compare(),
-                .dependencyInjection(),
-                .prototype(),
                 .build(),
+                .compare(),
                 .config(),
+                .coverage(),
+                .dependencyInjection(),
+                .migrate(),
+                .prototype(),
                 .report(),
-                .ui(),
             ],
             path: MyPackage.app.path
         ),
@@ -60,7 +54,7 @@ let package = Package(
 
         MyPackage.coverage.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ],
@@ -68,9 +62,16 @@ let package = Package(
                 .process("Resources/input.json"),
             ]
         ),
+        MyPackage.migrate.toTarget(
+            dependencies: [
+                AppDependencies.argumentParser.target,
+                .dependencyInjection(),
+                .helper(),
+            ]
+        ),
         MyPackage.compare.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .shared(),
                 .helper(),
@@ -78,58 +79,46 @@ let package = Package(
         ),
         MyPackage.build.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.config.toTarget(dependencies: [
-            .argumentParser(),
+            AppDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
         ]
         ),
         MyPackage.report.toTarget(dependencies: [
-            .argumentParser(),
+            AppDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
         ]),
         MyPackage.prototype.toTarget(
             dependencies: [
-                .argumentParser(),
+                AppDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.archive.toTarget(dependencies: [
-            .argumentParser(),
+            AppDependencies.argumentParser.target,
             .helper(),
         ]),
 
-        MyPackage.ui.toTarget(dependencies: [
-            .argumentParser(),
-            .swiftTUI(),
-            .uiComponents(),
-            .helper(),
-        ]),
         // MARK: HELPER
-        MyPackage.uiComponents.toTarget(dependencies: [
-            .swiftTUI(),
-        ]),
         MyPackage.helper.toTarget(
             dependencies: [
-                .asyncAlgorithms(),
+                AppDependencies.asyncAlgorithms.target,
+                AppDependencies.duckDB.target,
+                AppDependencies.globPattern.target,
+                AppDependencies.swiftHTML.target,
+                AppDependencies.yams.target,
                 .dependencyInjection(),
-                .fluent(),
-                .postgresDriver(),
-                .sqlDriver(),
-                .globPattern(),
                 .shared(),
-                .swiftHTML(),
-                .swiftSlash(),
-                .yams(),
             ],
             resources: [
                 .process("Resources/ccConfig.yml"),
@@ -153,6 +142,7 @@ let package = Package(
             dependencies: [
                 .coverage(),
                 .compare(),
+                .migrate(),
                 .build(),
                 .config(),
             ],
@@ -166,6 +156,7 @@ let package = Package(
             path: "Tests/HelperTests",
             resources: [
                 .process("Resources/TestData.json"),
+                .process("Resources/TestData-tiny.json"),
             ]
         ),
 
@@ -183,114 +174,6 @@ let package = Package(
         ),
     ]
 )
-
-extension PackageDescription.Package.Dependency {
-    typealias PPD = PackageDescription.Package.Dependency
-    /// ext. Dependency: ArgumentParser Package (use as package.dependency)
-    static func argumentParserPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0")
-    }
-
-    /// ext. Dependency: SwiftHtml Package (use as package.dependency)
-    static func swiftHTMLPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0")
-    }
-
-    /// ext. Dependency: Yams Package (use as package.dependency)
-    static func yamsPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5")
-    }
-
-    /// ext. Dependency: GlobPattern Package (use as package.dependency)
-    static func globPatternPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/ChimeHQ/GlobPattern", from: "0.1.1")
-    }
-
-    /// ext. Dependency: AsyncAlgorithms Package (use as package.dependency)
-    static func asyncAlgorithmsPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0")
-    }
-
-    static func swiftSlashPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0")
-    }
-
-    static func fluent() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.1")
-    }
-
-    static func postgresDriver() -> Package.Dependency {
-        PPD.package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0")
-    }
-    
-    static func sqlDriver() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0")
-    }
-
-    static func swiftTUI() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/rensbreur/SwiftTUI.git", branch: "main")
-    }
-}
-
-extension PackageDescription.Target.Dependency {
-    // MARK: ThirdPArty Dependencies
-
-    /// ThirdParty: ArgumentParser Package (use as target.dependency)
-    static func argumentParser() -> Target.Dependency {
-        Target.Dependency.product(name: "ArgumentParser", package: "swift-argument-parser")
-    }
-
-    /// ThirdParty: SwiftHtml Package (use as target.dependency)
-    static func swiftHTML() -> Target.Dependency {
-        Target.Dependency.product(name: "SwiftHtml", package: "swift-html")
-    }
-
-    /// ThirdParty: Yams Package (use as target.dependency)
-    static func yams() -> Target.Dependency {
-        Target.Dependency.product(name: "Yams", package: "yams")
-    }
-
-    /// ThirdParty: GlobPattern Package (use as target.dependency)
-    static func globPattern() -> Target.Dependency {
-        Target.Dependency.product(name: "GlobPattern", package: "GlobPattern")
-    }
-
-    /// ThirdParty: AsyncAlgorithms Package (use as target.dependency)
-    static func asyncAlgorithms() -> Target.Dependency {
-        Target.Dependency.product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
-    }
-
-    /// ThirdParty: SwiftSlash Package (use as target.dependency)
-    static func swiftSlash() -> Target.Dependency {
-        Target.Dependency.product(name: "SwiftSlash", package: "SwiftSlash")
-    }
-
-//    static func postgresKit() -> Target.Dependency {
-//        Target.Dependency.product(name: "PostgresKit", package: "postgres-kit")
-//    }
-    static func fluent() -> Self {
-        PackageDescription.Target.Dependency.product(name: "HummingbirdFluent", package: "hummingbird-fluent")
-    }
-//    static func fluent() -> Target.Dependency {
-//        Target.Dependency.product(name: "Fluent", package: "fluent")
-//    }
-
-//    static func fluentKit() -> Target.Dependency {
-//        Target.Dependency.product(name: "FluentKit", package: "fluent-kit")
-//    }
-
-    static func postgresDriver() -> Target.Dependency {
-        Target.Dependency.product(name: "FluentPostgresDriver", package: "fluent-postgres-driver")
-    }
-
-    static func sqlDriver() -> Self {
-        PackageDescription.Target.Dependency.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
-    }
-
-    static func swiftTUI() -> Self {
-        PackageDescription.Target.Dependency.product(name: "SwiftTUI", package: "SwiftTUI")
-    }
-}
 
 extension PackageDescription.Target.Dependency {
     // MARK: Internal packages
@@ -310,16 +193,16 @@ extension PackageDescription.Target.Dependency {
         Target.Dependency.target(name: "Shared")
     }
 
-    /// Repository: `UIComponents`: repository for UIComponents
-    static func uiComponents() -> Target.Dependency {
-        Target.Dependency.target(name: "UIComponents")
-    }
-
     // MARK: Executable Commands
 
     /// SubCommand: `coverage`: command to generate coverage report
     static func coverage() -> Target.Dependency {
         Target.Dependency.target(name: "Coverage")
+    }
+
+    /// SubCommand: `migrate`: command to generate migrate from old json storage to new database approach
+    static func migrate() -> Target.Dependency {
+        Target.Dependency.target(name: "Migrate")
     }
 
     /// SubCommand: `compare`: command to compare coverage reports
@@ -350,11 +233,6 @@ extension PackageDescription.Target.Dependency {
     /// SubCommand: `archiveTester`: command to test new stuff easily
     static func archive() -> Target.Dependency {
         Target.Dependency.target(name: "Archive")
-    }
-
-    /// SubCommand: `UI`: command to use UI
-    static func ui() -> Target.Dependency {
-        Target.Dependency.target(name: "UI")
     }
 }
 
@@ -412,5 +290,59 @@ struct TargetDefinition {
                 swiftSettings: swiftSettings,
                 linkerSettings: linkerSettings,
                 plugins: plugins)
+    }
+}
+
+enum AppDependencies {
+    typealias PPD = PackageDescription.Package.Dependency
+
+    struct Reference {
+        let package: Package.Dependency
+        let target: PackageDescription.Target.Dependency
+    }
+
+    static var argumentParser: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/apple/swift-argument-parser.git", exact: "1.5.0"),
+            target: Target.Dependency.product(name: "ArgumentParser", package: "swift-argument-parser")
+        )
+    }
+
+    static var swiftHTML: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
+            target: Target.Dependency.product(name: "SwiftHtml", package: "swift-html")
+        )
+    }
+
+    /// ext. Dependency: Yams Package (use as package.dependency)
+    static var yams: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5"),
+            target: Target.Dependency.product(name: "Yams", package: "yams")
+        )
+    }
+
+    /// ext. Dependency: GlobPattern Package (use as package.dependency)
+    static var globPattern: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/ChimeHQ/GlobPattern", from: "0.1.1"),
+            target: Target.Dependency.product(name: "GlobPattern", package: "GlobPattern")
+        )
+    }
+
+    /// ext. Dependency: AsyncAlgorithms Package (use as package.dependency)
+    static var asyncAlgorithms: Reference {
+        .init(
+            package: PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0"),
+            target: Target.Dependency.product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
+        )
+    }
+
+    static var duckDB: Reference {
+        .init(
+            package: Package.Dependency.package(url: "https://github.com/duckdb/duckdb-swift.git", from: "1.1.3"),
+            target: PackageDescription.Target.Dependency.product(name: "DuckDB", package: "duckdb-swift")
+        )
     }
 }

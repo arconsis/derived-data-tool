@@ -4,9 +4,9 @@ import Compare
 import Config
 import Coverage
 import Foundation
+import Migrate
 import Prototype
 import Report
-import UI
 
 @main
 struct App: AsyncParsableCommand {
@@ -22,10 +22,10 @@ struct App: AsyncParsableCommand {
                 CoverageCommand.self,
                 PrototypeCommand.self,
                 BuildCommand.self,
+                MigrateCommand.self,
                 ConfigCommand.self,
                 ReportCommand.self,
                 CompareCommand.self,
-                UICommand.self,
             ]
         #else
             return [
@@ -33,7 +33,6 @@ struct App: AsyncParsableCommand {
                 BuildCommand.self,
                 ConfigCommand.self,
                 ReportCommand.self,
-                UICommand.self,
             ]
         #endif
     }

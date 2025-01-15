@@ -9,7 +9,7 @@ import Foundation
 import Shared
 
 struct GithubPageEncoder: TestReportEncoder {
-    func encode(_: CoverageReport) throws -> String {
+    func encode(_: FullCoverageReport) throws -> String {
         ""
     }
 

@@ -22,8 +22,7 @@ extension Template {
     }
 
     static func decode(json: Data) throws -> Self {
-        let decoder = JSONDecoder()
-        let dict = try decoder.decode([String: String].self, from: json)
+        let dict = try SingleDecoder.shared.decode([String: String].self, from: json)
         return decode(dict: dict)
     }
 
@@ -106,7 +105,7 @@ extension Template {
             }
         }
 
-        private func list(in report: CoverageReport, previous _: CoverageReport?) throws -> [Target] {
+        private func list(in report: FullCoverageReport, previous _: FullCoverageReport?) throws -> [Target] {
             switch list {
             case .date,
                  .compare:
@@ -148,7 +147,7 @@ extension Template {
             }
         }
 
-        private func compare(in _: CoverageReport, previous _: CoverageReport?) -> [ComparingTargets] {
+        private func compare(in _: FullCoverageReport, previous _: FullCoverageReport?) -> [ComparingTargets] {
             return []
         }
 

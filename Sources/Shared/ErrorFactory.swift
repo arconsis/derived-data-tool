@@ -9,6 +9,7 @@ import Foundation
 
 public protocol Errorable: LocalizedError {
     var printsHelp: Bool { get }
+    var errorDescription: String? { get }
 }
 
 public struct BaseError: Errorable {

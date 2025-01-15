@@ -24,7 +24,7 @@ public class Comparer {
         archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveUrl)
     }
 
-    public func compare(_ coverageReport: CoverageReport) async throws -> [ComparingTargets] {
+    public func compare(_ coverageReport: FullCoverageReport) async throws -> [ComparingTargets] {
         try await archiver.setup()
         guard let baseReport = try archiver.lastReport()?.coverage else {
             throw ComparerError.baselineReportMissing

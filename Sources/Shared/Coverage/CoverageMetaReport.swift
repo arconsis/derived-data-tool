@@ -9,9 +9,9 @@ import Foundation
 
 public struct CoverageMetaReport: Codable, Equatable {
     public let fileInfo: XCResultFile
-    public let coverage: CoverageReport
+    public let coverage: FullCoverageReport
 
-    public init(fileInfo: XCResultFile, coverage: CoverageReport) {
+    public init(fileInfo: XCResultFile, coverage: FullCoverageReport) {
         self.fileInfo = fileInfo
         self.coverage = coverage
     }

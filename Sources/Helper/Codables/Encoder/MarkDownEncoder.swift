@@ -10,11 +10,11 @@ import Shared
 
 public enum MarkdownEncoderType {
     case header(meta: CoverageMetaReport)
-    case detailed(report: CoverageReport)
-    case topRanked(amount: Int, report: CoverageReport)
-    case lastRanked(amount: Int, report: CoverageReport)
-    case uncovered(report: CoverageReport)
-    case compare(current: CoverageReport, previous: CoverageReport?)
+    case detailed(report: FullCoverageReport)
+    case topRanked(amount: Int, report: FullCoverageReport)
+    case lastRanked(amount: Int, report: FullCoverageReport)
+    case uncovered(report: FullCoverageReport)
+    case compare(current: FullCoverageReport, previous: FullCoverageReport?)
 }
 
 public protocol CoverageReportEncoding {
@@ -157,7 +157,7 @@ extension MarkdownEncoderType {
         return result
     }
 
-//    func encode(_ coverageReport: CoverageReport) throws -> String {
+//    func encode(_ coverageReport: FullCoverageReport) throws -> String {
 //        let sortedTargets = coverageReport.targets.sorted(by: { $0.name < $1.name })
 //        var result = "| Targetname | Executable Lines | Covered Lines | Coverage |\n"
 //        result += "| :--- | ---: | :--- | :---: |\n"

@@ -24,15 +24,15 @@ public enum ReportGenerator {
         return .failure(.init(with: ReportError.couldNotBeDecoded))
     }
 
-    public static func decodeFullXCOV(with contentString: String) -> Result<CoverageReport, CCCLIError> {
+    public static func decodeFullXCOV(with contentString: String) -> Result<FullCoverageReport, CCCLIError> {
         guard let data = contentString.data(using: .utf8) else {
             return .failure(.init(with: ReportError.couldNotBeDecoded))
         }
         return decodeFullXCOV(from: data)
     }
 
-    public static func decodeFullXCOV(from contentData: Data) -> Result<CoverageReport, CCCLIError> {
-        if let targetReports: CoverageReport = try? decode(contentData) {
+    public static func decodeFullXCOV(from contentData: Data) -> Result<FullCoverageReport, CCCLIError> {
+        if let targetReports: FullCoverageReport = try? decode(contentData) {
             return .success(targetReports)
         }
 
@@ -47,9 +47,7 @@ public enum ReportGenerator {
     }
 
     public static func decodeReport(from contentData: Data) -> Result<JSONReport, CCCLIError> {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        if let report = try? decoder.decode(JSONReport.self, from: contentData) {
+        if let report = try? SingleDecoder.shared.decode(JSONReport.self, from: contentData) {
             return .success(report)
         }
 
@@ -76,7 +74,7 @@ extension ReportGenerator {
     }
 
     @available(*, deprecated, message: "use Result-version")
-    public static func decodeFullXCOV(with contentString: String) throws -> CoverageReport {
+    public static func decodeFullXCOV(with contentString: String) throws -> FullCoverageReport {
         guard let data = contentString.data(using: .utf8) else {
             throw ErrorFactory.failing(error: ReportError.couldNotBeDecoded)
         }
@@ -84,8 +82,8 @@ extension ReportGenerator {
     }
 
     @available(*, deprecated, message: "use Result-version")
-    public static func decodeFullXCOV(from contentData: Data) throws -> CoverageReport {
-        if let targetReports: CoverageReport = try? decode(contentData) {
+    public static func decodeFullXCOV(from contentData: Data) throws -> FullCoverageReport {
+        if let targetReports: FullCoverageReport = try? decode(contentData) {
             return targetReports
         }
 
@@ -102,9 +100,7 @@ extension ReportGenerator {
 
     @available(*, deprecated, message: "use Result-version")
     public static func decodeReport(from contentData: Data) throws -> JSONReport {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        if let report = try? decoder.decode(JSONReport.self, from: contentData) {
+        if let report = try? SingleDecoder.shared.decode(JSONReport.self, from: contentData) {
             return report
         }
 
@@ -123,12 +119,11 @@ public extension ReportGenerator {
 
 private extension ReportGenerator {
     static func decode<T: Decodable>(_ data: Data) throws -> T {
-        try JSONDecoder().decode(T.self, from: data)
+        try SingleDecoder.shared.decode(T.self, from: data)
     }
 
     static func encode(_ encodable: any Encodable) throws -> Data {
-        let encoder = JSONEncoder()
-        return try encoder.encode(encodable)
+        return try SingleEncoder.shared.encode(encodable)
     }
 
     static func encode(targetReports: TargetReports) throws -> Data {

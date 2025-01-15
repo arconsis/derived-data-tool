@@ -9,7 +9,7 @@ import Foundation
 import Shared
 
 struct TestReportMarkdownEncoder: TestReportEncoder {
-    func encode(_ coverageReport: CoverageReport) throws -> String {
+    func encode(_ coverageReport: FullCoverageReport) throws -> String {
         let sortedTargets = coverageReport.targets.sorted(by: { $0.name < $1.name })
         var result = "| Targetname | Executable Lines | Covered Lines | Coverage |\n"
         result += "| :--- | ---: | :--- | :---: |\n"
