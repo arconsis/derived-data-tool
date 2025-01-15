@@ -59,9 +59,9 @@ class SQLiteDatabase {
         // Adjust the query based on the filter
         switch filter {
         case .id(let reportID):
-            baseQuery += " WHERE CoverageReports.id = ?;"
+            baseQuery += " WHERE CoverageReports.id = \(reportID);"
         case .date(let reportDate):
-            baseQuery += " WHERE CoverageReports.date = ?;"
+            baseQuery += " WHERE CoverageReports.date = \(reportDate);"
         }
 
         var statement: OpaquePointer?

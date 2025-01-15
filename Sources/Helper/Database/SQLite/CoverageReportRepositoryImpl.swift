@@ -20,6 +20,14 @@ class CoverageReportRepositoryImpl {
 
 
 extension CoverageReportRepositoryImpl: CoverageReportRepository {
+    func getAllEntries(for application: String?) async throws -> [Shared.CoverageReport] {
+        return []
+    }
+
+    func getEntry(for key: DBKey) async throws -> Shared.CoverageReport? {
+        return nil
+    }
+
     func getAllEntries(for application: String?) async throws -> [SQLiteCoverage] {
         fatalError("Not yet implemented")
     }
