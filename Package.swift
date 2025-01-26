@@ -14,8 +14,6 @@ extension PackageDescription.Target {
     static let helper = TargetDefinition(name: "Helper", path: "Sources/Helper")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
-    static let uiComponents = TargetDefinition(name: "UIComponents", path: "Sources/Repositories/UIComponents")
-    static let ui = TargetDefinition(name: "UI", path: "Sources/Command/UI")
 }
 
 typealias MyPackage = PackageDescription.Target
@@ -29,20 +27,17 @@ let package = Package(
         .argumentParserPackage(),
         .asyncAlgorithmsPackage(),
         .fluent(),
-        .postgresDriver(),
         .sqlDriver(),
         .globPatternPackage(),
         .swiftHTMLPackage(),
         .swiftSlashPackage(),
         .yamsPackage(),
-        .swiftTUI(),
     ],
     targets: [
         .executableTarget(
             name: MyPackage.app.name,
             dependencies: [
                 .argumentParser(),
-                .swiftTUI(),
                 .archive(),
                 .coverage(),
                 .compare(),
@@ -51,7 +46,6 @@ let package = Package(
                 .build(),
                 .config(),
                 .report(),
-                .ui(),
             ],
             path: MyPackage.app.path
         ),
@@ -108,22 +102,12 @@ let package = Package(
             .helper(),
         ]),
 
-        MyPackage.ui.toTarget(dependencies: [
-            .argumentParser(),
-            .swiftTUI(),
-            .uiComponents(),
-            .helper(),
-        ]),
         // MARK: HELPER
-        MyPackage.uiComponents.toTarget(dependencies: [
-            .swiftTUI(),
-        ]),
         MyPackage.helper.toTarget(
             dependencies: [
                 .asyncAlgorithms(),
                 .dependencyInjection(),
                 .fluent(),
-                .postgresDriver(),
                 .sqlDriver(),
                 .globPattern(),
                 .shared(),
@@ -219,16 +203,8 @@ extension PackageDescription.Package.Dependency {
         Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.1")
     }
 
-    static func postgresDriver() -> Package.Dependency {
-        PPD.package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0")
-    }
-    
     static func sqlDriver() -> Package.Dependency {
         Package.Dependency.package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0")
-    }
-
-    static func swiftTUI() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/rensbreur/SwiftTUI.git", branch: "main")
     }
 }
 
@@ -279,16 +255,8 @@ extension PackageDescription.Target.Dependency {
 //        Target.Dependency.product(name: "FluentKit", package: "fluent-kit")
 //    }
 
-    static func postgresDriver() -> Target.Dependency {
-        Target.Dependency.product(name: "FluentPostgresDriver", package: "fluent-postgres-driver")
-    }
-
     static func sqlDriver() -> Self {
         PackageDescription.Target.Dependency.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
-    }
-
-    static func swiftTUI() -> Self {
-        PackageDescription.Target.Dependency.product(name: "SwiftTUI", package: "SwiftTUI")
     }
 }
 
@@ -308,11 +276,6 @@ extension PackageDescription.Target.Dependency {
     /// Shared-DTOs: includes all `objects` that are needed in different packages
     static func shared() -> Target.Dependency {
         Target.Dependency.target(name: "Shared")
-    }
-
-    /// Repository: `UIComponents`: repository for UIComponents
-    static func uiComponents() -> Target.Dependency {
-        Target.Dependency.target(name: "UIComponents")
     }
 
     // MARK: Executable Commands
@@ -350,11 +313,6 @@ extension PackageDescription.Target.Dependency {
     /// SubCommand: `archiveTester`: command to test new stuff easily
     static func archive() -> Target.Dependency {
         Target.Dependency.target(name: "Archive")
-    }
-
-    /// SubCommand: `UI`: command to use UI
-    static func ui() -> Target.Dependency {
-        Target.Dependency.target(name: "UI")
     }
 }
 

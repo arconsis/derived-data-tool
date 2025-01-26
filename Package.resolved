@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "fluent-postgres-driver",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vapor/fluent-postgres-driver.git",
-      "state" : {
-        "revision" : "e2988a8c960196eca2891f3a0bb1caad9044e7ea",
-        "version" : "2.9.2"
-      }
-    },
-    {
       "identity" : "fluent-sqlite-driver",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/fluent-sqlite-driver.git",
@@ -70,24 +61,6 @@
       "state" : {
         "revision" : "7f3f075b1db45c4b24cce12dc5c92452b98684d9",
         "version" : "2.0.0-beta.1"
-      }
-    },
-    {
-      "identity" : "postgres-kit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vapor/postgres-kit.git",
-      "state" : {
-        "revision" : "0b72fa83b1023c4b82072e4049a3db6c29781fff",
-        "version" : "2.13.5"
-      }
-    },
-    {
-      "identity" : "postgres-nio",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vapor/postgres-nio.git",
-      "state" : {
-        "revision" : "5c268768890b062803a49f1358becc478f954265",
-        "version" : "1.21.5"
       }
     },
     {
@@ -160,15 +133,6 @@
       "state" : {
         "revision" : "ee97538f5b81ae89698fd95938896dec5217b148",
         "version" : "1.1.1"
-      }
-    },
-    {
-      "identity" : "swift-crypto",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-crypto.git",
-      "state" : {
-        "revision" : "33f65a3cbc52f8c19295723af9cbecc2195484e1",
-        "version" : "3.5.0"
       }
     },
     {
@@ -304,15 +268,6 @@
       "state" : {
         "revision" : "dbcd79125918644c348471853ef5332d650548db",
         "version" : "3.4.0"
-      }
-    },
-    {
-      "identity" : "swifttui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rensbreur/SwiftTUI.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "9095357cdb8a0e3c6938561990016f8ee26255c9"
       }
     },
     {

@@ -16,20 +16,25 @@ final class TargetModel: Model {
     @ID(key: .id)
     var id: UUID?
 
+    @Field(key: FieldKeyStore.executableLines)
+    var executableLines: Int
+    
+    @Field(key: FieldKeyStore.coveredLines)
+    var coveredLines: Int
+
     @Parent(key: FieldKeyStore.coverage)
     var coverage: CoverageModel
-    
-    @Children(for: \.$target)
-    var files: [FileModel]
 
     @Field(key: FieldKeyStore.name)
     var name: String
 
     init() {}
 
-    init(id: UUID? = nil, coverageId: CoverageModel.IDValue, name: String) {
+    init(id: UUID? = nil, name: String, executableLines: Int, coveredLines: Int, coverageId: CoverageModel.IDValue) {
         self.id = id
-        self.$coverage.id = coverageId
         self.name = name
+        self.executableLines = executableLines
+        self.coveredLines = coveredLines
+        self.$coverage.id = coverageId
     }
 }

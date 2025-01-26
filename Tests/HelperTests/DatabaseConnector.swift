@@ -20,11 +20,7 @@ final class DatabaseConnectorTests: XCTestCase {
     }()
 
     override func setUp() async throws {
-        let credentials = DatabaseConnector.DatabaseCredentials(hostname: "localhost",
-                                                                username: "postgres",
-                                                                password: "secret",
-                                                                database: "code_coverage_test")
-        dbConnector = DatabaseConnector(credentials: credentials)
+        dbConnector = DatabaseConnector()
         try await dbConnector.connect()
     }
 

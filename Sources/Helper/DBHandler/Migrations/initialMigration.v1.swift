@@ -12,13 +12,9 @@ struct InitialMigration: AsyncMigration {
         try await CreateReportModel.prepare(on: database)
         try await CreateCoverageModel.prepare(on: database)
         try await CreateTargetModel.prepare(on: database)
-        try await CreateFileModel.prepare(on: database)
-        try await CreateFunctionModel.prepare(on: database)
     }
 
     func revert(on database: any Database) async throws {
-        try await CreateFunctionModel.prepare(on: database)
-        try await CreateFileModel.prepare(on: database)
         try await CreateTargetModel.prepare(on: database)
         try await CreateCoverageModel.prepare(on: database)
         try await CreateReportModel.prepare(on: database)

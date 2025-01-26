@@ -18,7 +18,6 @@ enum CreateReportModel {
             .field(FieldKeyStore.url, .string, .required)
             .field(FieldKeyStore.date, .string, .required)
             .field(FieldKeyStore.application, .string, .required)
-            .field(FieldKeyStore.coverage, .custom("JSONB"), .required)
             .create()
     }
 

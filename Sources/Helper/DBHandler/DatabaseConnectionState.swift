@@ -6,7 +6,7 @@
 //
 
 import FluentKit
-import FluentPostgresDriver
+import FluentSQLiteDriver
 import Foundation
 
 enum Uninitialised {}

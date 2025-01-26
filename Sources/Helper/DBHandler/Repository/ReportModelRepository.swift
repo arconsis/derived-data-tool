@@ -13,7 +13,6 @@ enum ReportModelRepositoryError: Error {
     case entityNotCreated
 }
 
-
 struct ReportModelRepository {
     let db: any Database
     init(db: any Database) {
@@ -28,14 +27,6 @@ private extension ReportModelRepository {
 
     func coverageModelQuery() -> QueryBuilder<CoverageModel> {
         CoverageModel.query(on: db)
-    }
-
-    func fileModelQuery() -> QueryBuilder<FileModel> {
-        FileModel.query(on: db)
-    }
-
-    func functionModelQuery() -> QueryBuilder<FunctionModel> {
-        FunctionModel.query(on: db)
     }
 
     func targetModelQuery() -> QueryBuilder<TargetModel> {
@@ -65,26 +56,11 @@ private extension ReportModelRepository {
         return modelId
     }
 
-    func createTargetModel(coverageId: CoverageModel.IDValue, name: String) async throws -> TargetModel.IDValue {
-        let model = TargetModel(coverageId: coverageId, name: name)
-        try await model.save(on: db)
-        guard let modelId = model.id else {
-            throw ReportModelRepositoryError.entityNotCreated
-        }
-        return modelId
-    }
-
-    func createFileModel(targetId: TargetModel.IDValue, name: String, path: String, gitRoot gitPath: String) async throws -> FileModel.IDValue {
-        let model = FileModel(targetId: targetId, name: name, path: path.sanitize(by: gitPath))
-        try await model.save(on: db)
-        guard let modelId = model.id else {
-            throw ReportModelRepositoryError.entityNotCreated
-        }
-        return modelId
-    }
-
-    func createFunctionModel(fileId: FileModel.IDValue, name: String, lineNumber: Int, executableLines: Int, executionCount: Int, coveredLines: Int) async throws -> FunctionModel.IDValue {
-        let model = FunctionModel(fileId: fileId, name: name, lineNumber: lineNumber, executableLines: executableLines, executionCount: executionCount, coveredLines: coveredLines)
+    func createTargetModel(name: String, executableLines: Int, coveredLines: Int, coverageId: CoverageModel.IDValue) async throws -> TargetModel.IDValue {
+        let model = TargetModel(name: name,
+                                executableLines: executableLines,
+                                coveredLines: coveredLines,
+                                coverageId: coverageId)
         try await model.save(on: db)
         guard let modelId = model.id else {
             throw ReportModelRepositoryError.entityNotCreated
@@ -121,30 +97,10 @@ extension ReportModelRepository {
 
     private func make(_ target: Target, parent: CoverageModel.IDValue, gitRoot gitPath: String) async throws {
         do {
-            let targetId = try await createTargetModel(coverageId: parent, name: target.name)
-
-            for file in target.files {
-                try await make(file, parent: targetId, gitRoot: gitPath)
-            }
-        } catch {
-            print(String(reflecting: error))
-        }
-    }
-
-    private func make(_ file: File, parent: TargetModel.IDValue, gitRoot gitPath: String) async throws {
-        do {
-            let targetId = try await createFileModel(targetId: parent,
-                                                     name: file.name,
-                                                     path: file.path,
-                                                     gitRoot: gitPath)
-            for function in file.functions {
-                let _ = try await createFunctionModel(fileId: targetId,
-                                                               name: function.name,
-                                                               lineNumber: function.lineNumber,
-                                                               executableLines: function.executableLines,
-                                                               executionCount: function.executionCount,
-                                                               coveredLines: function.coveredLines)
-            }
+            let _ = try await createTargetModel(name: target.name,
+                                                       executableLines: target.executableLines,
+                                                       coveredLines: target.coveredLines,
+                                                       coverageId: parent)
         } catch {
             print(String(reflecting: error))
         }
