@@ -21,15 +21,11 @@ final class CompressionTests: XCTestCase {
     }
 
     let jsonDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
+        SingleDecoder.shared
     }()
 
     let jsonEncoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        return encoder
+        SingleEncoder.shared
     }()
 
     var fileHandler: FileHandler!

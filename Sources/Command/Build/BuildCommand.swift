@@ -130,16 +130,12 @@ extension BuildCommand {
 private extension BuildCommand {
     func decodeReport(from contentString: String) throws -> RawXCResult {
         guard let contentData = contentString.data(using: .utf8) else { throw BuildError.stringToDataConversionFailed }
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return try decoder.decode(RawXCResult.self, from: contentData)
+        return try SingleDecoder.shared.decode(RawXCResult.self, from: contentData)
     }
 
     func formattedJsonContent(from report: RawXCResult, prettyPrint: Bool = true) -> String? {
         do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            let data = try encoder.encode(report)
+            let data = try SingleEncoder.shared.encode(report)
             let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             let jsonData = try JSONSerialization.data(withJSONObject: json, options: prettyPrint ? .prettyPrinted : .sortedKeys)
             return String(decoding: jsonData, as: UTF8.self)

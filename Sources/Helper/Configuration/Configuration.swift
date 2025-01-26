@@ -80,6 +80,6 @@ extension ConfigFactory {
         case noConfigFileFoundAt(String)
 
         var printsHelp: Bool { true }
-        var errorDescription: String? { localizedDescription }
+        var errorDescription: String? { "No Configuration File Found" }
     }
 }

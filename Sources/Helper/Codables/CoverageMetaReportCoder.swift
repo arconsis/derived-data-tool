@@ -27,9 +27,7 @@ struct CoverageMetaReportCoder {
     // MARK: - Decoder
 
     private var decoder: JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
+        SingleDecoder.shared
     }
 
     func decode(contentOf url: URL) throws -> CoverageMetaReport {
@@ -111,11 +109,10 @@ struct CoverageMetaReportCoder {
     // MARK: - ENCODER
 
     func encode(_ report: CoverageMetaReport, compressed: Bool = true) throws -> Data {
-        let encoder = JSONEncoder()
+        let encoder = SingleEncoder.shared
         if !compressed {
             encoder.outputFormatting = .prettyPrinted
         }
-        encoder.dateEncodingStrategy = .iso8601
         let data = try encoder.encode(report)
         if compressed {
             return try Compressor.compress(data)

@@ -14,9 +14,7 @@ final class DatabaseConnectorTests: XCTestCase {
     var dbConnector: DatabaseConnector!
 
     let jsonDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
+        SingleDecoder.shared
     }()
 
     override func setUp() async throws {
@@ -29,7 +27,7 @@ final class DatabaseConnectorTests: XCTestCase {
     }
 
     func testExample() async throws {
-        let sut = ReportModelRepository(db: dbConnector.db)
+        let sut = ReportModelRepositoryImpl(db: dbConnector.db)
 
         guard let url = Bundle.module.url(forResource: "TestData", withExtension: "json") else {
             XCTFail("Resource is missing")

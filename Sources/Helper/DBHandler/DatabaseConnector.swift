@@ -28,11 +28,7 @@ public class DatabaseConnector {
 //        connectionState.stepCompleted()
     }
 
-    deinit {
-
-    }
-
-    static func createDatabase(fileUrl: URL? = nil) -> Fluent {
+    private static func createDatabase(fileUrl: URL? = nil) -> Fluent {
         let logger = Logger(label: "Repository")
         let fluent = Fluent(logger: logger)
 
@@ -59,14 +55,14 @@ public class DatabaseConnector {
     private func setup() async throws {
 //        try connectionState.ready(for: .setup)
         await addMigrations()
-        try await fluent.revert()
+//        try await fluent.revert()
         try await fluent.migrate()
         optionalDatabase = fluent.db()
 
-//        try connectionState.reached(state: .connected)
+        try connectionState.reached(state: .connected)
     }
 
-    func disconnect() async throws {
+    public func disconnect() async throws {
         try await fluent.shutdown()
 //        try connectionState.ready(for: .disconnected)
 

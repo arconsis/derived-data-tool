@@ -13,14 +13,19 @@ enum ReportModelRepositoryError: Error {
     case entityNotCreated
 }
 
-struct ReportModelRepository {
+public protocol ReportModelRepository {
+    func add(report: CoverageMetaReport) async throws
+    func shutDownDatabaseConnection() async throws
+}
+
+struct ReportModelRepositoryImpl {
     let db: any Database
     init(db: any Database) {
         self.db = db
     }
 }
 
-private extension ReportModelRepository {
+private extension ReportModelRepositoryImpl {
     func reportModelQuery() -> QueryBuilder<ReportModel> {
         ReportModel.query(on: db)
     }
@@ -47,8 +52,8 @@ private extension ReportModelRepository {
         return modelId
     }
 
-    func createCoverageModel(report: ReportModel.IDValue) async throws -> CoverageModel.IDValue {
-        let model = CoverageModel(report: report)
+    func createCoverageModel(report reportId: ReportModel.IDValue) async throws -> CoverageModel.IDValue {
+        let model = CoverageModel(report: reportId)
         try await model.save(on: db)
         guard let modelId = model.id else {
             throw ReportModelRepositoryError.entityNotCreated
@@ -69,7 +74,7 @@ private extension ReportModelRepository {
     }
 }
 
-extension ReportModelRepository {
+extension ReportModelRepositoryImpl: ReportModelRepository {
     func add(report: CoverageMetaReport) async throws {
         do {
             let gitPath = report.coverage.commonPathPrefix()
@@ -82,11 +87,17 @@ extension ReportModelRepository {
         }
     }
 
+    func shutDownDatabaseConnection() async throws {
+        
+    }
+
     private func make(_ coverage: CoverageReport, parent: ReportModel.IDValue, gitRoot gitPath: String) async throws {
         do {
+            let cleanedUpCoverageReport = coverage.removingCommonPrefix()
+
             let modelId = try await createCoverageModel(report: parent)
 
-            for target in coverage.targets {
+            for target in cleanedUpCoverageReport.targets {
                 try await make(target, parent: modelId, gitRoot: gitPath)
             }
         } catch {

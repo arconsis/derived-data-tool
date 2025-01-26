@@ -37,16 +37,12 @@ public extension Coverage {
     }
 
     func decodeReport(from contentData: Data) throws -> TargetReports {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return try decoder.decode(TargetReports.self, from: contentData)
+        return try SingleDecoder.shared.decode(TargetReports.self, from: contentData)
     }
 
     func formattedJsonContent(from report: JSONReport, prettyPrint: Bool = true) -> String? {
         do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            let data = try encoder.encode(report)
+            let data = try SingleEncoder.shared.encode(report)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: prettyPrint ? .prettyPrinted : .sortedKeys)
             return String(decoding: jsonData, as: UTF8.self)
@@ -99,6 +95,40 @@ public struct CoverageReport: Coverage {
         return commonPrefix
     }
 }
+
+extension CoverageReport {
+    /// Returns a new `CoverageReport` with the file paths modified to remove the given prefix.
+    public func removingCommonPrefix() -> CoverageReport {
+
+        let paths = self.targets.flatMap(\.files).map(\.path)
+        let commonPrefix = Self.findCommonPrefix(for: paths)
+
+        // Map over all targets and modify their file paths.
+        let updatedTargets = targets.map { target in
+            Target(
+                name: target.name,
+                files: target.files.map { file in
+                    File(
+                        name: file.name,
+                        path: file.path.replacingOccurrences(of: commonPrefix, with: ""),
+                        functions: file.functions
+                    )
+                }
+            )
+        }
+        return CoverageReport(targets: updatedTargets)
+    }
+
+    private static func findCommonPrefix(for paths: [String]) -> String {
+        guard !paths.isEmpty else { return "" }
+
+        return paths.reduce(paths[0]) { (currentCommonPrefix, path) in
+            String(currentCommonPrefix.commonPrefix(with: path))
+        }
+    }
+}
+
+
 
 // MARK: - Target
 

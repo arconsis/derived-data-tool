@@ -12,6 +12,7 @@ extension PackageDescription.Target {
     static let coverage = TargetDefinition(name: "Coverage", path: "Sources/Command/Coverage")
     static let dependencyInjection = TargetDefinition(name: "DependencyInjection", path: "Sources/DependencyInjection")
     static let helper = TargetDefinition(name: "Helper", path: "Sources/Helper")
+    static let migrate = TargetDefinition(name: "Migrate", path: "Sources/Command/Migrate")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
 }
@@ -43,6 +44,7 @@ let package = Package(
                 .compare(),
                 .dependencyInjection(),
                 .prototype(),
+                .migrate(),
                 .build(),
                 .config(),
                 .report(),
@@ -100,6 +102,13 @@ let package = Package(
         MyPackage.archive.toTarget(dependencies: [
             .argumentParser(),
             .helper(),
+        ]),
+
+        MyPackage.migrate.toTarget(dependencies: [
+            .argumentParser(),
+            .dependencyInjection(),
+            .helper(),
+            .shared(),
         ]),
 
         // MARK: HELPER
@@ -313,6 +322,10 @@ extension PackageDescription.Target.Dependency {
     /// SubCommand: `archiveTester`: command to test new stuff easily
     static func archive() -> Target.Dependency {
         Target.Dependency.target(name: "Archive")
+    }
+
+    static func migrate() -> Target.Dependency {
+        Target.Dependency.target(name: "Migrate")
     }
 }
 
