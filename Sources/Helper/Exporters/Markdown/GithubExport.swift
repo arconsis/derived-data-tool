@@ -111,16 +111,6 @@ private extension GithubExport {
 }
 
 private extension GithubExport {
-//    struct ArchiveFile {
-//        init(date: Date, content: String) {
-//            self.filename = "\(DateFormat.yearMontDay.string(from: date))\(GithubExport.fileExtension)"
-//            self.content = content
-//        }
-//
-//        let filename: String
-//        let content: String
-//    }
-
     enum GithubExportError: Error {
         case stringToDataConversionFailed
     }
