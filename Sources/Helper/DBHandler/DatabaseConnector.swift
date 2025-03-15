@@ -25,7 +25,7 @@ public class DatabaseConnector {
     init(fileUrl: URL? = nil) {
         connectionState = .init()
         fluent = Self.createDatabase(fileUrl: fileUrl)
-//        connectionState.stepCompleted()
+        try? connectionState.transition(event: .setup)
     }
 
     private static func createDatabase(fileUrl: URL? = nil) -> Fluent {
@@ -44,33 +44,18 @@ public class DatabaseConnector {
 
     func connect() async throws {
         try await setup()
-//        print(connectionState.state())
-//        try connectionState.reached(state: .setup)
-//        connectionState.stepCompleted()
-//        print(connectionState.state())
-//        try connectionState.ready(for: .connected)
-        //        db = try await Self.connect(to: postgres, on: eventLoopGroup.any())
     }
 
     private func setup() async throws {
-//        try connectionState.ready(for: .setup)
         await addMigrations()
-//        try await fluent.revert()
         try await fluent.migrate()
         optionalDatabase = fluent.db()
-
-        try connectionState.reached(state: .connected)
+        try connectionState.transition(event: .connect)
     }
 
     public func disconnect() async throws {
         try await fluent.shutdown()
-//        try connectionState.ready(for: .disconnected)
-
-    }
-
-    func modify() async throws {
-//        try connectionState.reached(state: .connected)
-
+        try connectionState.transition(event: .disconnect)
     }
 }
 

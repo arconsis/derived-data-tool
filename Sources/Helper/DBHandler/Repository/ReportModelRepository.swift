@@ -20,6 +20,7 @@ public protocol ReportModelRepository {
 
 struct ReportModelRepositoryImpl {
     let db: any Database
+    let logger = Logger(label: "RepositoryImpl")
     init(db: any Database) {
         self.db = db
     }
@@ -82,7 +83,7 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
             let reportId = try await createReportModel(fileInfo: report.fileInfo, gitRoot: gitPath)
             try await make(report.coverage, parent: reportId, gitRoot: gitPath)
         } catch {
-            print(String(reflecting: error))
+            logger.error(.init(stringLiteral: String(reflecting: error)))
             throw error
         }
     }
@@ -101,7 +102,7 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
                 try await make(target, parent: modelId, gitRoot: gitPath)
             }
         } catch {
-            print(String(reflecting: error))
+            logger.error(.init(stringLiteral: String(reflecting: error)))
             throw error
         }
     }
@@ -113,7 +114,8 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
                                                        coveredLines: target.coveredLines,
                                                        coverageId: parent)
         } catch {
-            print(String(reflecting: error))
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
         }
     }
 }

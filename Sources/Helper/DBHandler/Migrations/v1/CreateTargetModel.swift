@@ -15,6 +15,8 @@ enum CreateTargetModel {
         try await database.schema(modelSchema)
             .id()
             .field(FieldKeyStore.name, .string, .required)
+            .field(FieldKeyStore.executableLines, .int, .required)
+            .field(FieldKeyStore.coveredLines, .int, .required)
             .field(FieldKeyStore.coverage, .uuid, .required, .references(ModelDefinition.Coverage.schema, "id"))
             .create()
     }

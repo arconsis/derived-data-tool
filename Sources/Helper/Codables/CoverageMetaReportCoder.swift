@@ -31,7 +31,7 @@ struct CoverageMetaReportCoder {
     }
 
     func decode(contentOf url: URL) throws -> CoverageMetaReport {
-        logger.log("DECODE:", url.lastPathComponent)
+        logger.log("Looking into file at path:", url.lastPathComponent)
         do {
             let isUncompressed: Bool = url.lastPathComponent.contains("json")
             if isUncompressed {
