@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/fluent-kit.git",
       "state" : {
-        "revision" : "d69efce21242ad4dba6935cc1b8d5637281604d5",
-        "version" : "1.48.5"
+        "revision" : "614d3ec27cdef50cfb9fc3cfd382b6a4d9578cff",
+        "version" : "1.49.0"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird.git",
       "state" : {
-        "revision" : "de24af2daf32e8ef9439823e7c72b3ee8676ef6c",
-        "version" : "2.0.0-beta.8"
+        "revision" : "567c1fdcd577d3463a1406a34d9a64749bf583ec",
+        "version" : "2.9.0"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird-fluent.git",
       "state" : {
-        "revision" : "7f3f075b1db45c4b24cce12dc5c92452b98684d9",
-        "version" : "2.0.0-beta.1"
+        "revision" : "45459ea5b541c6a96b87d1be848e384593b7dde3",
+        "version" : "2.0.0"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-async-algorithms",
       "state" : {
-        "revision" : "6ae9a051f76b81cc668305ceed5b0e0a7fd93d20",
-        "version" : "1.0.1"
+        "revision" : "4c3ea81f81f0a25d0470188459c6d4bf20cf2f97",
+        "version" : "1.0.3"
       }
     },
     {
@@ -203,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "8d8eb609929aee75336a0a3d2417280786265868",
-        "version" : "1.32.0"
+        "revision" : "170f4ca06b6a9c57b811293cebcb96e81b661310",
+        "version" : "1.35.0"
       }
     },
     {

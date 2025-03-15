@@ -209,7 +209,7 @@ extension PackageDescription.Package.Dependency {
     }
 
     static func fluent() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.1")
+        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0")
     }
 
     static func sqlDriver() -> Package.Dependency {
