@@ -11,6 +11,7 @@ import Helper
 import Shared
 
 class CoverageTool {
+    private static let reporterId: String = "CoverageTool"
     private let verbose: Bool
     private let quiet: Bool
     private let fileHandler: FileHandler
@@ -183,5 +184,28 @@ private extension CoverageTool {
 
     func xccov(filePath: URL) async -> StringResult {
         await cliTools.xccov(filePath: filePath)
+    }
+}
+
+private extension CoverageTool {
+    private var progressReporter: ProgressReporterFactory {
+        ProgressReporterFactory.default
+    }
+
+
+    func report(percentage: Double) {
+        progressReporter.report(percentage: percentage, onReporterWith: Self.reporterId)
+    }
+
+    func report(step: Int, of totalSteps: Int, inPercentage: Bool) {
+        progressReporter.report(step: step, of: totalSteps, inPercentage: inPercentage, onReporterWith: Self.reporterId)
+    }
+
+    func report(finished: Bool) {
+        progressReporter.report(finished: finished, onReporterWith: Self.reporterId)
+    }
+
+    func report(text: String, clearLine: Bool) {
+        progressReporter.report(text: text, clearLine: clearLine, onReporterWith: Self.reporterId)
     }
 }
