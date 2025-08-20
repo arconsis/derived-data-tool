@@ -48,7 +48,7 @@ jobs:
 
   build:
     needs: [get-version, create-release-branch]
-    runs-on: macos-latest
+    runs-on: macos-15
     env:
       version: ${{ needs.get-version.outputs.release-version }}
     steps:
