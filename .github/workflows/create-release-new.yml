@@ -70,7 +70,7 @@ jobs:
 
       - name: Build
         run: |
-          swift build -c release -Xswiftc -O --static-swift-stdlib
+          swift build -c release
           echo "Project was build successfully" >> $GITHUB_STEP_SUMMARY
       - name: Summarize Build
         run: |
