@@ -14,13 +14,13 @@ on:
           - patch
 jobs:
   get-version:
-    uses: ./.github/actions/get-version
+    uses: ./.github/actions/get-version@${{ github.sha }}
     with:
       release-type: ${{ inputs.release-type }}
 
   create-release-branch:
     needs: [get-version]
-    uses: ./.github/actions/create-release-branch
+    uses: ./.github/actions/create-release-branch@${{ github.sha }}
     with:
       release-version: ${{ needs.get-version.outputs.release-version }}
 
@@ -35,7 +35,7 @@ jobs:
           ref: releases/${{ env.version }}
 
       - name: Resolve swift dependency cache
-        uses: ./.github/actions/create-swift-dependency-cache
+        uses: ./.github/actions/create-swift-dependency-cache@${{ github.sha }}
 
       - name: Resolve Dependencies
         run: |
