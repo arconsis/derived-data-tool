@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DependencyInjection
 
 public protocol ProgressReporting {
     func report(percentage: Double)
@@ -24,7 +25,7 @@ extension ProgressReporting {
     }
 
     func report(percentage: Double) {
-        report(text: "\(percentage)%")
+        report(text: "\(String(format: "%.2f", percentage))%")
     }
 
     func report(step: Int, of totalSteps: Int, inPercentage: Bool = true) {
@@ -38,15 +39,8 @@ extension ProgressReporting {
 }
 
 class ProgressReporter: ProgressReporting, Hashable {
-    static func == (lhs: ProgressReporter, rhs: ProgressReporter) -> Bool {
-        lhs.id == rhs.id && lhs.prefix == rhs.prefix
-    }
-
-    var hashValue: Int { "\(id)\(prefix)".hashValue }
-
     let id: String
     let prefix: String
-    var alive: Bool = true
 
     init(id: String, prefix: String) {
         self.id = id
@@ -55,19 +49,26 @@ class ProgressReporter: ProgressReporting, Hashable {
 
     func report(finished: Bool) {
         report(text: "DONE!")
-        alive = false
     }
 
     func report(text: String, clearLine: Bool = true) {
-        if alive {
+        if CE.shouldUseProgressUI {
             var textOutput: String = "\(prefix): \(text)"
             if clearLine {
                 textOutput = "\u{001B}[2K\r\(textOutput)"
             }
             FileHandle.standardOutput.write(Data(textOutput.utf8))
+        } else {
+            @Injected(\.logger) var debugLogger
+            debugLogger.log(text)
         }
     }
 
+    static func == (lhs: ProgressReporter, rhs: ProgressReporter) -> Bool {
+        lhs.id == rhs.id && lhs.prefix == rhs.prefix
+    }
+
+    var hashValue: Int { "\(id)\(prefix)".hashValue }
     func hash(into hasher: inout Hasher) {
         hasher.combine("\(id)\(prefix)")
     }

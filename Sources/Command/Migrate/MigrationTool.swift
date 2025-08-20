@@ -12,6 +12,7 @@ import Helper
 import Shared
 
 class MigrationTool {
+    private static let reporterId: String = "MigrationTool"
     private let verbose: Bool
     private let quiet: Bool
     private let fileHandler: FileHandler
@@ -63,23 +64,24 @@ class MigrationTool {
 extension MigrationTool: Runnable {
     func run() async throws {
         do {
-            logger.log("setup completed")
+            report(text: "setup completed", clearLine: false)
+//            logger.log("setup completed")
 
             let archives = archiver.sortedArchives
 
             var counter: Int = 0
 
             for archive in archives {
-                logger.log("archive: \(archive)")
+//                logger.log("archive: \(archive)")
                 let report = try archiver.report(for: archive)
 
                 try await repository.add(report: report)
 
                 try fileHandler.deleteFile(at: archive.url)
                 counter += 1
-                print("Finished \(String(format: "%.2f", (Double(counter) / Double(archives.count) * 100.0)))%")
+                self.report(step: counter, of: archives.count, inPercentage: true)
             }
-            print("DONE")
+            self.report(finished: true)
         } catch {
             logger.error("Error: \(error: error)")
             if !quiet {
@@ -93,6 +95,26 @@ extension MigrationTool: Runnable {
 // MARK: Helper
 
 private extension MigrationTool {
+    private var progressReporter: ProgressReporterFactory {
+        ProgressReporterFactory.default
+    }
+
+
+    func report(percentage: Double) {
+        progressReporter.report(percentage: percentage, onReporterWith: Self.reporterId)
+    }
+
+    func report(step: Int, of totalSteps: Int, inPercentage: Bool) {
+        progressReporter.report(step: step, of: totalSteps, inPercentage: inPercentage, onReporterWith: Self.reporterId)
+    }
+
+    func report(finished: Bool) {
+        progressReporter.report(finished: finished, onReporterWith: Self.reporterId)
+    }
+
+    func report(text: String, clearLine: Bool) {
+        progressReporter.report(text: text, clearLine: clearLine, onReporterWith: Self.reporterId)
+    }
 
 }
 

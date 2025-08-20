@@ -42,7 +42,10 @@ public final class MigrateCommand: AsyncParsableCommand, QuietErrorHandling {
             InjectedValues[\.logger] = MyLogger.makeLogger(verbose: verbose)
             let config = try await ConfigFactory.getConfig(at: URL(with: configFilePath))
             guard let databasePath = config.locations?.databasePath else { throw MigrationError.missingDatabasePath }
-            tools = await MigrateCommandToolWrapper.make(config: config, workingDirectory: customGitRootpath, databasePath: databasePath)
+            // TODO: make sure to use a filename instead of a folder name could be `db.sql`
+            tools = await MigrateCommandToolWrapper.make(config: config,
+                                                         workingDirectory: customGitRootpath,
+                                                         databasePath: databasePath)
 
             guard let locationCurrentReport = tools.locationCurrentReport else { throw MigrationError.currentReportLocationMissing }
             let reportUrl: URL = tools.workingDirectory.appending(pathComponent: locationCurrentReport)
@@ -51,12 +54,10 @@ public final class MigrateCommand: AsyncParsableCommand, QuietErrorHandling {
 
             let archiver = Archiver(fileHandler: tools.fileHandler, archiveUrl: archiveLocation)
             try await archiver.setup()
-            guard let root = await tools.fileHandler.getGitRootDirectory().value else {
-                throw MigrationError.internalError
-            }
-            let relativeDatabasePath = root.appending(pathComponent: databasePath)
 
-            connector = try await Repository.makeConnector(with: relativeDatabasePath)
+            let databaseUrl = try await tools.makeDatabaseUrl()
+
+            connector = try await Repository.makeConnector(with: databaseUrl)
 
             guard let connector else {
                 throw MigrationError.internalError
@@ -98,13 +99,9 @@ extension MigrateCommand {
         let locationCurrentReport: String?
         let fileHandler: FileHandler
         let workingDirectory: URL
-        let databasePath: String
+        private let databasePath: String
         private let cliTools: Tools
         var archiveLocation: URL?
-
-//        var githubExporterSetting: GithubExportSettings {
-//            try! config.settings(.githubExporter) as! GithubExportSettings
-//        }
 
         private enum CodingKeys: String, CodingKey {
             case config,
@@ -140,6 +137,7 @@ extension MigrateCommand {
             self.filterReports = filterReports
             self.locationCurrentReport = locationCurrentReport
             self.databasePath = databasePath
+                .ensureFilePath(defaultFileName: "database.sqlite").relativeString
             self.fileHandler = fileHandler
             self.workingDirectory = workingDirectory
             self.cliTools = cliTools
@@ -181,6 +179,20 @@ extension MigrateCommand {
                          workingDirectory: workingDirectory,
                          archiveLocation: archiveLocation,
                          cliTools: Tools())
+        }
+
+        func makeDatabaseUrl() async throws -> URL {
+            guard let root = await fileHandler.getGitRootDirectory().value else {
+                throw MigrationError.internalError
+            }
+
+            // DON'T forget to create the folder without the filename
+            let url = root.appending(pathComponent: databasePath)
+            let urlWithoutFileName = url.deletingLastPathComponent()
+
+            try FileManager.default.createDirectory(at: urlWithoutFileName, withIntermediateDirectories: true)
+
+            return url
         }
     }
 }
