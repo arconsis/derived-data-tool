@@ -6,12 +6,12 @@ inputs:
     description: "Should be one of the following: major, minor, patch"
     required: true
 outputs:
-  next-version:
+  release-version:
     description: "Calculated Next Release Version"
-    value: ${{ steps.get-version.outputs.release-version }}
+    value: ${{ steps.release-version.outputs.release }}
   current-version:
-    description: "Receive current Verison"
-    value: ${{ steps.get-version.outputs.current-version }}
+    description: "Receive current Version"
+    value: ${{ steps.last-version.outputs.version }}
 
 runs:
   using: composite
