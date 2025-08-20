@@ -18,29 +18,33 @@ jobs:
     outputs:
       release-version: ${{ steps.get_version.outputs.release-version }}
     steps:
-      - name: Get Version
-        id: get_version
-        uses: ./.github/actions/get-version
-        with:
-          release-type: ${{ inputs.release-type }}
-      - name: Summarize Version
-        run: |
-          echo "## Version Info" >> $GITHUB_STEP_SUMMARY
-          echo "Next release version: ${{ steps.get_version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
-          echo "Current version: ${{ steps.get_version.outputs.current-version }}" >> $GITHUB_STEP_SUMMARY
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Get Version
+          id: get_version
+          uses: ./.github/actions/get-version
+          with:
+            release-type: ${{ inputs.release-type }}
+        - name: Summarize Version
+          run: |
+            echo "## Version Info" >> $GITHUB_STEP_SUMMARY
+            echo "Next release version: ${{ steps.get_version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
+            echo "Current version: ${{ steps.get_version.outputs.current-version }}" >> $GITHUB_STEP_SUMMARY
 
   create-release-branch:
     needs: [get-version]
     runs-on: ubuntu-latest
     steps:
-      - name: Create Release Branch
-        uses: ./.github/actions/create-release-branch
-        with:
-          release-version: ${{ needs.get-version.outputs.release-version }}
-      - name: Summarize Branch Creation
-        run: |
-          echo "## Branch Info" >> $GITHUB_STEP_SUMMARY
-          echo "Release branch created: releases/${{ needs.get-version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Create Release Branch
+          uses: ./.github/actions/create-release-branch
+          with:
+            release-version: ${{ needs.get-version.outputs.release-version }}
+        - name: Summarize Branch Creation
+          run: |
+            echo "## Branch Info" >> $GITHUB_STEP_SUMMARY
+            echo "Release branch created: releases/${{ needs.get-version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
 
   build:
     needs: [get-version, create-release-branch]
