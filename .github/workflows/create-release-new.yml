@@ -98,7 +98,6 @@ jobs:
     steps:
       - name: verify
         run: echo "VERIFIED" >> $GITHUB_STEP_SUMMARY
-        
 
   merge:
     needs: [get-version, verify]
