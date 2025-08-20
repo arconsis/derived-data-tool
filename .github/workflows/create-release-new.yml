@@ -76,3 +76,34 @@ jobs:
         uses: ./.github/actions/create-release-branch
         with:
           release-version: ${{ needs.get-version.outputs.release-version }}
+
+  create-github-release:
+    needs: [build, get-version]
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.get-version.outputs.release-version }}
+    steps:
+      - name: Download macOS Executable
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data-tool-macos-executable
+          path: ./dist
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.version }}
+          release_name: Release ${{ env.version }}
+          body: |
+            Automated release for version ${{ env.version }}.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/derived-data-tool
+          asset_name: derived-data-tool-macos
+          asset_content_type: application/octet-stream
