@@ -47,7 +47,7 @@ jobs:
         id: buildpath
         run: echo "BIN_PATH=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
       - name: Rename Executable
-        run: mv "$BIN_PATH/Run" "$BIN_PATH/derived-data-tool"
+        run: mv "$BIN_PATH/App" "$BIN_PATH/derived-data-tool"
       - name: Upload macOS Executable
         uses: actions/upload-artifact@v4
         with:
