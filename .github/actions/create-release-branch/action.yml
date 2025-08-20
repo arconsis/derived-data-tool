@@ -1,7 +1,6 @@
 name: "Create a new release branch"
 description: "This action will create a new branch for the current release and delete it if something goes wrong"
 
-
 inputs:
   release-version:
     required: true
@@ -11,18 +10,23 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v4
-    
-    - name: create branch (releases/${{ inputs.release-version }})
-      shell: bash
-      run: git branch releases/${{ inputs.release-version }}
 
-    - name: checkout branch (releases/${{ inputs.release-version }})
+    - name: prepare release branch (releases/${{ inputs.release-version }})
       shell: bash
-      run: git checkout releases/${{ inputs.release-version }}
-
-    - name: publish branch (releases/${{ inputs.release-version }})
-      shell: bash
-      run: git push --set-upstream origin releases/${{ inputs.release-version }}
+      run: |
+        # Delete remote branch if exists
+        if git ls-remote --exit-code --heads origin releases/${{ inputs.release-version }}; then
+          echo "Remote branch releases/${{ inputs.release-version }} already exists. Deleting it."
+          git push origin --delete releases/${{ inputs.release-version }}
+        fi
+        # Delete local branch if exists
+        if git show-ref --verify --quiet refs/heads/releases/${{ inputs.release-version }}; then
+          git branch -D releases/${{ inputs.release-version }}
+        fi
+        # Create and checkout new branch
+        git checkout -b releases/${{ inputs.release-version }}
+        # Push new branch to remote
+        git push --set-upstream origin releases/${{ inputs.release-version }}
 
     - name: update version-file
       shell: bash
