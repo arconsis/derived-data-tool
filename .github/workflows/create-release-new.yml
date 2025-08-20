@@ -14,7 +14,7 @@ on:
           - patch
 jobs:
   get-version:
-    uses: ./.github/actions/get-version@${{ github.GITHUB_SHA }}
+    uses: ./.github/actions/get-version@${{ GITHUB_SHA }} }}
     with:
       release-type: ${{ inputs.release-type }}
 
