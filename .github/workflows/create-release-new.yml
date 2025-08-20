@@ -14,15 +14,33 @@ on:
           - patch
 jobs:
   get-version:
-    uses: ./.github/actions/get-version@${{ GITHUB_SHA }} }}
-    with:
-      release-type: ${{ inputs.release-type }}
+    runs-on: ubuntu-latest
+    outputs:
+      release-version: ${{ steps.get_version.outputs.release-version }}
+    steps:
+      - name: Get Version
+        id: get_version
+        uses: ./.github/actions/get-version
+        with:
+          release-type: ${{ inputs.release-type }}
+      - name: Summarize Version
+        run: |
+          echo "## Version Info" >> $GITHUB_STEP_SUMMARY
+          echo "Next release version: ${{ steps.get_version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "Current version: ${{ steps.get_version.outputs.current-version }}" >> $GITHUB_STEP_SUMMARY
 
   create-release-branch:
     needs: [get-version]
-    uses: ./.github/actions/create-release-branch@${{ github.GITHUB_SHA }}
-    with:
-      release-version: ${{ needs.get-version.outputs.release-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release Branch
+        uses: ./.github/actions/create-release-branch
+        with:
+          release-version: ${{ needs.get-version.outputs.release-version }}
+      - name: Summarize Branch Creation
+        run: |
+          echo "## Branch Info" >> $GITHUB_STEP_SUMMARY
+          echo "Release branch created: releases/${{ needs.get-version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
 
   build:
     needs: [get-version, create-release-branch]
@@ -35,7 +53,11 @@ jobs:
           ref: releases/${{ env.version }}
 
       - name: Resolve swift dependency cache
-        uses: ./.github/actions/create-swift-dependency-cache@${{ github.GITHUB_SHA }}
+        uses: ./.github/actions/create-swift-dependency-cache
+      - name: Summarize Swift Cache
+        run: |
+          echo "## Swift Dependency Cache" >> $GITHUB_STEP_SUMMARY
+          echo "Swift dependency cache step completed." >> $GITHUB_STEP_SUMMARY
 
       - name: Resolve Dependencies
         run: |
@@ -46,6 +68,10 @@ jobs:
         run: |
           swift build -c release -Xswiftc -O --static-swift-stdlib
           echo "Project was build successfully" >> $GITHUB_STEP_SUMMARY
+      - name: Summarize Build
+        run: |
+          echo "## Build Info" >> $GITHUB_STEP_SUMMARY
+          echo "Build completed for version: ${{ env.version }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Create staging directory
         run: |
@@ -54,53 +80,34 @@ jobs:
           find -L "$(swift build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./staging/ \;
           [ -d ./Public ] && { mv ./Public ./staging/Public && chmod -R a-w ./staging/Public; } || true
           [ -d ./Resources ] && { mv ./Resources ./staging/Resources && chmod -R a-w ./staging/Resources; } || true
+      - name: Summarize Staging
+        run: |
+          echo "## Staging Info" >> $GITHUB_STEP_SUMMARY
+          echo "Staging directory created and populated." >> $GITHUB_STEP_SUMMARY
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+      - name: Upload macOS Executable Artifact
+        uses: actions/upload-artifact@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & Push (latest)
+          name: derived-data-tool-macos-executable
+          path: ./staging/Run
+          retention-days: 14
+      - name: Summarize Artifact Upload
         run: |
-          docker build --tag ghcr.io/elmoritz/newsletter-agent:latest .
-          docker push ghcr.io/elmoritz/newsletter-agent:latest
-          echo "New Docker container available: ghcr.io/elmoritz/newsletter-agent:latest" >> $GITHUB_STEP_SUMMARY
-
-      - name: Build & Push (current)
-        run: |
-          docker build --tag ghcr.io/elmoritz/newsletter-agent:${{ env.version }} .
-          docker push ghcr.io/elmoritz/newsletter-agent:${{ env.version }}
-          echo "New Docker container available: ghcr.io/elmoritz/newsletter-agent:${{ env.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifact Info" >> $GITHUB_STEP_SUMMARY
+          echo "macOS executable uploaded as artifact: derived-data-tool-macos-executable" >> $GITHUB_STEP_SUMMARY
 
       - name: "Add tag to commit"
         run: |
           git tag ${{ env.version }}
           git push --tags
           echo "New tag (${{ env.version }}) was added to commit" >> $GITHUB_STEP_SUMMARY
-
-  publish:
-    name: Deploy Docker Container
-    needs: [build]
-    uses: ./.github/workflows/update-server-image.yml
-    with:
-      command-to-execute-in-root: "./restart_newsletter_server.sh"
-    secrets:
-      ssh_user: ${{ secrets.STAGING_SSH_USER }}
-      ssh_key: ${{ secrets.ACCESS_NETCUP_SERVER }}
-      ssh_host: ${{ secrets.STAGING_SSH_HOST }}
-
-  verify:
-    name: Check Reachability
-    needs: [publish]
-    runs-on: ubuntu-latest
-    steps:
-      - name: verify
-        run: echo "VERIFIED" >> $GITHUB_STEP_SUMMARY
+      - name: Summarize Tagging
+        run: |
+          echo "## Tag Info" >> $GITHUB_STEP_SUMMARY
+          echo "Tag added and pushed: ${{ env.version }}" >> $GITHUB_STEP_SUMMARY
 
   merge:
-    needs: [get-version, verify]
+    needs: [get-version, build]
     runs-on: ubuntu-latest
     env:
       version: ${{ needs.get-version.outputs.release-version }}
@@ -116,3 +123,7 @@ jobs:
           source_ref: releases/${{ env.version }}
           target_branch: main
           commit_message_template: "Merge branch 'releases/${{ env.version }}' into main "
+      - name: Summarize Merge
+        run: |
+          echo "## Merge Info" >> $GITHUB_STEP_SUMMARY
+          echo "Release branch merged into main: releases/${{ env.version }}" >> $GITHUB_STEP_SUMMARY
