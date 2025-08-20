@@ -12,123 +12,67 @@ on:
           - major
           - minor
           - patch
+
 jobs:
   get-version:
     runs-on: ubuntu-latest
     outputs:
       release-version: ${{ steps.get_version.outputs.release-version }}
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Get Version
         id: get_version
         uses: ./.github/actions/get-version
         with:
           release-type: ${{ inputs.release-type }}
-      - name: Summarize Version
-        run: |
-          echo "## Version Info" >> $GITHUB_STEP_SUMMARY
-          echo "Next release version: ${{ steps.get_version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
-          echo "Current version: ${{ steps.get_version.outputs.current-version }}" >> $GITHUB_STEP_SUMMARY
-
-  create-release-branch:
-    needs: [get-version]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Create Release Branch
-        uses: ./.github/actions/create-release-branch
-        with:
-          release-version: ${{ needs.get-version.outputs.release-version }}
-      - name: Summarize Branch Creation
-        run: |
-          echo "## Branch Info" >> $GITHUB_STEP_SUMMARY
-          echo "Release branch created: releases/${{ needs.get-version.outputs.release-version }}" >> $GITHUB_STEP_SUMMARY
 
   build:
-    needs: [get-version, create-release-branch]
+    needs: [get-version]
     runs-on: macos-15
     env:
       version: ${{ needs.get-version.outputs.release-version }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          ref: releases/${{ env.version }}
-
-      - name: Resolve swift dependency cache
+          ref: main
+      - name: Initiate Swift Dependency Cache
         uses: ./.github/actions/create-swift-dependency-cache
-      - name: Summarize Swift Cache
-        run: |
-          echo "## Swift Dependency Cache" >> $GITHUB_STEP_SUMMARY
-          echo "Swift dependency cache step completed." >> $GITHUB_STEP_SUMMARY
-
       - name: Resolve Dependencies
-        run: |
-          swift package resolve
-          echo "Swift packages were resolved" >> $GITHUB_STEP_SUMMARY
-
+        run: swift package resolve
       - name: Build
-        run: |
-          swift build -c release
-          echo "Project was build successfully" >> $GITHUB_STEP_SUMMARY
-      - name: Summarize Build
-        run: |
-          echo "## Build Info" >> $GITHUB_STEP_SUMMARY
-          echo "Build completed for version: ${{ env.version }}" >> $GITHUB_STEP_SUMMARY
-
-      - name: Create staging directory
-        run: |
-          mkdir staging
-          cp "$(swift build -c release --show-bin-path)/Run" ./staging
-          find -L "$(swift build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./staging/ \;
-          [ -d ./Public ] && { mv ./Public ./staging/Public && chmod -R a-w ./staging/Public; } || true
-          [ -d ./Resources ] && { mv ./Resources ./staging/Resources && chmod -R a-w ./staging/Resources; } || true
-      - name: Summarize Staging
-        run: |
-          echo "## Staging Info" >> $GITHUB_STEP_SUMMARY
-          echo "Staging directory created and populated." >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload macOS Executable Artifact
+        run: swift build -c release
+      - name: Get Build Path
+        id: buildpath
+        run: echo "BIN_PATH=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
+      - name: Rename Executable
+        run: mv "$BIN_PATH/Run" "$BIN_PATH/derived-data-tool"
+      - name: Upload macOS Executable
         uses: actions/upload-artifact@v4
         with:
           name: derived-data-tool-macos-executable
-          path: ./staging/Run
+          path: ${{ env.BIN_PATH }}/derived-data-tool
           retention-days: 14
-      - name: Summarize Artifact Upload
+      - name: Update .version file
+        run: echo "${{ env.version }}" > .version
+      - name: Add tag to main branch
         run: |
-          echo "## Artifact Info" >> $GITHUB_STEP_SUMMARY
-          echo "macOS executable uploaded as artifact: derived-data-tool-macos-executable" >> $GITHUB_STEP_SUMMARY
-
-      - name: "Add tag to commit"
-        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git tag ${{ env.version }}
           git pull --rebase
           git push --tags
-          echo "New tag (${{ env.version }}) was added to commit" >> $GITHUB_STEP_SUMMARY
-      - name: Summarize Tagging
-        run: |
-          echo "## Tag Info" >> $GITHUB_STEP_SUMMARY
-          echo "Tag added and pushed: ${{ env.version }}" >> $GITHUB_STEP_SUMMARY
 
-  merge:
+  create-release-branch:
     needs: [get-version, build]
     runs-on: ubuntu-latest
-    env:
-      version: ${{ needs.get-version.outputs.release-version }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          ref: releases/${{ env.version }}
-
-      - name: merge bumped version back to main
-        uses: everlytic/branch-merge@1.1.5
+          ref: main
+      - name: Create Release Branch
+        uses: ./.github/actions/create-release-branch
         with:
-          github_token: ${{ github.token }}
-          source_ref: releases/${{ env.version }}
-          target_branch: main
-          commit_message_template: "Merge branch 'releases/${{ env.version }}' into main "
-      - name: Summarize Merge
-        run: |
-          echo "## Merge Info" >> $GITHUB_STEP_SUMMARY
-          echo "Release branch merged into main: releases/${{ env.version }}" >> $GITHUB_STEP_SUMMARY
+          release-version: ${{ needs.get-version.outputs.release-version }}
