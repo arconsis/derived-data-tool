@@ -8,7 +8,7 @@ runs:
     id: cache-swift
     shell: bash
     run: |
-      md5=($(sha1sum Package.resolved))
+      md5=$(shasum -a 1 Package.resolved | awk '{print $1}')
       echo $md5
       echo "cache_sha1=$md5" >> "$GITHUB_OUTPUT"
 
