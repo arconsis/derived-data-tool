@@ -18,6 +18,9 @@ runs:
   steps:
     - name: git checkout
       uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
 
     - name: fetch version from latest valid tag
       id: last-version
