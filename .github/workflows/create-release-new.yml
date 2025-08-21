@@ -37,6 +37,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
       - name: Initiate Swift Dependency Cache
         uses: ./.github/actions/create-swift-dependency-cache
       - name: Resolve Dependencies
