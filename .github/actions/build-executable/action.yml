@@ -1,0 +1,20 @@
+name: "Build macOS Executable"
+description: "Builds a macOS executable for a specified architecture using Swift."
+author: "arconsis"
+runs:
+  using: "composite"
+  steps:
+    - name: Run build script
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/entrypoint.sh
+        ${{ github.action_path }}/entrypoint.sh \
+          --arch "${{ inputs.arch }}" \
+          --output "${{ inputs.output }}"
+inputs:
+  arch:
+    description: "Target architecture (e.g., arm64, x86_64, or universal)."
+    required: true
+  output:
+    description: "Output path for the built executable."
+    required: true

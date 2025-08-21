@@ -49,6 +49,16 @@ jobs:
         run: echo "BIN_PATH=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
       - name: Rename Executable
         run: mv "$BIN_PATH/App" "$BIN_PATH/derived-data-tool"
+
+      - name: Sign and Notarize Executable
+        uses: ./.github/actions/sign-and-notarize
+        with:
+          executable: ${{ env.BIN_PATH }}/derived-data-tool
+          apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          apple_id: ${{ secrets.APPLE_ID }}
+          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          
       - name: Package macOS Executable
         run: |
           tar -czf derived-data-tool.tar.gz -C "${{ env.BIN_PATH }}" derived-data-tool
