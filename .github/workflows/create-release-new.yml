@@ -54,6 +54,17 @@ jobs:
           name: derived-data-tool-macos-executable
           path: ${{ env.BIN_PATH }}/derived-data-tool
           retention-days: 14
+      - name: Determine next version with build number
+        id: next_version_build
+        run: |
+          chmod +x scripts/ci/get-latest-tag-and-next-version.sh
+          # Use the base version (major.minor.patch) from env.version
+          BASE_VERSION=$(echo "${{ env.version }}" | cut -d. -f1-3)
+          OUTPUT=$(scripts/ci/get-latest-tag-and-next-version.sh "$BASE_VERSION")
+          echo "$OUTPUT"
+          NEXT_VERSION=$(echo "$OUTPUT" | grep 'Next version:' | awk '{print $3}')
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_ENV
+
       - name: Add tag to main branch
         run: |
           git config user.name github-actions
