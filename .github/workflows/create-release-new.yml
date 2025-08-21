@@ -61,12 +61,7 @@ jobs:
           git tag ${{ env.version }}
           git pull --rebase
           git push --tags
-      - name: Update .version file and amend commit
-        run: |
-          echo "${{ env.version }}" > .version
-          git add .version
-          git commit --amend --no-edit
-          git push --force-with-lease
+  # .version file logic removed; version is now managed by tags
 
   create-release-branch:
     needs: [get-version, build]

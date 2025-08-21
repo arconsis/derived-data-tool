@@ -19,12 +19,19 @@ runs:
     - name: git checkout
       uses: actions/checkout@v4
 
-    - name: fetch version
+    - name: fetch version from latest valid tag
       id: last-version
       shell: bash
       run: |
-        echo "Current version found: $(cat .version)" >> $GITHUB_STEP_SUMMARY
-        echo "version=$(cat .version)" >> "$GITHUB_OUTPUT"
+        # Accept tags like X.Y.Z or X.Y.Z.BUILD
+        TAG=$(git tag --sort=-creatordate | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n1)
+        if [ -z "$TAG" ]; then
+          VERSION="0.0.1"
+        else
+          VERSION="$TAG"
+        fi
+        echo "Current version found: $VERSION" >> $GITHUB_STEP_SUMMARY
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
     - name: Get next version
       id: next-version
