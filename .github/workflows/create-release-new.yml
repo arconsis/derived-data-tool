@@ -98,6 +98,7 @@ jobs:
         with:
           name: derived-data-tool-macos-executable
           path: ./dist
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -117,3 +118,5 @@ jobs:
           asset_path: ./dist/derived-data-tool
           asset_name: derived-data-tool-macos
           asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
