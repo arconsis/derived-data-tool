@@ -49,11 +49,14 @@ jobs:
         run: echo "BIN_PATH=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
       - name: Rename Executable
         run: mv "$BIN_PATH/App" "$BIN_PATH/derived-data-tool"
-      - name: Upload macOS Executable
+      - name: Package macOS Executable
+        run: |
+          tar -czf derived-data-tool.tar.gz -C "${{ env.BIN_PATH }}" derived-data-tool
+      - name: Upload macOS Executable Archive
         uses: actions/upload-artifact@v4
         with:
-          name: derived-data-tool-macos-executable
-          path: ${{ env.BIN_PATH }}/derived-data-tool
+          name: derived-data-tool-executable
+          path: derived-data-tool.tar.gz
           retention-days: 14
       - name: Validate and increment version using Swift script
         id: next_version_build
@@ -93,15 +96,13 @@ jobs:
     env:
       version: ${{ needs.get-version.outputs.release-version }}
     steps:
-      - name: Download macOS Executable
+      - name: Download macOS Executable Archive
         uses: actions/download-artifact@v4
         with:
-          name: derived-data-tool-macos-executable
+          name: derived-data-tool-executable
           path: ./dist
-
       - name: List dist directory contents
         run: ls -l ./dist
-
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -118,8 +119,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/derived-data-tool
-          asset_name: derived-data-tool-macos
-          asset_content_type: application/octet-stream
+          asset_path: ./dist/derived-data-tool.tar.gz
+          asset_name: derived-data-tool.tar.gz
+          asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
