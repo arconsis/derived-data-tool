@@ -54,8 +54,6 @@ jobs:
           name: derived-data-tool-macos-executable
           path: ${{ env.BIN_PATH }}/derived-data-tool
           retention-days: 14
-      - name: Update .version file
-        run: echo "${{ env.version }}" > .version
       - name: Add tag to main branch
         run: |
           git config user.name github-actions
@@ -63,6 +61,12 @@ jobs:
           git tag ${{ env.version }}
           git pull --rebase
           git push --tags
+      - name: Update .version file and amend commit
+        run: |
+          echo "${{ env.version }}" > .version
+          git add .version
+          git commit --amend --no-edit
+          git push --force-with-lease
 
   create-release-branch:
     needs: [get-version, build]
