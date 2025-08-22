@@ -1,0 +1,136 @@
+name: Create Release [AUTOMATED]
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: "Release version"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      release-version: ${{ steps.get_version.outputs.release-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Get Version
+        id: get_version
+        uses: ./.github/actions/get-version
+        with:
+          release-type: ${{ inputs.release-type }}
+
+  build:
+    needs: [get-version]
+    runs-on: macos-15
+    env:
+      version: ${{ needs.get-version.outputs.release-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Initiate Swift Dependency Cache
+        uses: ./.github/actions/create-swift-dependency-cache
+      - name: Resolve Dependencies
+        run: swift package resolve
+      - name: Build
+        run: swift build -c release
+      - name: Get Build Path
+        id: buildpath
+        run: echo "BIN_PATH=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
+      - name: Rename Executable
+        run: mv "$BIN_PATH/App" "$BIN_PATH/derived-data-tool"
+
+      - name: Sign and Notarize Executable
+        uses: ./.github/actions/sign-and-notarize
+        with:
+          executable: ${{ env.BIN_PATH }}/derived-data-tool
+          apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          apple_id: ${{ secrets.APPLE_ID }}
+          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          
+      - name: Package macOS Executable
+        run: |
+          tar -czf derived-data-tool.tar.gz -C "${{ env.BIN_PATH }}" derived-data-tool
+      - name: Upload macOS Executable Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: derived-data-tool-executable
+          path: derived-data-tool.tar.gz
+          retention-days: 14
+      - name: Validate and increment version using Swift script
+        id: next_version_build
+        run: |
+          chmod +x ./scripts/ci/version-validator.swift
+          # Validate the current version
+          ./scripts/ci/version-validator.swift check "${{ env.version }}"
+          # Increment the build number
+          NEXT_VERSION=$(./scripts/ci/version-validator.swift build "${{ env.version }}")
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_ENV
+
+      - name: Add tag to main branch
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag ${{ env.version }}
+          git pull --rebase
+          git push --tags
+  # .version file logic removed; version is now managed by tags
+
+  create-release-branch:
+    needs: [get-version, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Create Release Branch
+        uses: ./.github/actions/create-release-branch
+        with:
+          release-version: ${{ needs.get-version.outputs.release-version }}
+
+  create-github-release:
+    needs: [build, get-version]
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.get-version.outputs.release-version }}
+    steps:
+      - name: Download macOS Executable Archive
+        uses: actions/download-artifact@v4
+        with:
+          name: derived-data-tool-executable
+          path: ./dist
+      - name: List dist directory contents
+        run: ls -l ./dist
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.version }}
+          release_name: Release ${{ env.version }}
+          body: |
+            Automated release for version ${{ env.version }}.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/derived-data-tool.tar.gz
+          asset_name: derived-data-tool.tar.gz
+          asset_content_type: application/gzip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

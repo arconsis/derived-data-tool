@@ -354,8 +354,12 @@ struct TargetDefinition {
                 publicHeadersPath: publicHeadersPath,
                 cSettings: cSettings,
                 cxxSettings: cxxSettings,
-                swiftSettings: swiftSettings,
-                linkerSettings: linkerSettings,
+                swiftSettings: [
+                    .unsafeFlags(["-Osize", "-cross-module-optimization"], .when(configuration: .release))
+                  ],
+                  linkerSettings: [
+                    .unsafeFlags(["-dead_strip", "-dead_strip_dylibs"], .when(configuration: .release))
+                  ],
                 plugins: plugins)
     }
 

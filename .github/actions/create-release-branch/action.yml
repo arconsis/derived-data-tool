@@ -11,52 +11,8 @@ runs:
   steps:
     - uses: actions/checkout@v4
 
-    - name: prepare release branch (releases/${{ inputs.release-version }})
+    - name: Create release branch and bump version
       shell: bash
       run: |
-        # Delete remote branch if exists
-        if git ls-remote --exit-code --heads origin releases/${{ inputs.release-version }}; then
-          echo "Remote branch releases/${{ inputs.release-version }} already exists. Deleting it."
-          git push origin --delete releases/${{ inputs.release-version }}
-        fi
-        # Delete local branch if exists
-        if git show-ref --verify --quiet refs/heads/releases/${{ inputs.release-version }}; then
-          git branch -D releases/${{ inputs.release-version }}
-        fi
-        # Create and checkout new branch
-        git checkout -b releases/${{ inputs.release-version }}
-        # Push new branch to remote
-        git push --set-upstream origin releases/${{ inputs.release-version }}
-
-    - name: update version-file
-      shell: bash
-      run: |
-        echo ${{ inputs.release-version }} > .version
-
-    - name: update version in app
-      shell: bash
-      working-directory: ./Sources/App/
-      run: |
-        sed "s#version: \".*\"#version: \"${{ inputs.release-version }}\"#" "App.swift" >> new_App.swift
-        rm ./App.swift
-        mv ./new_App.swift ./App.swift
-
-    - name: git status after changes
-      shell: bash
-      run: git status
-
-    - name: commit bumped version
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: "[BOT] update App version to ${{ inputs.release-version }}"
-        commit_user_name: "github-release[bot]"
-        commit_user_email: github.release@elmoritz.eu
-        commit_author: Moritz Ellerbrock <github@elmoritz.eu>
-
-    - name: onFailure delete branch
-      shell: bash
-      if: failure()
-      run: |
-        echo "# ABORT: New release will be stopped" >> $GITHUB_STEP_SUMMARY
-        git push origin --delete releases/${{ inputs.release-version }} || true
-        echo "New release branch (releases/${{ inputs.release-version }}) was deleted" >> $GITHUB_STEP_SUMMARY
+        chmod +x ${{ github.action_path }}/entrypoint.swift
+        ${{ github.action_path }}/entrypoint.swift "${{ inputs.release-version }}"

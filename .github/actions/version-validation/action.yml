@@ -1,0 +1,25 @@
+name: "Validate or Increment Version"
+description: "This action validates or increments a version string using a Swift script."
+
+inputs:
+  mode:
+    required: true
+    description: "Operation mode: check, bugfix, minor, major, build"
+  version:
+    required: true
+    description: "Version string to validate or increment (e.g. 1.2.3)"
+
+outputs:
+  result:
+    description: "Resulting version string or validation message."
+    value: ${{ steps.validate-version.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+  - name: Run version-validator.swift
+    id: validate-version
+    shell: bash
+    run: |
+      chmod +x ${{ github.action_path }}/version-validator
+      ${{ github.action_path }}/version-validator "${{ inputs.mode }}" "${{ inputs.version }}"
