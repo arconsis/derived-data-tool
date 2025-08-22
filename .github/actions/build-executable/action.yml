@@ -7,8 +7,8 @@ runs:
   - name: Run build script
     shell: bash
     run: |
-      chmod +x ${{ github.action_path }}/entrypoint.swift
-      ${{ github.action_path }}/entrypoint.swift \
+      chmod +x ${{ github.action_path }}/entrypoint
+      ${{ github.action_path }}/entrypoint \
         --arch "${{ inputs.arch }}" \
         --output "${{ inputs.output }}"
 inputs:

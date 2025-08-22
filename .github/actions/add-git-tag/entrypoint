@@ -22,9 +22,9 @@ let tag = CommandLine.arguments[1]
 // MARK: - Git Tagging
 func runShell(_ command: String) {
     let task = Process()
-    task.launchPath = "/bin/bash"
+    task.executableURL = URL(fileURLWithPath: "/bin/bash")
     task.arguments = ["-c", command]
-    task.launch()
+    try? task.run()
     task.waitUntilExit()
     if task.terminationStatus != 0 {
         exitWithError("Command failed: \(command)")
