@@ -15,7 +15,7 @@ guard FileManager.default.fileExists(atPath: packageResolvedPath) else {
 
 let process = Process()
 process.executableURL = URL(fileURLWithPath: "/bin/bash")
-process.arguments = ["-a", "1", packageResolvedPath]
+process.arguments = ["shasum", "-a", "1", packageResolvedPath]
 let pipe = Pipe()
 process.standardOutput = pipe
 try? process.run()
