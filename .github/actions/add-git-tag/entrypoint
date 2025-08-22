@@ -1,0 +1,40 @@
+#!/usr/bin/env swift
+import Foundation
+
+// MARK: - Logging + Exit Functions
+func log(_ message: String) {
+    print("[add-git-tag] \(message)")
+}
+func writeStandardError(_ message: String) {
+    if let data = (message + "\n").data(using: .utf8) {
+        FileHandle.standardError.write(data)
+    }
+}
+func exitWithError(_ message: String) -> Never {
+    writeStandardError("❌ \(message)")
+    exit(1)
+}
+// MARK: - Argument Parsing
+guard CommandLine.arguments.count == 2 else {
+    exitWithError("Usage: \(CommandLine.arguments[0]) <tag>")
+}
+let tag = CommandLine.arguments[1]
+// MARK: - Git Tagging
+func runShell(_ command: String) {
+    let task = Process()
+    task.launchPath = "/bin/bash"
+    task.arguments = ["-c", command]
+    task.launch()
+    task.waitUntilExit()
+    if task.terminationStatus != 0 {
+        exitWithError("Command failed: \(command)")
+    }
+}
+log("Configuring git user...")
+runShell("git config user.name github-actions")
+runShell("git config user.email github-actions@github.com")
+log("Tagging with version \(tag)...")
+runShell("git tag \(tag)")
+runShell("git pull --rebase")
+runShell("git push --tags")
+log("Tag \(tag) added and pushed.")

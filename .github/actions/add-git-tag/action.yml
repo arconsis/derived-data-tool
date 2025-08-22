@@ -1,0 +1,12 @@
+name: "Add Git Tag"
+description: "Adds a git tag and pushes it to the remote repository."
+inputs:
+  tag:
+    description: "Tag to add to the repository."
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Add git tag and push
+      shell: bash
+      run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint "${{ inputs.tag }}"
