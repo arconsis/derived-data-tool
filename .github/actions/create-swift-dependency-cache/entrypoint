@@ -1,0 +1,35 @@
+#!/usr/bin/env swift
+import Foundation
+
+// MARK: - Logging
+func log(_ message: String) {
+    print("[create-swift-dependency-cache] \(message)")
+}
+
+// MARK: - SHA-1 Calculation
+let packageResolvedPath = "Package.resolved"
+guard FileManager.default.fileExists(atPath: packageResolvedPath) else {
+    print("❌ Package.resolved not found.")
+    exit(1)
+}
+
+let process = Process()
+process.launchPath = "/usr/bin/shasum"
+process.arguments = ["-a", "1", packageResolvedPath]
+let pipe = Pipe()
+process.standardOutput = pipe
+process.launch()
+let data = pipe.fileHandleForReading.readDataToEndOfFile()
+process.waitUntilExit()
+
+guard let output = String(data: data, encoding: .utf8),
+      let sha1 = output.split(separator: " ").first else {
+    print("❌ Failed to calculate SHA-1.")
+    exit(1)
+}
+
+log("SHA-1 for Package.resolved: \(sha1)")
+// Output for GitHub Actions
+if let githubOutput = ProcessInfo.processInfo.environment["GITHUB_OUTPUT"] {
+    try? "cache_sha1=\(sha1)\n".write(toFile: githubOutput, atomically: true, encoding: .utf8)
+}
