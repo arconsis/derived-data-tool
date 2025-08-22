@@ -4,13 +4,13 @@ author: "arconsis"
 runs:
   using: "composite"
   steps:
-    - name: Run build script
-      shell: bash
-      run: |
-        chmod +x ${{ github.action_path }}/entrypoint.sh
-        ${{ github.action_path }}/entrypoint.sh \
-          --arch "${{ inputs.arch }}" \
-          --output "${{ inputs.output }}"
+  - name: Run build script
+    shell: bash
+    run: |
+      chmod +x ${{ github.action_path }}/entrypoint.swift
+      ${{ github.action_path }}/entrypoint.swift \
+        --arch "${{ inputs.arch }}" \
+        --output "${{ inputs.output }}"
 inputs:
   arch:
     description: "Target architecture (e.g., arm64, x86_64, or universal)."
