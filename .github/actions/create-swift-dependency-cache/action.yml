@@ -7,7 +7,7 @@ runs:
   - name: Calculate SHA-1 for Package.resolved
     id: cache-swift
     shell: bash
-    run: chmod +x ${{ github.action_path }}/entrypoint.swift && ${{ github.action_path }}/entrypoint.swift
+    run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint
 
   - name: Cache Swift
     uses: actions/cache@v3

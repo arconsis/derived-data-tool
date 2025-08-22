@@ -1,0 +1,84 @@
+#!/usr/bin/env swift
+import Foundation
+
+// MARK: - Logging
+func log(_ message: String) {
+    print("[get-version] \(message)")
+}
+func writeStandardError(_ message: String) {
+    if let data = (message + "\n").data(using: .utf8) {
+        FileHandle.standardError.write(data)
+    }
+}
+func exitWithError(_ message: String) -> Never {
+    writeStandardError("❌ \(message)")
+    exit(1)
+}
+// MARK: - Argument Parsing
+guard CommandLine.arguments.count == 2 else {
+    exitWithError("Usage: \(CommandLine.arguments[0]) <release-type>")
+}
+let releaseType = CommandLine.arguments[1].lowercased()
+// MARK: - Get Latest Tag
+func shellOutput(_ command: String) -> String {
+    let task = Process()
+    task.launchPath = "/bin/bash"
+    task.arguments = ["-c", command]
+    let pipe = Pipe()
+    task.standardOutput = pipe
+    task.launch()
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    task.waitUntilExit()
+    return String(data: data, encoding: .utf8) ?? ""
+}
+let tagPattern = "^[0-9]+\\.[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+let tag = shellOutput("git tag --sort=-creatordate | grep -E '\\(tagPattern)' | head -n1 || true")
+    .trimmingCharacters(in: .whitespacesAndNewlines)
+let currentVersion = tag.isEmpty ? "0.0.1" : tag
+log("Current version found: \(currentVersion)")
+if let githubOutput = ProcessInfo.processInfo.environment["GITHUB_OUTPUT"] {
+    try? "version=\(currentVersion)\n".write(
+        toFile: githubOutput, atomically: true, encoding: .utf8)
+}
+if let githubStepSummary = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
+    try? "Current version found: \(currentVersion)\n".write(
+        toFile: githubStepSummary, atomically: true, encoding: .utf8)
+}
+// MARK: - Calculate Next Version
+func parseVersion(_ version: String) -> [Int] {
+    return version.split(separator: ".").compactMap { Int($0) }
+}
+func formatVersion(_ version: [Int]) -> String {
+    version.map(String.init).joined(separator: ".")
+}
+var versionParts = parseVersion(currentVersion)
+if versionParts.count < 3 {
+    versionParts += Array(repeating: 0, count: 3 - versionParts.count)
+}
+var nextVersion: String = currentVersion
+switch releaseType {
+case "major":
+    versionParts[0] += 1
+    versionParts[1] = 0
+    versionParts[2] = 0
+    nextVersion = formatVersion(versionParts)
+    log("New major release will be created with version \(nextVersion)")
+case "minor":
+    versionParts[1] += 1
+    versionParts[2] = 0
+    nextVersion = formatVersion(versionParts)
+    log("New minor release will be created with version \(nextVersion)")
+case "patch":
+    versionParts[2] += 1
+    nextVersion = formatVersion(versionParts)
+    log("New patch release will be created with version \(nextVersion)")
+default:
+    exitWithError("Unknown release type: \(releaseType)")
+}
+if let githubOutput = ProcessInfo.processInfo.environment["GITHUB_OUTPUT"] {
+    try? "release=\(nextVersion)\n".write(toFile: githubOutput, atomically: true, encoding: .utf8)
+}
+if let githubStepSummary = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
+    try? "New \(releaseType) release will be created with version \(nextVersion)\n".write(
+        toFile: githubStepSummary, atomically: true, encoding: .utf8)
+}

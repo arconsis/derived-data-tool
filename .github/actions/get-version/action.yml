@@ -22,46 +22,7 @@ runs:
         ref: main
         fetch-depth: 0
 
-    - name: fetch version from latest valid tag
-      id: last-version
-      shell: bash
-      run: |
-        # Accept tags like X.Y.Z or X.Y.Z.BUILD
-        TAG=$(git tag --sort=-creatordate | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n1 || true)
-        if [ -z "$TAG" ]; then
-          VERSION="0.0.1"
-        else
-          VERSION="$TAG"
-        fi
-        echo "Current version found: $VERSION" >> $GITHUB_STEP_SUMMARY
-        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-    - name: Get next version
-      id: next-version
-      uses: "WyriHaximus/github-action-next-semvers@v1"
-      with:
-        version: ${{ steps.last-version.outputs.version }}
-
-    - name: calculate next version
+    - name: Calculate next release version
       id: release-version
       shell: bash
-      run: |
-        if $IS_MAJOR_RELEASE; then
-          echo "New major release will be created with version $MAJOR_VERSION" >> $GITHUB_STEP_SUMMARY
-          echo "release=$MAJOR_VERSION" >> "$GITHUB_OUTPUT"
-        elif $IS_MINOR_RELEASE; then
-          echo "New minor release will be created with version $MINOR_VERSION" >> $GITHUB_STEP_SUMMARY
-          echo "release=$MINOR_VERSION" >> "$GITHUB_OUTPUT"
-        elif $IS_PATCH_RELEASE; then
-          echo "New patch release will be created with version $PATCH_VERSION" >> $GITHUB_STEP_SUMMARY
-          echo "release=$PATCH_VERSION" >> "$GITHUB_OUTPUT"
-        else
-          exit 1
-        fi
-      env:
-        IS_MAJOR_RELEASE: ${{ inputs.release-type == 'major' }}
-        MAJOR_VERSION: ${{ steps.next-version.outputs.major }}
-        IS_MINOR_RELEASE: ${{ inputs.release-type == 'minor' }}
-        MINOR_VERSION: ${{ steps.next-version.outputs.minor }}
-        IS_PATCH_RELEASE: ${{ inputs.release-type == 'patch' }}
-        PATCH_VERSION: ${{ steps.next-version.outputs.patch }}
+      run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint "${{ inputs.release-type }}"
