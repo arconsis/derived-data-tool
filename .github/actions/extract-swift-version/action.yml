@@ -12,18 +12,7 @@ runs:
     - name: git checkout
       uses: actions/checkout@v4
 
-    - name: extract first line from Package.swift
-      id: package-swift-first-line
-      shell: bash
-      run: echo "first_line=$(head -n 1 Package.swift)" >> $GITHUB_OUTPUT
-
-    - name: extract first line from Package.swift
+    - name: Extract Swift version from Package.swift
       id: determine-swift-version
       shell: bash
-      run: |
-        if [[ "${{ steps.package-swift-first-line.outputs.first_line }}" =~ //\ swift-tools-version:\ ([0-9]+\.[0-9]+(\.[0-9]+)?) ]]; then
-          echo "swift-version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT" 
-          echo "Swift ${BASH_REMATCH[1]} Detected" >> $GITHUB_STEP_SUMMARY
-        else
-          exit 1
-        fi
+      run: chmod +x ${{ github.action_path }}/entrypoint.swift && ${{ github.action_path }}/entrypoint.swift
