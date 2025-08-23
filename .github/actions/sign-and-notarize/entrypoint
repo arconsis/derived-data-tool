@@ -20,30 +20,23 @@ var identity: String?
 var appleID: String?
 var teamID: String?
 var appSpecificPassword: String?
-var args = CommandLine.arguments.dropFirst()
-log(args.joined(separator: ", "))
-while let arg = args.first {
-    log(arg)
+log(CommandLine.arguments.dropFirst().joined(separator: ", "))
+var args = CommandLine.arguments.dropFirst().makeIterator()
+while let arg = args.next() {
     switch arg {
     case "--executable":
-        args = args.dropFirst()
-        executable = args.first
+        executable = args.next()
     case "--identity":
-        args = args.dropFirst()
-        identity = args.first
+        identity = args.next()
     case "--apple_id":
-        args = args.dropFirst()
-        appleID = args.first
+        appleID = args.next()
     case "--team_id":
-        args = args.dropFirst()
-        teamID = args.first
+        teamID = args.next()
     case "--password":
-        args = args.dropFirst()
-        appSpecificPassword = args.first
+        appSpecificPassword = args.next()
     default:
         exitWithError("Unknown option: \(arg)")
     }
-    args = args.dropFirst()
 }
 if executable == nil || identity == nil || appleID == nil || teamID == nil
     || appSpecificPassword == nil
