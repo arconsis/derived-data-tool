@@ -22,7 +22,7 @@ var teamID: String?
 var appSpecificPassword: String?
 log(CommandLine.arguments.dropFirst().joined(separator: ", "))
 var args = CommandLine.arguments.dropFirst().makeIterator()
-while let arg = args.next() {
+while let arg = args.next()?.trimmingCharacters(in: .whitespacesAndNewlines) {
     switch arg {
     case "--executable":
         executable = args.next()
