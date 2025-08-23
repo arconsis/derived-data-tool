@@ -21,7 +21,9 @@ var appleID: String?
 var teamID: String?
 var appSpecificPassword: String?
 var args = CommandLine.arguments.dropFirst()
+log(args.joined(separator: ", "))
 while let arg = args.first {
+    log(arg)
     switch arg {
     case "--executable":
         args = args.dropFirst()
