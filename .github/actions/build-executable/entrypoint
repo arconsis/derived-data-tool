@@ -58,19 +58,30 @@ if arch == nil || output == nil {
     exitWithError("Missing required arguments.")
 }
 // MARK: - Build Logic
+
 let archValue = arch!
 let outputValue = output!
+
+// Get the executable name from swift package show-executables
+let executablesOutput = shellOutput("swift package show-executables")
+let executableNames =
+    executablesOutput
+    .split(separator: "\n")
+    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+    .filter { !$0.contains("(") && !$0.isEmpty }
+let executableName = executableNames.first ?? "App"
+
 if archValue == "universal" {
     log("Building universal binary (arm64 & x86_64)...")
     let _ = system("swift build -c release --arch arm64 --arch x86_64")
     let binPath = shellOutput("swift build -c release --show-bin-path")
-    let appPath = binPath.trimmingCharacters(in: .whitespacesAndNewlines) + "/App"
+    let appPath = binPath.trimmingCharacters(in: .whitespacesAndNewlines) + "/" + executableName
     let _ = system("cp \(appPath) \(outputValue)")
 } else if archValue == "arm64" || archValue == "x86_64" {
     log("Building for \(archValue)...")
     let _ = system("swift build -c release --arch \(archValue)")
     let binPath = shellOutput("swift build -c release --show-bin-path")
-    let appPath = binPath.trimmingCharacters(in: .whitespacesAndNewlines) + "/App"
+    let appPath = binPath.trimmingCharacters(in: .whitespacesAndNewlines) + "/" + executableName
     let _ = system("cp \(appPath) \(outputValue)")
 } else {
     exitWithError("Unknown architecture: \(archValue)")
