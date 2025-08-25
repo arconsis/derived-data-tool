@@ -357,9 +357,7 @@ struct TargetDefinition {
                 swiftSettings: [
                     .unsafeFlags(["-Osize", "-cross-module-optimization"], .when(configuration: .release))
                   ],
-                  linkerSettings: [
-                    .unsafeFlags(["-dead_strip", "-dead_strip_dylibs"], .when(configuration: .release))
-                  ],
+                linkerSettings: [],
                 plugins: plugins)
     }
 
