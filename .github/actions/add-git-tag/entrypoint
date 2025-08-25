@@ -4,15 +4,17 @@ import Foundation
 // MARK: - Logging + Exit Functions
 // MARK: - GitHub Summary Helper
 func updateSummary(_ message: String, logOutput: Bool = true) {
-    if let summaryPath = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
-        let entry = message + "\n"
-        if let data = entry.data(using: .utf8) {
-            if let handle = try? FileHandle(forWritingTo: URL(fileURLWithPath: summaryPath)) {
-                handle.seekToEndOfFile()
-                handle.write(data)
-                handle.closeFile()
-            } else {
-                try? entry.write(toFile: summaryPath, atomically: true, encoding: .utf8)
+    if logOutput {
+        if let summaryPath = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
+            let entry = message + "\n"
+            if let data = entry.data(using: .utf8) {
+                if let handle = try? FileHandle(forWritingTo: URL(fileURLWithPath: summaryPath)) {
+                    handle.seekToEndOfFile()
+                    handle.write(data)
+                    handle.closeFile()
+                } else {
+                    try? entry.write(toFile: summaryPath, atomically: true, encoding: .utf8)
+                }
             }
         }
     }

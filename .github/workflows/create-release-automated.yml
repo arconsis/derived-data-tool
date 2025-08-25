@@ -151,17 +151,17 @@ jobs:
       version: ${{ needs.get-version.outputs.release-version }}
     steps:
       - name: Download Executable Archive (arm64)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: derived-data-tool-arm64
           path: ./dist
       - name: Download Executable Archive (x86_64)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: derived-data-tool-x86_64
           path: ./dist
       - name: Download Executable Archive (universal)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: derived-data-tool-universal
           path: ./dist
