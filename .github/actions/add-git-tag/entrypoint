@@ -2,6 +2,21 @@
 import Foundation
 
 // MARK: - Logging + Exit Functions
+// MARK: - GitHub Summary Helper
+func updateSummary(_ message: String) {
+    if let summaryPath = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
+        let entry = message + "\n"
+        if let data = entry.data(using: .utf8) {
+            if let handle = try? FileHandle(forWritingTo: URL(fileURLWithPath: summaryPath)) {
+                handle.seekToEndOfFile()
+                handle.write(data)
+                handle.closeFile()
+            } else {
+                try? entry.write(toFile: summaryPath, atomically: true, encoding: .utf8)
+            }
+        }
+    }
+}
 func log(_ message: String) {
     print("[add-git-tag] \(message)")
 }
@@ -12,6 +27,7 @@ func writeStandardError(_ message: String) {
 }
 func exitWithError(_ message: String) -> Never {
     writeStandardError("❌ \(message)")
+    updateSummary("❌ \(message)")
     exit(1)
 }
 // MARK: - Argument Parsing
@@ -26,7 +42,10 @@ func runShell(_ command: String) {
     task.arguments = ["-c", command]
     try? task.run()
     task.waitUntilExit()
-    if task.terminationStatus != 0 {
+    if task.terminationStatus == 0 {
+        updateSummary("✅ \(command)")
+    } else {
+        updateSummary("❌ Command failed: \(command)")
         exitWithError("Command failed: \(command)")
     }
 }
@@ -35,6 +54,10 @@ runShell("git config user.name github-actions")
 runShell("git config user.email github-actions@github.com")
 log("Tagging with version \(tag)...")
 runShell("git tag \(tag)")
+// Print and stash uncommitted changes before rebasing
+log("Checking for uncommitted changes...")
+runShell("git status --short")
+runShell("git stash --include-untracked")
 runShell("git pull --rebase")
 runShell("git push --tags")
 log("Tag \(tag) added and pushed.")

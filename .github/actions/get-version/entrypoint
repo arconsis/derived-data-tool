@@ -2,6 +2,21 @@
 import Foundation
 
 // MARK: - Logging
+// MARK: - GitHub Summary Helper
+func updateSummary(_ message: String) {
+    if let summaryPath = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
+        let entry = message + "\n"
+        if let data = entry.data(using: .utf8) {
+            if let handle = try? FileHandle(forWritingTo: URL(fileURLWithPath: summaryPath)) {
+                handle.seekToEndOfFile()
+                handle.write(data)
+                handle.closeFile()
+            } else {
+                try? entry.write(toFile: summaryPath, atomically: true, encoding: .utf8)
+            }
+        }
+    }
+}
 func log(_ message: String) {
     print("[get-version] \(message)")
 }
@@ -12,6 +27,7 @@ func writeStandardError(_ message: String) {
 }
 func exitWithError(_ message: String) -> Never {
     writeStandardError("❌ \(message)")
+    updateSummary("❌ \(message)")
     exit(1)
 }
 // MARK: - Argument Parsing
@@ -40,10 +56,7 @@ if let githubOutput = ProcessInfo.processInfo.environment["GITHUB_OUTPUT"] {
     try? "version=\(currentVersion)\n".write(
         toFile: githubOutput, atomically: true, encoding: .utf8)
 }
-if let githubStepSummary = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
-    try? "Current version found: \(currentVersion)\n".write(
-        toFile: githubStepSummary, atomically: true, encoding: .utf8)
-}
+updateSummary("✅ Current version found: \(currentVersion)")
 // MARK: - Calculate Next Version
 func parseVersion(_ version: String) -> [Int] {
     return version.split(separator: ".").compactMap { Int($0) }
