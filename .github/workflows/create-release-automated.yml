@@ -42,6 +42,13 @@ jobs:
       - name: Initiate Swift Dependency Cache
         uses: ./.github/actions/create-swift-dependency-cache
 
+      # Import Apple Code Signing Certificates
+      - name: Import Apple Code Signing Certificates
+        uses: apple-actions/import-codesign-certs@v5
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+
       # Build, sign, and package for arm64
       - name: Build Executable (arm64)
         uses: ./.github/actions/build-executable
