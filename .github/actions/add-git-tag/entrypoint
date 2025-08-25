@@ -3,7 +3,7 @@ import Foundation
 
 // MARK: - Logging + Exit Functions
 // MARK: - GitHub Summary Helper
-func updateSummary(_ message: String) {
+func updateSummary(_ message: String, logOutput: Bool = true) {
     if let summaryPath = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
         let entry = message + "\n"
         if let data = entry.data(using: .utf8) {
@@ -17,7 +17,7 @@ func updateSummary(_ message: String) {
         }
     }
 }
-func log(_ message: String) {
+func log(_ message: String, logOutput: Bool = true) {
     print("[add-git-tag] \(message)")
 }
 func writeStandardError(_ message: String) {
@@ -36,22 +36,22 @@ guard CommandLine.arguments.count == 2 else {
 }
 let tag = CommandLine.arguments[1]
 // MARK: - Git Tagging
-func runShell(_ command: String) {
+func runShell(_ command: String, logOutput: Bool = true) {
     let task = Process()
     task.executableURL = URL(fileURLWithPath: "/bin/bash")
     task.arguments = ["-c", command]
     try? task.run()
     task.waitUntilExit()
     if task.terminationStatus == 0 {
-        updateSummary("✅ \(command)")
+        updateSummary("✅ \(command)", logOutput: logOutput)
     } else {
-        updateSummary("❌ Command failed: \(command)")
+        updateSummary("❌ Command failed: \(command)", logOutput: logOutput)
         exitWithError("Command failed: \(command)")
     }
 }
 log("Configuring git user...")
-runShell("git config user.name github-actions")
-runShell("git config user.email github-actions@github.com")
+runShell("git config user.name github-actions", logOutput: false)
+runShell("git config user.email github-actions@github.com", logOutput: false)
 log("Tagging with version \(tag)...")
 runShell("git tag \(tag)")
 // Print and stash uncommitted changes before rebasing
