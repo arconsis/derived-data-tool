@@ -4,13 +4,13 @@ description: "This action tries to retrieve the cache from github, if impossible
 runs:
   using: composite
   steps:
-  - name: Calculate SHA-1 for Package.resolved
-    id: cache-swift
-    shell: bash
-    run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint
+    - name: Calculate SHA-1 for Package.resolved
+      id: cache-swift
+      shell: bash
+      run: chmod +x ${{ github.action_path }}/entrypoint.swift && ${{ github.action_path }}/entrypoint
 
-  - name: Cache Swift
-    uses: actions/cache@v3
-    with:
-      path: .build
-      key: ${{ steps.cache-swift.outputs.cache_sha1 }}-swift
+    - name: Cache Swift
+      uses: actions/cache@v3
+      with:
+        path: .build
+        key: ${{ steps.cache-swift.outputs.cache_sha1 }}-swift

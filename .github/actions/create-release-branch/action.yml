@@ -15,4 +15,4 @@ runs:
       shell: bash
       run: |
         chmod +x ${{ github.action_path }}/entrypoint
-        ${{ github.action_path }}/entrypoint "${{ inputs.release-version }}"
+        ${{ github.action_path }}/entrypoint.swift "${{ inputs.release-version }}"

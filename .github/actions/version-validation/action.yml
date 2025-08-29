@@ -17,9 +17,9 @@ outputs:
 runs:
   using: composite
   steps:
-  - name: Run version-validator.swift
-    id: validate-version
-    shell: bash
-    run: |
-      chmod +x ${{ github.action_path }}/entrypoint
-      ${{ github.action_path }}/entrypoint "${{ inputs.mode }}" "${{ inputs.version }}"
+    - name: Run version-validator.swift
+      id: validate-version
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/entrypoint
+        ${{ github.action_path }}/entrypoint.swift "${{ inputs.mode }}" "${{ inputs.version }}"

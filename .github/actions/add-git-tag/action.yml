@@ -9,4 +9,4 @@ runs:
   steps:
     - name: Add git tag and push
       shell: bash
-      run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint "${{ inputs.tag }}"
+      run: chmod +x ${{ github.action_path }}/entrypoint.swift && ${{ github.action_path }}/entrypoint.swift "${{ inputs.tag }}"

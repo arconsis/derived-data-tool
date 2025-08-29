@@ -15,4 +15,4 @@ runs:
     - name: Extract Swift version from Package.swift
       id: determine-swift-version
       shell: bash
-      run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint
+      run: chmod +x ${{ github.action_path }}/entrypoint.swift && ${{ github.action_path }}/entrypoint

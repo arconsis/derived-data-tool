@@ -25,4 +25,4 @@ runs:
     - name: Calculate next release version
       id: release-version
       shell: bash
-      run: chmod +x ${{ github.action_path }}/entrypoint && ${{ github.action_path }}/entrypoint "${{ inputs.release-type }}"
+      run: chmod +x ${{ github.action_path }}/entrypoint.swift && ${{ github.action_path }}/entrypoint.swift "${{ inputs.release-type }}"
