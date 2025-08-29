@@ -43,11 +43,11 @@ jobs:
         uses: ./.github/actions/create-swift-dependency-cache
 
       # Import Apple Code Signing Certificates
-      - name: Import Apple Code Signing Certificates
-        uses: apple-actions/import-codesign-certs@v5
-        with:
-          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE_P12 }}
-          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      # - name: Import Apple Code Signing Certificates
+      #   uses: apple-actions/import-codesign-certs@v5
+      #   with:
+      #     p12-file-base64: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+      #     p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
 
       # Build, sign, and package for arm64
       - name: Build Executable (arm64)
@@ -55,50 +55,57 @@ jobs:
         with:
           arch: arm64
           output: ./derived-data-tool-arm64
-      - name: Sign and Notarize Executable (arm64)
-        uses: ./.github/actions/sign-and-notarize
+
+      - name: Sign an Application Bundle
+        uses: indygreg/apple-code-sign-action@v1
         with:
-          executable: ./derived-data-tool-arm64
-          apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          apple_id: ${{ secrets.APPLE_ID }}
-          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
-          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          input_path: ./derived-data-tool-arm64
+          output_path: dist/derived-data-tool-arm64
+
+      # - name: Sign and Notarize Executable (arm64)
+      #   uses: ./.github/actions/sign-and-notarize
+      #   with:
+      #     executable: ./derived-data-tool-arm64
+      #     apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      #     apple_id: ${{ secrets.APPLE_ID }}
+      #     apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+      #     apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
       - name: Package Executable (arm64)
-        run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool-arm64
+        run: tar -czf derived-data-tool-arm64.tar.gz dist/derived-data-tool-arm64
 
       # Build, sign, and package for x86_64
-      - name: Build Executable (x86_64)
-        uses: ./.github/actions/build-executable
-        with:
-          arch: x86_64
-          output: ./derived-data-tool-x86_64
-      - name: Sign and Notarize Executable (x86_64)
-        uses: ./.github/actions/sign-and-notarize
-        with:
-          executable: ./derived-data-tool-x86_64
-          apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          apple_id: ${{ secrets.APPLE_ID }}
-          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
-          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      - name: Package Executable (x86_64)
-        run: tar -czf derived-data-tool-x86_64.tar.gz derived-data-tool-x86_64
+      # - name: Build Executable (x86_64)
+      #   uses: ./.github/actions/build-executable
+      #   with:
+      #     arch: x86_64
+      #     output: ./derived-data-tool-x86_64
+      # - name: Sign and Notarize Executable (x86_64)
+      #   uses: ./.github/actions/sign-and-notarize
+      #   with:
+      #     executable: ./derived-data-tool-x86_64
+      #     apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      #     apple_id: ${{ secrets.APPLE_ID }}
+      #     apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+      #     apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+      # - name: Package Executable (x86_64)
+      #   run: tar -czf derived-data-tool-x86_64.tar.gz derived-data-tool-x86_64
 
       # Build, sign, and package for universal
-      - name: Build Executable (universal)
-        uses: ./.github/actions/build-executable
-        with:
-          arch: universal
-          output: ./derived-data-tool-universal
-      - name: Sign and Notarize Executable (universal)
-        uses: ./.github/actions/sign-and-notarize
-        with:
-          executable: ./derived-data-tool-universal
-          apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          apple_id: ${{ secrets.APPLE_ID }}
-          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
-          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      - name: Package Executable (universal)
-        run: tar -czf derived-data-tool-universal.tar.gz derived-data-tool-universal
+      # - name: Build Executable (universal)
+      #   uses: ./.github/actions/build-executable
+      #   with:
+      #     arch: universal
+      #     output: ./derived-data-tool-universal
+      # - name: Sign and Notarize Executable (universal)
+      #   uses: ./.github/actions/sign-and-notarize
+      #   with:
+      #     executable: ./derived-data-tool-universal
+      #     apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      #     apple_id: ${{ secrets.APPLE_ID }}
+      #     apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+      #     apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+      # - name: Package Executable (universal)
+      #   run: tar -czf derived-data-tool-universal.tar.gz derived-data-tool-universal
 
       # Upload all executables
       - name: Upload Executable Archive (arm64)
@@ -107,25 +114,25 @@ jobs:
           name: derived-data-tool-arm64
           path: derived-data-tool-arm64.tar.gz
           retention-days: 14
-      - name: Upload Executable Archive (x86_64)
-        uses: actions/upload-artifact@v4
-        with:
-          name: derived-data-tool-x86_64
-          path: derived-data-tool-x86_64.tar.gz
-          retention-days: 14
-      - name: Upload Executable Archive (universal)
-        uses: actions/upload-artifact@v4
-        with:
-          name: derived-data-tool-universal
-          path: derived-data-tool-universal.tar.gz
-          retention-days: 14
+      # - name: Upload Executable Archive (x86_64)
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: derived-data-tool-x86_64
+      #     path: derived-data-tool-x86_64.tar.gz
+      #     retention-days: 14
+      # - name: Upload Executable Archive (universal)
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: derived-data-tool-universal
+      #     path: derived-data-tool-universal.tar.gz
+      #     retention-days: 14
 
-      - name: Validate and increment version using Swift script
-        id: next_version_build
-        uses: ./.github/actions/version-validation
-        with:
-          mode: build
-          version: ${{ env.version }}
+      # - name: Validate and increment version using Swift script
+      #   id: next_version_build
+      #   uses: ./.github/actions/version-validation
+      #   with:
+      #     mode: build
+      #     version: ${{ env.version }}
       - name: Add tag to main branch
         uses: ./.github/actions/add-git-tag
         with:
@@ -155,16 +162,16 @@ jobs:
         with:
           name: derived-data-tool-arm64
           path: ./dist
-      - name: Download Executable Archive (x86_64)
-        uses: actions/download-artifact@v5
-        with:
-          name: derived-data-tool-x86_64
-          path: ./dist
-      - name: Download Executable Archive (universal)
-        uses: actions/download-artifact@v5
-        with:
-          name: derived-data-tool-universal
-          path: ./dist
+      # - name: Download Executable Archive (x86_64)
+      #   uses: actions/download-artifact@v5
+      #   with:
+      #     name: derived-data-tool-x86_64
+      #     path: ./dist
+      # - name: Download Executable Archive (universal)
+      #   uses: actions/download-artifact@v5
+      #   with:
+      #     name: derived-data-tool-universal
+      #     path: ./dist
       - name: List dist directory contents
         run: ls -l ./dist
       - name: Create GitHub Release
@@ -188,21 +195,21 @@ jobs:
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload Release Asset (x86_64)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/derived-data-tool-x86_64.tar.gz
-          asset_name: derived-data-tool-x86_64.tar.gz
-          asset_content_type: application/gzip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload Release Asset (universal)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/derived-data-tool-universal.tar.gz
-          asset_name: derived-data-tool-universal.tar.gz
-          asset_content_type: application/gzip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload Release Asset (x86_64)
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./dist/derived-data-tool-x86_64.tar.gz
+      #     asset_name: derived-data-tool-x86_64.tar.gz
+      #     asset_content_type: application/gzip
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload Release Asset (universal)
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./dist/derived-data-tool-universal.tar.gz
+      #     asset_name: derived-data-tool-universal.tar.gz
+      #     asset_content_type: application/gzip
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
