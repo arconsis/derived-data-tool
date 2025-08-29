@@ -14,5 +14,5 @@ runs:
     - name: Create release branch and bump version
       shell: bash
       run: |
-        chmod +x ${{ github.action_path }}/entrypoint
+        chmod +x ${{ github.action_path }}/entrypoint.swift
         ${{ github.action_path }}/entrypoint.swift "${{ inputs.release-version }}"
