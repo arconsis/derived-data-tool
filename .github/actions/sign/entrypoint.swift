@@ -17,9 +17,6 @@ func exitWithError(_ message: String) -> Never {
 // MARK: - Argument Parsing
 var executable: String?
 var identity: String?
-var appleID: String?
-var teamID: String?
-var appSpecificPassword: String?
 log(CommandLine.arguments.dropFirst().joined(separator: ", "))
 var args = CommandLine.arguments.dropFirst().makeIterator()
 while let arg = args.next()?.trimmingCharacters(in: .whitespacesAndNewlines) {
@@ -28,12 +25,6 @@ while let arg = args.next()?.trimmingCharacters(in: .whitespacesAndNewlines) {
         executable = args.next()
     case "--identity":
         identity = args.next()
-    case "--apple_id":
-        appleID = args.next()
-    case "--team_id":
-        teamID = args.next()
-    case "--password":
-        appSpecificPassword = args.next()
     default:
         exitWithError("Unknown option: \(arg)")
     }
@@ -43,20 +34,12 @@ if executable == nil || identity == nil || appleID == nil || teamID == nil
 {
     exitWithError("Missing required arguments.")
 }
-// MARK: - Sign and Notarize
+// MARK: - Sign
 let exec = executable!
 let id = identity!
-let apple = appleID!
-let team = teamID!
-let pw = appSpecificPassword!
 log("Signing \(exec) with identity \(id)...")
 runShell("codesign --timestamp --options runtime --sign \(id) \(exec)")
-log("Submitting \(exec) for notarization...")
-runShell(
-    "xcrun notarytool submit \(exec) --apple-id \(apple) --team-id \(team) --password \(pw) --wait")
-log("Stapling notarization ticket to \(exec)...")
-runShell("xcrun stapler staple \(exec)")
-log("Sign and notarize process completed.")
+log("Sign process completed.")
 // MARK: - Shell Helper
 @discardableResult
 func runShell(_ command: String) -> Int32 {

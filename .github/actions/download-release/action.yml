@@ -6,7 +6,8 @@ runs:
   steps:
     - name: Run download script
       shell: bash
-      run: chmod +x ${{ github.action_path }}/entrypoint.sh && ${{ github.action_path }}/entrypoint.sh \
+      run:
+        chmod +x ${{ github.action_path }}/entrypoint.sh && ${{ github.action_path }}/entrypoint.sh \
         "${{ inputs.url }}" "${{ inputs.output }}"
 inputs:
   url:

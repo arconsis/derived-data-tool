@@ -1,0 +1,31 @@
+name: Debug Sign and Notarize
+on:
+  workflow_dispatch:
+jobs:
+  debug-sign-notarize:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download Release Artifact
+        uses: ./.github/actions/download-release
+        with:
+          url: https://github.com/arconsis/derived-data-tool/releases/download/0.0.3/derived-data-tool-arm64.tar.gz
+          output: derived-data-tool-arm64.tar.gz
+      - name: Extract Artifact
+        uses: ./.github/actions/extract-tar
+        with:
+          archive: derived-data-tool-arm64.tar.gz
+          output-dir: extracted/
+      - name: Sign Binary
+        uses: ./.github/actions/sign
+        with:
+          binary-path: extracted/derived-data-tool
+      - name: Notarize Binary
+        uses: ./.github/actions/notarize
+        with:
+          binary-path: extracted/derived-data-tool
+      - name: Run Version Check
+        uses: ./.github/actions/run-version-check
+        with:
+          binary-path: extracted/derived-data-tool
