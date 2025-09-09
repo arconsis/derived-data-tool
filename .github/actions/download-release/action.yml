@@ -1,0 +1,17 @@
+name: "Download Release Artifact"
+description: "Downloads a release artifact from a given URL."
+author: "arconsis"
+runs:
+  using: "composite"
+  steps:
+    - name: Run download script
+      shell: bash
+      run: chmod +x ${{ github.action_path }}/entrypoint.sh && ${{ github.action_path }}/entrypoint.sh \
+        "${{ inputs.url }}" "${{ inputs.output }}"
+inputs:
+  url:
+    description: "URL to download the release artifact from."
+    required: true
+  output:
+    description: "Output file name."
+    required: true

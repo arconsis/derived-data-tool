@@ -1,0 +1,14 @@
+name: "Run Version Check"
+description: "Runs the binary with --version and prints the output."
+author: "arconsis"
+runs:
+  using: "composite"
+  steps:
+    - name: Run version check script
+      shell: bash
+      run: chmod +x ${{ github.action_path }}/entrypoint.sh && ${{ github.action_path }}/entrypoint.sh \
+        "${{ inputs.binary-path }}"
+inputs:
+  binary-path:
+    description: "Path to the binary to check."
+    required: true

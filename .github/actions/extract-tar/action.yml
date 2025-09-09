@@ -1,0 +1,17 @@
+name: "Extract Tar Archive"
+description: "Extracts a tar.gz archive to a specified directory."
+author: "arconsis"
+runs:
+  using: "composite"
+  steps:
+    - name: Run extract script
+      shell: bash
+      run: chmod +x ${{ github.action_path }}/entrypoint.sh && ${{ github.action_path }}/entrypoint.sh \
+        "${{ inputs.archive }}" "${{ inputs.output-dir }}"
+inputs:
+  archive:
+    description: "Path to the tar.gz archive."
+    required: true
+  output-dir:
+    description: "Directory to extract to."
+    required: true
