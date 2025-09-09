@@ -11,7 +11,7 @@ jobs:
         uses: ./.github/actions/download-release
         with:
           url: https://github.com/arconsis/derived-data-tool/releases/download/0.0.3/derived-data-tool-arm64.tar.gz
-          output: derived-data-tool-arm64.tar.gz
+          output: ./derived-data-tool-arm64.tar.gz
       - name: Extract Artifact
         uses: ./.github/actions/extract-tar
         with:
