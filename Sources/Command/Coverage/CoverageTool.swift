@@ -19,9 +19,8 @@ class CoverageTool {
     private let githubExporterSetting: GithubExportSettings
 
     private let filterReports: [String]
-    private let excludedTargets: [String]
-    private let excludedFiles: [String]
-    private let excludedFunctions: [String]
+    private let excludedPatterns: MatchPatternConfig
+    private let includedPatterns: MatchPatternConfig
 
     private let workingDirectory: URL
     private let locationCurrentReport: URL
@@ -38,6 +37,9 @@ class CoverageTool {
          excludedTargets: [String],
          excludedFiles: [String],
          excludedFunctions: [String],
+         includedTargets: [String],
+         includedFiles: [String],
+         includedFunctions: [String],
          workingDirectory: URL,
          locationCurrentReport: URL,
          archiveLocation: URL,
@@ -50,12 +52,16 @@ class CoverageTool {
         self.cliTools = cliTools
         self.githubExporterSetting = githubExporterSetting
         self.filterReports = filterReports
-        self.excludedTargets = excludedTargets
-        self.excludedFiles = excludedFiles
-        self.excludedFunctions = excludedFunctions
         self.workingDirectory = workingDirectory
         self.locationCurrentReport = locationCurrentReport
         self.archiveLocation = archiveLocation
+        self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
+                                                   files: excludedFiles,
+                                                   functions: excludedFunctions)
+
+        self.includedPatterns = MatchPatternConfig(targets: includedTargets,
+                                                   files: includedFiles,
+                                                   functions: includedFunctions)
     }
 }
 
@@ -133,11 +139,15 @@ private extension CoverageTool {
         for xcResult in resultFiles {
             if let json = await xccov(filePath: xcResult.url).value,
                var result = ReportGenerator.decodeFullXCOV(with: json).value {
-                result = result.exclude(targets: excludedTargets)
+                // process included List first
+                result = result.include(targets: includedPatterns.targets)
+                result = result.include(files: includedPatterns.files)
+                result = result.include(functions: includedPatterns.functions)
 
-                result = result.exclude(files: excludedFiles)
-
-                result = result.exclude(functions: excludedFunctions)
+                // process excluded List last
+                result = result.exclude(targets: excludedPatterns.targets)
+                result = result.exclude(files: excludedPatterns.files)
+                result = result.exclude(functions: excludedPatterns.functions)
 
                 let meta = CoverageMetaReport(fileInfo: xcResult, coverage: result)
                 codeCoverageReports.append(meta)

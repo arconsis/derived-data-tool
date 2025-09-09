@@ -9,22 +9,25 @@ import Foundation
 
 public struct Config: Codable, CustomStringConvertible {
     public let excluded: Excluded?
+    public let included: Included?
     public let filterXCResults: [String]?
     public let locations: Locations?
     private let tools: [Tool]?
 //    public let workflow: Workflow?
 
     enum CodingKeys: String, CodingKey {
-        case excluded, archiver, locations, tools
+        case excluded, included, archiver, locations, tools
         case filterXCResults = "filter_results"
     }
 
     init(excluded: Config.Excluded? = nil,
+         included: Config.Included? = nil,
          filterXCResults: [String]? = nil,
          locations: Config.Locations? = nil,
          tools: [Tool]? = nil)
     {
         self.excluded = excluded
+        self.included = included
         self.filterXCResults = filterXCResults
         self.locations = locations
         self.tools = tools
@@ -50,6 +53,7 @@ public struct Config: Codable, CustomStringConvertible {
         let container: KeyedDecodingContainer<Config.CodingKeys> = try decoder.container(keyedBy: Config.CodingKeys.self)
 
         excluded = try container.decodeIfPresent(Excluded.self, forKey: .excluded)
+        included = try container.decodeIfPresent(Included.self, forKey: .included)
         locations = try container.decodeIfPresent(Locations.self, forKey: .locations)
         filterXCResults = try container.decodeIfPresent([String].self, forKey: .filterXCResults)
         tools = try container.decodeIfPresent([Tool].self, forKey: .tools)
@@ -67,6 +71,7 @@ public struct Config: Codable, CustomStringConvertible {
     public var description: String {
         return """
         Excluded: \(excluded?.description ?? "N/A")
+        Included: \(included?.description ?? "N/A")
         Locations: \(locations?.description ?? "N/A")
         """
     }

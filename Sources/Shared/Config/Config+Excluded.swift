@@ -21,4 +21,18 @@ public extension Config {
             """
         }
     }
+
+    struct Included: Codable, CustomStringConvertible {
+        public let targets: [String]?
+        public let files: [String]?
+        public let functions: [String]?
+
+        public var description: String {
+            return """
+            Targets: \(targets?.description ?? "N/A")
+            Files: \(files?.description ?? "N/A")
+            Functions: \(functions?.description ?? "N/A")
+            """
+        }
+    }
 }

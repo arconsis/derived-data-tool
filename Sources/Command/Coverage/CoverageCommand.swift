@@ -54,6 +54,9 @@ public final class CoverageCommand: AsyncParsableCommand, QuietErrorHandling {
                                                    excludedTargets: tools.excludedTargets,
                                                    excludedFiles: tools.excludedFiles,
                                                    excludedFunctions: tools.excludedFunctions,
+                                                   includedTargets: tools.includedTargets,
+                                                   includedFiles: tools.includedFiles,
+                                                   includedFunctions: tools.includedFunctions,
                                                    workingDirectory: tools.workingDirectory,
                                                    locationCurrentReport: reportUrl,
                                                    archiveLocation: archiveLocation,
@@ -73,6 +76,11 @@ extension CoverageCommand {
         let excludedTargets: [String]
         let excludedFiles: [String]
         let excludedFunctions: [String]
+
+        let includedTargets: [String]
+        let includedFiles: [String]
+        let includedFunctions: [String]
+
         let filterReports: [String]
         let locationCurrentReport: String?
         let fileHandler: FileHandler
@@ -102,6 +110,9 @@ extension CoverageCommand {
              excludedTargets: [String],
              excludedFiles: [String],
              excludedFunctions: [String],
+             includedTargets: [String],
+             includedFiles: [String],
+             includedFunctions: [String],
              filterReports: [String],
              locationCurrentReport: String?,
              fileHandler: FileHandler,
@@ -113,6 +124,11 @@ extension CoverageCommand {
             self.excludedTargets = excludedTargets
             self.excludedFiles = excludedFiles
             self.excludedFunctions = excludedFunctions
+
+            self.includedTargets = includedTargets
+            self.includedFiles = includedFiles
+            self.includedFunctions = includedFunctions
+
             self.filterReports = filterReports
             self.locationCurrentReport = locationCurrentReport
             self.fileHandler = fileHandler
@@ -126,6 +142,11 @@ extension CoverageCommand {
             let excludedTargets: [String] = config.excluded?.targets ?? []
             let excludedFiles: [String] = config.excluded?.files ?? []
             let excludedFunctions: [String] = config.excluded?.functions ?? []
+
+            let includedTargets: [String] = config.included?.targets ?? []
+            let includedFiles: [String] = config.included?.files ?? []
+            let includedFunctions: [String] = config.included?.functions ?? []
+
             let filterReports: [String] = config.filterXCResults ?? []
             let locationCurrentReport: String? = config.locations?.currentReport
             let fileHandler = FileHandler()
@@ -149,6 +170,9 @@ extension CoverageCommand {
                          excludedTargets: excludedTargets,
                          excludedFiles: excludedFiles,
                          excludedFunctions: excludedFunctions,
+                         includedTargets: includedTargets,
+                         includedFiles: includedFiles,
+                         includedFunctions: includedFunctions,
                          filterReports: filterReports,
                          locationCurrentReport: locationCurrentReport,
                          fileHandler: FileHandler(),
