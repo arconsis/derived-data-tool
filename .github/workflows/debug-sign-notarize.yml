@@ -11,16 +11,16 @@ jobs:
         uses: ./.github/actions/download-release
         with:
           url: https://github.com/arconsis/derived-data-tool/releases/download/0.0.3/derived-data-tool-arm64.tar.gz
-          output: ./derived-data-tool-arm64.tar.gz
+          output: ./derived-data-tool.tar.gz
       - name: Extract Artifact
         uses: ./.github/actions/extract-tar
         with:
-          archive: derived-data-tool-arm64.tar.gz
+          archive: derived-data-tool.tar.gz
           output-dir: extracted/
       - name: Sign Binary
         uses: ./.github/actions/simple-sign-action
         with:
-          executable: ./extracted/dist/derived-data-tool-arm64
+          executable: ./extracted/dist/derived-data-tool
           certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
           certificate_pwd: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           keychain_pwd: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
