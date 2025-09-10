@@ -18,9 +18,9 @@ jobs:
           archive: derived-data-tool-arm64.tar.gz
           output-dir: extracted/
       - name: Sign Binary
-        uses: ./.github/actions/sign
+        uses: ./.github/actions/simple-sign-action
         with:
-          binary-path: extracted/derived-data-tool
+          executable: extracted/derived-data-tool
       - name: Notarize Binary
         uses: ./.github/actions/notarize
         with:
