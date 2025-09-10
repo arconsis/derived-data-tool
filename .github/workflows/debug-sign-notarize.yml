@@ -31,4 +31,4 @@ jobs:
       - name: Run Version Check
         uses: ./.github/actions/run-version-check
         with:
-          binary-path: extracted/derived-data-tool-arm64
+          binary-path: ./extracted/derived-data-tool-arm64
