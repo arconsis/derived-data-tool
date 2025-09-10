@@ -65,19 +65,19 @@ jobs:
       # - name: Sign an Application Bundle
       #   uses: indygreg/apple-code-sign-action@v1
       #   with:
-      #     input_path: ./derived-data-tool-arm64
-      #     output_path: dist/derived-data-tool-arm64
+      #     input_path: ./derived-data-tool
+      #     output_path: dist/derived-data-tool
 
       # - name: Sign and Notarize Executable (arm64)
       #   uses: ./.github/actions/sign-and-notarize
       #   with:
-      #     executable: ./derived-data-tool-arm64
+      #     executable: ./derived-data-tool
       #     apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
       #     apple_id: ${{ secrets.APPLE_ID }}
       #     apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
       #     apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
       - name: Package Executable (arm64)
-        run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool-arm64
+        run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool
 
       # Build, sign, and package for x86_64
       # - name: Build Executable (x86_64)
@@ -117,7 +117,7 @@ jobs:
       - name: Upload Executable Archive (arm64)
         uses: actions/upload-artifact@v4
         with:
-          name: derived-data-tool-arm64
+          name: derived-data-tool
           path: derived-data-tool-arm64.tar.gz
           retention-days: 14
       # - name: Upload Executable Archive (x86_64)
@@ -166,7 +166,7 @@ jobs:
       - name: Download Executable Archive (arm64)
         uses: actions/download-artifact@v5
         with:
-          name: derived-data-tool-arm64
+          name: derived-data-tool
           path: ./dist
       # - name: Download Executable Archive (x86_64)
       #   uses: actions/download-artifact@v5
@@ -196,8 +196,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/derived-data-tool-arm64.tar.gz
-          asset_name: derived-data-tool-arm64.tar.gz
+          asset_path: ./dist/derived-data-tool.tar.gz
+          asset_name: derived-data-tool.tar.gz
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
