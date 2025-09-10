@@ -30,6 +30,11 @@ runs:
         echo "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ..."
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
         echo "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ... DONE"
+        ls -la
+        ls -la ./extracted/
+        find . derived-data-tool
+
+
         echo "codesign --force -s $IDENTITY `$EXECUTABLE` -v ..."
         /usr/bin/codesign --force -s $IDENTITY $EXECUTABLE -v
         echo "codesign --force -s $IDENTITY `$EXECUTABLE` -v ... DONE"
