@@ -10,5 +10,5 @@ runs:
   steps:
     - name: Set version in VersionCommand.swift
       run: |
-        swift .${{ github.action_path }}/entrypoint.swift "${{ inputs.version }}"
+        swift ${{ github.action_path }}/entrypoint.swift "${{ inputs.version }}"
       shell: bash
