@@ -7,9 +7,9 @@ runs:
   steps:
     - name: Codesign executable
       env:
-        MACOS_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE_P12 }}
-        MACOS_CERTIFICATE_PWD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-        KEYCHAIN_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        MACOS_CERTIFICATE: ${{ inputs.certificate_p12 }}
+        MACOS_CERTIFICATE_PWD: ${{ inputs.certificate_pwd }}
+        KEYCHAIN_PASSWORD: ${{ inputs.keychain_pwd }}
       run: |
         echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
         security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
@@ -22,4 +22,13 @@ runs:
 inputs:
   executable:
     description: "Path to the executable to sign."
+    required: true
+  certificate_p12:
+    description: "Base64 encoded .p12 certificate."
+    required: true
+  certificate_pwd:
+    description: "Password for the .p12 certificate."
+    required: true
+  keychain_pwd:
+    description: "Password for the keychain."
     required: true

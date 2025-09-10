@@ -21,6 +21,9 @@ jobs:
         uses: ./.github/actions/simple-sign-action
         with:
           executable: extracted/derived-data-tool
+          certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          certificate_pwd: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          keychain_pwd: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
       - name: Notarize Binary
         uses: ./.github/actions/notarize
         with:
