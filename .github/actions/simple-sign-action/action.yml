@@ -20,7 +20,6 @@ runs:
         security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
         security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
-        ls -la ./extracted/
         /usr/bin/codesign --force -s $IDENTITY $EXECUTABLE -v
 
 inputs:
