@@ -6,9 +6,9 @@ runs:
   steps:
     - name: Run extract script
       shell: bash
-      run:
-        chmod +x ${{ github.action_path }}/entrypoint.sh && ${{ github.action_path }}/entrypoint.sh \
-        "${{ inputs.archive }}" "${{ inputs.output-dir }}"
+      run: |
+        chmod +x ${{ github.action_path }}/entrypoint.sh
+        ${{ github.action_path }}/entrypoint.sh "${{ inputs.archive }}" "${{ inputs.output-dir }}"
 inputs:
   archive:
     description: "Path to the tar.gz archive."
