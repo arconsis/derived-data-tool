@@ -6,6 +6,7 @@ runs:
   using: "composite"
   steps:
     - name: Codesign executable
+      shell: bash
       env:
         MACOS_CERTIFICATE: ${{ inputs.certificate_p12 }}
         MACOS_CERTIFICATE_PWD: ${{ inputs.certificate_pwd }}
