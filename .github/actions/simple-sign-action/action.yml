@@ -9,29 +9,16 @@ runs:
       shell: bash
       env:
         MACOS_CERTIFICATE: ${{ inputs.certificate_p12 }}
-      run: echo $MACOS_CERTIFICATE | base64 --decode -o certificate.p12
-
-    - name: Codesign executable
-      shell: bash
-      env:
-        KEYCHAIN_PASSWORD: ${{ inputs.keychain_pwd }}
-      run: |
-        security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
-        security default-keychain -s build.keychain
-    - name: Codesign executable
-      shell: bash
-      env:
         MACOS_CERTIFICATE_PWD: ${{ inputs.certificate_pwd }}
         KEYCHAIN_PASSWORD: ${{ inputs.keychain_pwd }}
+        EXECUTABLE: ${{ inputs.executable }}
       run: |
+        echo $MACOS_CERTIFICATE | base64 --decode -o certificate.p12
+        security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
+        security default-keychain -s build.keychain
         security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
         security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
-    - name: Codesign executable
-      shell: bash
-      env:
-        EXECUTABLE: ${{ inputs.executable }}
-      run: |
         IDENTITY=$(security find-identity -v | grep -o '^[^ ]*')
         /usr/bin/codesign --force -s $IDENTITY "$EXECUTABLE" -v
 inputs:
