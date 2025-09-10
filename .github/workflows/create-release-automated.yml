@@ -77,7 +77,7 @@ jobs:
       #     apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
       #     apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
       - name: Package Executable (arm64)
-        run: tar -czf derived-data-tool-arm64.tar.gz dist/derived-data-tool-arm64
+        run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool-arm64
 
       # Build, sign, and package for x86_64
       # - name: Build Executable (x86_64)
