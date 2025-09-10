@@ -30,9 +30,9 @@ runs:
         echo "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ..."
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
         echo "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ... DONE"
-        echo "codesign --force -s $IDENTITY "$EXECUTABLE" -v ..."
-        /usr/bin/codesign --force -s $IDENTITY "$EXECUTABLE" -v
-        echo "codesign --force -s $IDENTITY "$EXECUTABLE" -v ... DONE" 
+        echo "codesign --force -s $IDENTITY `$EXECUTABLE` -v ..."
+        /usr/bin/codesign --force -s $IDENTITY $EXECUTABLE -v
+        echo "codesign --force -s $IDENTITY `$EXECUTABLE` -v ... DONE"
 inputs:
   executable:
     description: "Path to the executable to sign."
