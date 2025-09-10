@@ -54,13 +54,19 @@ jobs:
         uses: ./.github/actions/build-executable
         with:
           arch: arm64
-          output: ./derived-data-tool-arm64
-
-      - name: Sign an Application Bundle
-        uses: indygreg/apple-code-sign-action@v1
+          output: ./derived-data-tool
+      - name: Sign Binary
+        uses: ./.github/actions/simple-sign-action
         with:
-          input_path: ./derived-data-tool-arm64
-          output_path: dist/derived-data-tool-arm64
+          executable: ./derived-data-tool
+          certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          certificate_pwd: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          keychain_pwd: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+      # - name: Sign an Application Bundle
+      #   uses: indygreg/apple-code-sign-action@v1
+      #   with:
+      #     input_path: ./derived-data-tool-arm64
+      #     output_path: dist/derived-data-tool-arm64
 
       # - name: Sign and Notarize Executable (arm64)
       #   uses: ./.github/actions/sign-and-notarize
