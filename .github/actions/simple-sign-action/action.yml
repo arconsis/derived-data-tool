@@ -9,7 +9,7 @@ runs:
       shell: bash
       env:
         MACOS_CERTIFICATE: ${{ inputs.certificate_p12 }}
-      run: echo $MACOS_CERTIFICATE | base64 —d > certificate.p12
+      run: echo $MACOS_CERTIFICATE | base64 --decode -o certificate.p12
 
     - name: Codesign executable
       shell: bash
