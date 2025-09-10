@@ -15,12 +15,24 @@ runs:
         IDENTITY: "3CC39568B315E0102F6EEAE2DA1C3464A965A2FF"
       run: |
         echo $MACOS_CERTIFICATE | base64 --decode -o certificate.p12
+        echo "security create-keychain -p ..."
         security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
+        echo "security create-keychain -p ... DONE"
+        echo "security default-keychain -s ..."
         security default-keychain -s build.keychain
+        echo "security default-keychain -s ... DONE"
+        echo "security unlock-keychain -p ..."
         security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
+        echo "security unlock-keychain -p ... DONE"
+        echo "security import certificate.p12 -k build.keychain -P ..."
         security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        echo "security import certificate.p12 -k build.keychain -P ... DONE"
+        echo "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ..."
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
+        echo "security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ... DONE"
+        echo "codesign --force -s $IDENTITY "$EXECUTABLE" -v ..."
         /usr/bin/codesign --force -s $IDENTITY "$EXECUTABLE" -v
+        echo "codesign --force -s $IDENTITY "$EXECUTABLE" -v ... DONE" 
 inputs:
   executable:
     description: "Path to the executable to sign."
