@@ -12,6 +12,7 @@ runs:
         MACOS_CERTIFICATE_PWD: ${{ inputs.certificate_pwd }}
         KEYCHAIN_PASSWORD: ${{ inputs.keychain_pwd }}
         EXECUTABLE: ${{ inputs.executable }}
+        IDENTITY: "3CC39568B315E0102F6EEAE2DA1C3464A965A2FF"
       run: |
         echo $MACOS_CERTIFICATE | base64 --decode -o certificate.p12
         security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
@@ -19,7 +20,6 @@ runs:
         security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
         security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
-        IDENTITY=$(security find-identity -v)
         /usr/bin/codesign --force -s $IDENTITY "$EXECUTABLE" -v
 inputs:
   executable:
