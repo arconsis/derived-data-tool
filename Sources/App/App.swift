@@ -7,6 +7,7 @@ import Foundation
 import Migrate
 import Prototype
 import Report
+import Version
 
 @main
 struct App: AsyncParsableCommand {
@@ -26,6 +27,7 @@ struct App: AsyncParsableCommand {
                 ReportCommand.self,
                 CompareCommand.self,
                 MigrateCommand.self,
+                VersionCommand.self,
             ]
         #else
             return [
@@ -33,6 +35,7 @@ struct App: AsyncParsableCommand {
                 BuildCommand.self,
                 ConfigCommand.self,
                 ReportCommand.self,
+                VersionCommand.self,
             ]
         #endif
     }

@@ -1,0 +1,14 @@
+name: "Set Version in Code"
+description: "Replaces the version string in VersionCommand.swift with the provided version."
+author: "arconsis"
+inputs:
+  version:
+    description: "Version string to set (e.g. 1.2.3)"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set version in VersionCommand.swift
+      run: |
+        swift .${{ github.action_path }}/entrypoint.swift "${{ inputs.version }}"
+      shell: bash

@@ -15,6 +15,7 @@ extension PackageDescription.Target {
     static let migrate = TargetDefinition(name: "Migrate", path: "Sources/Command/Migrate")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
+    static let version = TargetDefinition(name: "Version", path: "Sources/Command/Version")
 }
 
 typealias MyPackage = PackageDescription.Target
@@ -48,6 +49,7 @@ let package = Package(
                 .build(),
                 .config(),
                 .report(),
+                .version(),
             ],
             path: MyPackage.app.path
         ),
@@ -109,6 +111,9 @@ let package = Package(
             .dependencyInjection(),
             .helper(),
             .shared(),
+        ]),
+        MyPackage.version.toTarget(dependencies: [
+            .argumentParser(),
         ]),
 
         // MARK: HELPER
@@ -326,6 +331,11 @@ extension PackageDescription.Target.Dependency {
 
     static func migrate() -> Target.Dependency {
         Target.Dependency.target(name: "Migrate")
+    }
+
+    /// SubCommand: `version`: command to display app version
+    static func version() -> Target.Dependency {
+        Target.Dependency.target(name: "Version")
     }
 }
 
