@@ -33,7 +33,6 @@ struct App: AsyncParsableCommand {
                 BuildCommand.self,
                 ConfigCommand.self,
                 ReportCommand.self,
-                VersionCommand.self,
             ]
         #endif
     }
