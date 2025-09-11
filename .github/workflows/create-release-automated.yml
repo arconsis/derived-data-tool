@@ -115,7 +115,7 @@ jobs:
       - name: Upload Executable Archive (arm64)
         uses: actions/upload-artifact@v4
         with:
-          name: derived-data-tool
+          name: derived-data-tool (arm64)
           path: derived-data-tool-arm64.tar.gz
           retention-days: 14
       # - name: Upload Executable Archive (x86_64)
@@ -164,7 +164,7 @@ jobs:
       - name: Download Executable Archive (arm64)
         uses: actions/download-artifact@v5
         with:
-          name: derived-data-tool
+          name: derived-data-tool (arm64)
           path: ./dist
       # - name: Download Executable Archive (x86_64)
       #   uses: actions/download-artifact@v5
