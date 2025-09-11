@@ -10,5 +10,5 @@ runs:
   steps:
     - name: Remove quarantine attribute
       run: |
-        xattr -d com.apple.quarantine "${{ inputs.executable }}"
+        xattr -d com.apple.quarantine ${{ inputs.executable }}
       shell: bash
