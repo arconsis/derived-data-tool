@@ -8,14 +8,15 @@ guard arguments.count == 2 else {
 }
 
 let newVersion = arguments[1]
-let filePath = "Sources/Command/Version/VersionCommand.swift"
+let filePath = "Sources/App/App.swift"
 let fullPath = FileManager.default.currentDirectoryPath + "/" + filePath
 
 do {
     var content = try String(contentsOfFile: fullPath, encoding: .utf8)
-    let pattern = "0.0.0"
+    let pattern = "version: \"0.0.0\"," // match version: "0.0.0",
+    let replacement = "version: \"\(newVersion)\"," // version: "<newVersion>",
     if content.contains(pattern) {
-        content = content.replacingOccurrences(of: pattern, with: newVersion)
+        content = content.replacingOccurrences(of: pattern, with: replacement)
         try content.write(toFile: fullPath, atomically: true, encoding: .utf8)
         print("Version updated to \(newVersion) in \(filePath)")
     } else {

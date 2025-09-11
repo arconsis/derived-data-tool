@@ -7,13 +7,12 @@ import Foundation
 import Migrate
 import Prototype
 import Report
-import Version
 
 @main
 struct App: AsyncParsableCommand {
     public static let configuration = CommandConfiguration(
         abstract: "Code coverage tool",
-        version: "0.0.2",
+        version: "0.0.0",
         subcommands: Self.subcommands
     )
 
@@ -27,7 +26,6 @@ struct App: AsyncParsableCommand {
                 ReportCommand.self,
                 CompareCommand.self,
                 MigrateCommand.self,
-                VersionCommand.self,
             ]
         #else
             return [

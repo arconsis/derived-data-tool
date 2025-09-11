@@ -60,20 +60,10 @@ jobs:
           certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
           certificate_pwd: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           keychain_pwd: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      # - name: Sign an Application Bundle
-      #   uses: indygreg/apple-code-sign-action@v1
-      #   with:
-      #     input_path: ./derived-data-tool
-      #     output_path: dist/derived-data-tool
-
-      # - name: Sign and Notarize Executable (arm64)
-      #   uses: ./.github/actions/sign-and-notarize
-      #   with:
-      #     executable: ./derived-data-tool
-      #     apple_signing_identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-      #     apple_id: ${{ secrets.APPLE_ID }}
-      #     apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
-      #     apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+      - name: Remove quarantine attribute
+        uses: ./.github/actions/remove-quarantine
+        with:
+          executable: derived-data-tool
       - name: Package Executable (arm64)
         run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool
 

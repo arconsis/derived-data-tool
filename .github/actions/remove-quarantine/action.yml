@@ -1,0 +1,14 @@
+name: "Remove Quarantine Attribute"
+description: "Removes the com.apple.quarantine attribute from the built executable."
+author: "arconsis"
+inputs:
+  executable:
+    description: "Path to the executable to clean."
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Remove quarantine attribute
+      run: |
+        xattr -d com.apple.quarantine "${{ inputs.executable }}"
+      shell: bash
