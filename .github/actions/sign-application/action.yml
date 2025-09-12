@@ -12,7 +12,6 @@ runs:
         MACOS_CERTIFICATE_PWD: ${{ inputs.certificate_pwd }}
         KEYCHAIN_PASSWORD: ${{ inputs.keychain_pwd }}
         EXECUTABLE: ${{ inputs.executable }}
-        IDENTITY: ${{ inputs.identity }}
       run: |
         echo $MACOS_CERTIFICATE | base64 --decode -o certificate.p12
         security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
@@ -21,8 +20,9 @@ runs:
         security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
         echo "Available code signing identities in build.keychain:"
-        security find-identity -v -p codesigning build.keychain
-        /usr/bin/codesign --force -s $IDENTITY $EXECUTABLE -v
+        IDENTITY_HASH=$(security find-identity -v -p codesigning build.keychain | awk '/Developer ID Application/ {print $2}')
+        echo "Using identity hash: $IDENTITY_HASH"
+        /usr/bin/codesign --force -s "$IDENTITY_HASH" "$EXECUTABLE" -v
 
 inputs:
   executable:
@@ -36,7 +36,4 @@ inputs:
     required: true
   keychain_pwd:
     description: "Password for the keychain."
-    required: true
-  identity:
-    description: "The identity to use for codesigning."
     required: true

@@ -61,7 +61,6 @@ jobs:
           certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
           certificate_pwd: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           keychain_pwd: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
 
       - name: Package Executable (arm64)
         run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool
