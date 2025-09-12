@@ -53,19 +53,29 @@ jobs:
         with:
           arch: arm64
           output: ./derived-data-tool
+
       - name: Sign Binary
-        uses: ./.github/actions/simple-sign-action
+        uses: ./.github/actions/sign-action
         with:
           executable: ./derived-data-tool
           certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
           certificate_pwd: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           keychain_pwd: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          identity: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+
       - name: Remove quarantine attribute
         uses: ./.github/actions/remove-quarantine
         with:
           executable: derived-data-tool
       - name: Package Executable (arm64)
         run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool
+      - name: Notarize and Staple Executable (arm64)
+        uses: ./.github/actions/notarize-staple-application
+        with:
+          executable: derived-data-tool
+          apple_id: ${{ secrets.APPLE_ID }}
+          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+          app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
 
       # Build, sign, and package for x86_64
       # - name: Build Executable (x86_64)
