@@ -55,7 +55,7 @@ jobs:
           output: ./derived-data-tool
 
       - name: Sign Binary
-        uses: ./.github/actions/sign-action
+        uses: ./.github/actions/sign-application
         with:
           executable: ./derived-data-tool
           certificate_p12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
@@ -67,8 +67,10 @@ jobs:
         uses: ./.github/actions/remove-quarantine
         with:
           executable: derived-data-tool
+
       - name: Package Executable (arm64)
         run: tar -czf derived-data-tool-arm64.tar.gz derived-data-tool
+
       - name: Notarize and Staple Executable (arm64)
         uses: ./.github/actions/notarize-staple-application
         with:
