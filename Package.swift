@@ -24,6 +24,9 @@ let package = Package(
     platforms: [
         .macOS(.v14),
     ],
+    products: [
+        .executable(name: "derived-data-tool", targets: [MyPackage.app.name])
+    ],
     dependencies: [
         .argumentParserPackage(),
         .asyncAlgorithmsPackage(),
