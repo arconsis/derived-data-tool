@@ -17,6 +17,7 @@ class CoverageTool {
     private let fileHandler: FileHandler
     private let cliTools: Tools
     private let githubExporterSetting: GithubExportSettings
+    private let repository: ReportModelRepository
 
     private let filterReports: [String]
     private let excludedPatterns: MatchPatternConfig
@@ -33,6 +34,7 @@ class CoverageTool {
     init(fileHandler: FileHandler,
          cliTools: Tools,
          githubExporterSetting: GithubExportSettings,
+         repository: ReportModelRepository,
          filterReports: [String],
          excludedTargets: [String],
          excludedFiles: [String],
@@ -55,6 +57,7 @@ class CoverageTool {
         self.workingDirectory = workingDirectory
         self.locationCurrentReport = locationCurrentReport
         self.archiveLocation = archiveLocation
+        self.repository = repository
         self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
                                                    files: excludedFiles,
                                                    functions: excludedFunctions)
@@ -178,6 +181,8 @@ private extension CoverageTool {
                                                 config: ghConfig)
 
         await githubExporter.createReport(from: current)
+
+        try await repository.add(report: current)
     }
 }
 

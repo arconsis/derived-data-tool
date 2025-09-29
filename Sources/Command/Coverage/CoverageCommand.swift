@@ -40,16 +40,25 @@ public final class CoverageCommand: AsyncParsableCommand, QuietErrorHandling {
             try await Requirements.check()
             InjectedValues[\.logger] = MyLogger.makeLogger(verbose: verbose)
             let config = try await ConfigFactory.getConfig(at: URL(with: configFilePath))
-            tools = await CoverageCommandToolWrapper.make(config: config, workingDirectory: customGitRootpath)
+
+            guard let databasePath = config.locations?.databasePath else {
+                throw CoverageError.missingDatabasePath
+            }
+
+
+            tools = await CoverageCommandToolWrapper.make(config: config, workingDirectory: customGitRootpath, databasePath: databasePath)
 
             guard let locationCurrentReport = tools.locationCurrentReport else { throw CoverageError.currentReportLocationMissing }
             let reportUrl: URL = tools.workingDirectory.appending(pathComponent: locationCurrentReport)
 
             guard let archiveLocation = tools.archiveLocation else { throw CoverageError.archiveLocationMissing }
 
+            let repository = try await tools.makeRepository()
+
             let coverageTool: CoverageTool = .init(fileHandler: tools.fileHandler,
                                                    cliTools: Tools(),
                                                    githubExporterSetting: tools.githubExporterSetting,
+                                                   repository: repository,
                                                    filterReports: tools.filterReports,
                                                    excludedTargets: tools.excludedTargets,
                                                    excludedFiles: tools.excludedFiles,
@@ -83,7 +92,9 @@ extension CoverageCommand {
 
         let filterReports: [String]
         let locationCurrentReport: String?
+        private let databasePath: String
         let fileHandler: FileHandler
+        private var connector: DatabaseConnector!
         let workingDirectory: URL
         private let cliTools: Tools
         var archiveLocation: URL?
@@ -107,6 +118,7 @@ extension CoverageCommand {
         }
 
         init(config: Config,
+             databasePath: String,
              excludedTargets: [String],
              excludedFiles: [String],
              excludedFunctions: [String],
@@ -121,6 +133,7 @@ extension CoverageCommand {
              cliTools: Tools)
         {
             self.config = config
+            self.databasePath = databasePath
             self.excludedTargets = excludedTargets
             self.excludedFiles = excludedFiles
             self.excludedFunctions = excludedFunctions
@@ -137,12 +150,26 @@ extension CoverageCommand {
             self.archiveLocation = archiveLocation
         }
 
+        mutating func makeRepository() async throws -> ReportModelRepository {
+            guard let root = await fileHandler.getGitRootDirectory().value else {
+                throw CoverageError.internalError
+            }
+
+            let databaseUrl = root.appending(pathComponent: databasePath)
+            let urlWithoutFileName = databaseUrl.deletingLastPathComponent()
+            try FileManager.default.createDirectory(at: urlWithoutFileName, withIntermediateDirectories: true)
+
+            connector = try await Repository.makeConnector(with: databaseUrl)
+            let repository = try await Repository.make(with: connector)
+            return repository
+        }
+
         @MainActor
-        static func make(config: Config, workingDirectory: String?) async -> Self {
+        static func make(config: Config, workingDirectory: String?, databasePath: String) async -> Self {
             let excludedTargets: [String] = config.excluded?.targets ?? []
             let excludedFiles: [String] = config.excluded?.files ?? []
             let excludedFunctions: [String] = config.excluded?.functions ?? []
-
+            
             let includedTargets: [String] = config.included?.targets ?? []
             let includedFiles: [String] = config.included?.files ?? []
             let includedFunctions: [String] = config.included?.functions ?? []
@@ -166,7 +193,13 @@ extension CoverageCommand {
                 archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
             }
 
+            let databasePath = databasePath.ensureFilePath(defaultFileName: "database.sqlite").relativeString
+
+
+
+
             return .init(config: config,
+                         databasePath: databasePath,
                          excludedTargets: excludedTargets,
                          excludedFiles: excludedFiles,
                          excludedFunctions: excludedFunctions,

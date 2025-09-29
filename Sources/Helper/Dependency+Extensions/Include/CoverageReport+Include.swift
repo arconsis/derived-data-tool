@@ -15,7 +15,10 @@ public extension CoverageReport {
     }
 
     func include(targets: [String]) -> Self {
+        guard !targets.isEmpty else { return self }
         let globs = targets.globify()
+
+
         var filteredTarget: [Target] = []
 
         for target in self.targets {
@@ -31,6 +34,7 @@ public extension CoverageReport {
     }
 
     func include(files: [String]) -> Self {
+        guard !files.isEmpty else { return self }
         var filteredTargets: [Target] = []
         for target in targets {
             filteredTargets.append(target.include(files: files))
@@ -40,6 +44,7 @@ public extension CoverageReport {
     }
 
     func include(functions: [String]) -> Self {
+        guard !functions.isEmpty else { return self }
         var filteredTargets: [Target] = []
         for target in targets {
             filteredTargets.append(target.include(functions: functions))

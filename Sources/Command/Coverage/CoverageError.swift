@@ -14,6 +14,7 @@ enum CoverageError: LocalizedError, CustomStringConvertible {
     case noConfigFileFound
     case currentReportLocationMissing
     case archiveLocationMissing
+    case missingDatabasePath
     case noResultsToWorkWith
     case noResultFilesToConvert
     case internalError
@@ -39,6 +40,8 @@ enum CoverageError: LocalizedError, CustomStringConvertible {
             return "This should not happen but it did, wait for an update, please"
         case .noResultFilesToConvert:
             return "There are no xcresult files to work with"
+        case .missingDatabasePath:
+            return "No database path provided"
         }
     }
 

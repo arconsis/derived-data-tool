@@ -61,12 +61,7 @@ public class GithubExport {
             // delete old file
             deleteReport()
 
-            // load archive
-            let previous: CoverageMetaReport? = try? archiver.lastReport(before: current.fileInfo.date)
-
-            // create new file
-            let fileContent = createFileContent(with: current, previous: previous)
-            try saveReport(content: fileContent, at: reportUrl)
+            try createMarkDownReport(with: current)
 
             // archive CoverageReport-Content
             try await archiver.addReportToArchive(current)
@@ -74,6 +69,15 @@ public class GithubExport {
             logger.error(error.localizedDescription)
             return
         }
+    }
+
+    public func createMarkDownReport(with current: CoverageMetaReport) throws {
+        // load archive
+        let previous: CoverageMetaReport? = try? archiver.lastReport(before: current.fileInfo.date)
+
+        // create new file
+        let fileContent = createFileContent(with: current, previous: previous)
+        try saveReport(content: fileContent, at: reportUrl)
     }
 
     private func createFileContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {
