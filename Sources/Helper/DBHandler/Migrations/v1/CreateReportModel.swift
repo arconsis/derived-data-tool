@@ -16,7 +16,7 @@ enum CreateReportModel {
             .id()
             .field(FieldKeyStore.type, .string, .required)
             .field(FieldKeyStore.url, .string, .required)
-            .field(FieldKeyStore.date, .date, .required)
+            .field(FieldKeyStore.date, .string, .required)
             .field(FieldKeyStore.application, .string, .required)
             .unique(on: FieldKeyStore.date)
             .create()

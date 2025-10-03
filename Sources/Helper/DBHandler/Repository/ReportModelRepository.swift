@@ -40,38 +40,55 @@ private extension ReportModelRepositoryImpl {
     }
 
     func createReportModel(fileInfo: XCResultFile, gitRoot gitPath: String) async throws -> ReportModel.IDValue {
-        let model = ReportModel(
-            date: fileInfo.date,
-            type: fileInfo.type,
-            url: fileInfo.url.path().sanitize(by: gitPath),
-            application: fileInfo.application
-        )
-        try await model.save(on: db)
-        guard let modelId = model.id else {
+        do {
+            let model = ReportModel(
+                date: fileInfo.date,
+                type: fileInfo.type,
+                url: fileInfo.url.lastPathComponent,
+                application: fileInfo.application
+            )
+            try await model.save(on: db)
+            guard let modelId = model.id else {
+                throw ReportModelRepositoryError.entityNotCreated
+            }
+            return modelId
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
             throw ReportModelRepositoryError.entityNotCreated
         }
-        return modelId
     }
 
     func createCoverageModel(report reportId: ReportModel.IDValue) async throws -> CoverageModel.IDValue {
-        let model = CoverageModel(report: reportId)
-        try await model.save(on: db)
-        guard let modelId = model.id else {
-            throw ReportModelRepositoryError.entityNotCreated
+        do {
+            let model = CoverageModel(report: reportId)
+
+            try await model.save(on: db)
+            guard let modelId = model.id else {
+                throw ReportModelRepositoryError.entityNotCreated
+            }
+            return modelId
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
         }
-        return modelId
     }
 
+    @discardableResult
     func createTargetModel(name: String, executableLines: Int, coveredLines: Int, coverageId: CoverageModel.IDValue) async throws -> TargetModel.IDValue {
-        let model = TargetModel(name: name,
-                                executableLines: executableLines,
-                                coveredLines: coveredLines,
-                                coverageId: coverageId)
-        try await model.save(on: db)
-        guard let modelId = model.id else {
-            throw ReportModelRepositoryError.entityNotCreated
+        do {
+            let model = TargetModel(name: name,
+                                    executableLines: executableLines,
+                                    coveredLines: coveredLines,
+                                    coverageId: coverageId)
+            try await model.save(on: db)
+            guard let modelId = model.id else {
+                throw ReportModelRepositoryError.entityNotCreated
+            }
+            return modelId
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
         }
-        return modelId
     }
 }
 
@@ -81,7 +98,7 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
             let gitPath = report.coverage.commonPathPrefix()
 
             let reportId = try await createReportModel(fileInfo: report.fileInfo, gitRoot: gitPath)
-            try await make(report.coverage, parent: reportId, gitRoot: gitPath)
+            try await make(report.coverage, parent: reportId)
         } catch {
             logger.error(.init(stringLiteral: String(reflecting: error)))
             throw error
@@ -89,30 +106,22 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
     }
 
     func shutDownDatabaseConnection() async throws {
-        
+        try await db.context.eventLoop.shutdownGracefully()
     }
 
-    private func make(_ coverage: CoverageReport, parent: ReportModel.IDValue, gitRoot gitPath: String) async throws {
+    private func make(_ coverage: CoverageReport, parent: ReportModel.IDValue) async throws {
         do {
             let cleanedUpCoverageReport = coverage.removingCommonPrefix()
 
             let modelId = try await createCoverageModel(report: parent)
 
             for target in cleanedUpCoverageReport.targets {
-                try await make(target, parent: modelId, gitRoot: gitPath)
+                print(target.name)
+                try await createTargetModel(name: target.name,
+                                            executableLines: target.executableLines,
+                                            coveredLines: target.coveredLines,
+                                            coverageId: modelId)
             }
-        } catch {
-            logger.error(.init(stringLiteral: String(reflecting: error)))
-            throw error
-        }
-    }
-
-    private func make(_ target: Target, parent: CoverageModel.IDValue, gitRoot gitPath: String) async throws {
-        do {
-            let _ = try await createTargetModel(name: target.name,
-                                                       executableLines: target.executableLines,
-                                                       coveredLines: target.coveredLines,
-                                                       coverageId: parent)
         } catch {
             logger.error(.init(stringLiteral: String(reflecting: error)))
             throw error

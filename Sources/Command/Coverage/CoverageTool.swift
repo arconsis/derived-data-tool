@@ -167,26 +167,31 @@ private extension CoverageTool {
     func process(_ coverageReports: [CoverageMetaReport],
                  rootUrl _: URL) async throws
     {
-        guard coverageReports.count >= 1 else { throw CoverageError.noResultsToWorkWith }
+        do {
+            guard coverageReports.count >= 1 else { throw CoverageError.noResultsToWorkWith }
 
-        let sorted = coverageReports.sorted(by: { $0.fileInfo.date.timeIntervalSince1970 > $1.fileInfo.date.timeIntervalSince1970 })
+            let sorted = coverageReports.sorted(by: { $0.fileInfo.date.timeIntervalSince1970 > $1.fileInfo.date.timeIntervalSince1970 })
 
-        guard let current = sorted.first else { return }
+            guard let current = sorted.first else { return }
 
-        let ghConfig = GHConfig(settings: githubExporterSetting,
-                                reportUrl: locationCurrentReport,
-                                archiveUrl: archiveLocation)
+            let ghConfig = GHConfig(settings: githubExporterSetting,
+                                    reportUrl: locationCurrentReport,
+                                    archiveUrl: archiveLocation)
 
-        let githubExporter = await GithubExport(fileHandler: fileHandler,
-                                                config: ghConfig)
+            let githubExporter = await GithubExport(fileHandler: fileHandler,
+                                                    config: ghConfig)
 
-        await githubExporter.createReport(from: current)
+            await githubExporter.createMarkDownReport(with: current)
 
-        try await repository.add(report: current)
+            try await repository.add(report: current)
+        } catch {
+            try? await repository.shutDownDatabaseConnection()
+            throw error
+        }
     }
 }
 
-// MARK: Helper
+// MARK: Helper 
 
 private extension CoverageTool {
     func findXCResultfiles(at path: URL) async -> URLArrayResult {

@@ -55,14 +55,9 @@ public class GithubExport {
         archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveUrl)
     }
 
-    public func createReport(from current: CoverageMetaReport) async {
+    public func archiveReport(_ current: CoverageMetaReport) async {
         do {
-            try await archiver.setup()
-            // delete old file
-            deleteReport()
-
-            try createMarkDownReport(with: current)
-
+            try await setupAndDelete()
             // archive CoverageReport-Content
             try await archiver.addReportToArchive(current)
         } catch {
@@ -71,13 +66,26 @@ public class GithubExport {
         }
     }
 
-    public func createMarkDownReport(with current: CoverageMetaReport) throws {
-        // load archive
-        let previous: CoverageMetaReport? = try? archiver.lastReport(before: current.fileInfo.date)
+    public func createMarkDownReport(with current: CoverageMetaReport) async {
+        do {
+            try await setupAndDelete()
 
-        // create new file
-        let fileContent = createFileContent(with: current, previous: previous)
-        try saveReport(content: fileContent, at: reportUrl)
+            // load archive
+            let previous: CoverageMetaReport? = try? archiver.lastReport(before: current.fileInfo.date)
+
+            // create new file
+            let fileContent = createFileContent(with: current, previous: previous)
+            try saveReport(content: fileContent, at: reportUrl)
+        } catch {
+            logger.error(error.localizedDescription)
+            return
+        }
+    }
+
+    private func setupAndDelete() async throws {
+        try await archiver.setup()
+        // delete old file
+        deleteReport()
     }
 
     private func createFileContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {

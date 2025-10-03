@@ -17,6 +17,32 @@ extension PackageDescription.Target {
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
 }
 
+enum ExternalDependencies {
+    static let argumentParser = Dependency(package: .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0"),
+                                           target: .product(name: "ArgumentParser", package: "swift-argument-parser"))
+
+    static let swiftHTMLParser = Dependency(package: .package(url: "https://github.com/binarybirds/swift-html.git", from: "1.6.0"),
+                                            target: .product(name: "SwiftHtml", package: "swift-html"))
+
+    static let yams = Dependency(package: .package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5"),
+                                 target: .product(name: "Yams", package: "yams"))
+
+    static let globPattern = Dependency(package: .package(url: "https://github.com/ChimeHQ/GlobPattern.git", from: "0.1.1"),
+                                        target: .product(name: "GlobPattern", package: "GlobPattern"))
+
+    static let asyncAlgorithms = Dependency(package: .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "1.0.0"),
+                                            target: .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"))
+
+    static let swiftSlash = Dependency(package: .package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0"),
+                                       target: .product(name: "SwiftSlash", package: "SwiftSlash"))
+
+    static let fluent = Dependency(package: .package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0"),
+                                   target: .product(name: "HummingbirdFluent", package: "hummingbird-fluent"))
+
+    static let sqlDriver = Dependency(package: .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0"),
+                                      target: .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"))
+}
+
 typealias MyPackage = PackageDescription.Target
 
 let package = Package(
@@ -28,20 +54,20 @@ let package = Package(
         .executable(name: "derived-data-tool", targets: [MyPackage.app.name])
     ],
     dependencies: [
-        .argumentParserPackage(),
-        .asyncAlgorithmsPackage(),
-        .fluent(),
-        .sqlDriver(),
-        .globPatternPackage(),
-        .swiftHTMLPackage(),
-        .swiftSlashPackage(),
-        .yamsPackage(),
+        ExternalDependencies.argumentParser.package,
+        ExternalDependencies.asyncAlgorithms.package,
+        ExternalDependencies.fluent.package,
+        ExternalDependencies.sqlDriver.package,
+        ExternalDependencies.globPattern.package,
+        ExternalDependencies.swiftHTMLParser.package,
+        ExternalDependencies.swiftSlash.package,
+        ExternalDependencies.yams.package,
     ],
     targets: [
         .executableTarget(
             name: MyPackage.app.name,
             dependencies: [
-                .argumentParser(),
+                ExternalDependencies.argumentParser.target,
                 .archive(),
                 .coverage(),
                 .compare(),
@@ -59,7 +85,7 @@ let package = Package(
 
         MyPackage.coverage.toTarget(
             dependencies: [
-                .argumentParser(),
+                ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ],
@@ -69,7 +95,7 @@ let package = Package(
         ),
         MyPackage.compare.toTarget(
             dependencies: [
-                .argumentParser(),
+                ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .shared(),
                 .helper(),
@@ -77,38 +103,38 @@ let package = Package(
         ),
         MyPackage.build.toTarget(
             dependencies: [
-                .argumentParser(),
+                ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.config.toTarget(dependencies: [
-            .argumentParser(),
+            ExternalDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
         ]
         ),
         MyPackage.report.toTarget(dependencies: [
-            .argumentParser(),
+            ExternalDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
         ]),
         MyPackage.prototype.toTarget(
             dependencies: [
-                .argumentParser(),
+                ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
             ]
         ),
         MyPackage.archive.toTarget(dependencies: [
-            .argumentParser(),
+            ExternalDependencies.argumentParser.target,
             .helper(),
         ]),
 
         MyPackage.migrate.toTarget(dependencies: [
-            .argumentParser(),
+            ExternalDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
             .shared(),
@@ -117,15 +143,15 @@ let package = Package(
         // MARK: HELPER
         MyPackage.helper.toTarget(
             dependencies: [
-                .asyncAlgorithms(),
+                ExternalDependencies.asyncAlgorithms.target,
+                ExternalDependencies.fluent.target,
+                ExternalDependencies.sqlDriver.target,
+                ExternalDependencies.globPattern.target,
+                ExternalDependencies.swiftHTMLParser.target,
+                ExternalDependencies.swiftSlash.target,
+                ExternalDependencies.yams.target,
                 .dependencyInjection(),
-                .fluent(),
-                .sqlDriver(),
-                .globPattern(),
                 .shared(),
-                .swiftHTML(),
-                .swiftSlash(),
-                .yams(),
             ],
             resources: [
                 .process("Resources/ccConfig.yml"),
@@ -179,98 +205,6 @@ let package = Package(
         ),
     ]
 )
-
-extension PackageDescription.Package.Dependency {
-    typealias PPD = PackageDescription.Package.Dependency
-    /// ext. Dependency: ArgumentParser Package (use as package.dependency)
-    static func argumentParserPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0")
-    }
-
-    /// ext. Dependency: SwiftHtml Package (use as package.dependency)
-    static func swiftHTMLPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0")
-    }
-
-    /// ext. Dependency: Yams Package (use as package.dependency)
-    static func yamsPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5")
-    }
-
-    /// ext. Dependency: GlobPattern Package (use as package.dependency)
-    static func globPatternPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/ChimeHQ/GlobPattern", from: "0.1.1")
-    }
-
-    /// ext. Dependency: AsyncAlgorithms Package (use as package.dependency)
-    static func asyncAlgorithmsPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0")
-    }
-
-    static func swiftSlashPackage() -> Package.Dependency {
-        PPD.package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0")
-    }
-
-    static func fluent() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0")
-    }
-
-    static func sqlDriver() -> Package.Dependency {
-        Package.Dependency.package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0")
-    }
-}
-
-extension PackageDescription.Target.Dependency {
-    // MARK: ThirdPArty Dependencies
-
-    /// ThirdParty: ArgumentParser Package (use as target.dependency)
-    static func argumentParser() -> Target.Dependency {
-        Target.Dependency.product(name: "ArgumentParser", package: "swift-argument-parser")
-    }
-
-    /// ThirdParty: SwiftHtml Package (use as target.dependency)
-    static func swiftHTML() -> Target.Dependency {
-        Target.Dependency.product(name: "SwiftHtml", package: "swift-html")
-    }
-
-    /// ThirdParty: Yams Package (use as target.dependency)
-    static func yams() -> Target.Dependency {
-        Target.Dependency.product(name: "Yams", package: "yams")
-    }
-
-    /// ThirdParty: GlobPattern Package (use as target.dependency)
-    static func globPattern() -> Target.Dependency {
-        Target.Dependency.product(name: "GlobPattern", package: "GlobPattern")
-    }
-
-    /// ThirdParty: AsyncAlgorithms Package (use as target.dependency)
-    static func asyncAlgorithms() -> Target.Dependency {
-        Target.Dependency.product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
-    }
-
-    /// ThirdParty: SwiftSlash Package (use as target.dependency)
-    static func swiftSlash() -> Target.Dependency {
-        Target.Dependency.product(name: "SwiftSlash", package: "SwiftSlash")
-    }
-
-//    static func postgresKit() -> Target.Dependency {
-//        Target.Dependency.product(name: "PostgresKit", package: "postgres-kit")
-//    }
-    static func fluent() -> Self {
-        PackageDescription.Target.Dependency.product(name: "HummingbirdFluent", package: "hummingbird-fluent")
-    }
-//    static func fluent() -> Target.Dependency {
-//        Target.Dependency.product(name: "Fluent", package: "fluent")
-//    }
-
-//    static func fluentKit() -> Target.Dependency {
-//        Target.Dependency.product(name: "FluentKit", package: "fluent-kit")
-//    }
-
-    static func sqlDriver() -> Self {
-        PackageDescription.Target.Dependency.product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
-    }
-}
 
 extension PackageDescription.Target.Dependency {
     // MARK: Internal packages
@@ -389,4 +323,9 @@ struct TargetDefinition {
                 linkerSettings: linkerSettings,
                 plugins: plugins)
     }
+}
+
+struct Dependency {
+    let package: Package.Dependency
+    let target: PackageDescription.Target.Dependency
 }

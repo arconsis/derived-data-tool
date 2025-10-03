@@ -17,7 +17,7 @@ final class ReportModel: Model {
     var id: UUID?
 
     @Field(key: FieldKeyStore.date)
-    var date: Date
+    var timestamp: String
 
     @Field(key: FieldKeyStore.type)
     var type: String
@@ -39,7 +39,7 @@ final class ReportModel: Model {
         url: String,
         application: String) {
         self.id = id
-        self.date = date
+        self.timestamp = date.ISO8601Format(.iso8601)
         self.type = type
         self.url = url
         self.application = application
