@@ -142,15 +142,15 @@ private extension CoverageTool {
         for xcResult in resultFiles {
             if let json = await xccov(filePath: xcResult.url).value,
                var result = ReportGenerator.decodeFullXCOV(with: json).value {
-                // process included List first
-                result = result.include(targets: includedPatterns.targets)
-                result = result.include(files: includedPatterns.files)
-                result = result.include(functions: includedPatterns.functions)
-
-                // process excluded List last
+                // process excluded List first (remove unwanted items)
                 result = result.exclude(targets: excludedPatterns.targets)
                 result = result.exclude(files: excludedPatterns.files)
                 result = result.exclude(functions: excludedPatterns.functions)
+
+                // process included List last (keep only wanted items from what's left)
+                result = result.include(targets: includedPatterns.targets)
+                result = result.include(files: includedPatterns.files)
+                result = result.include(functions: includedPatterns.functions)
 
                 let meta = CoverageMetaReport(fileInfo: xcResult, coverage: result)
                 codeCoverageReports.append(meta)
@@ -183,6 +183,7 @@ private extension CoverageTool {
             await githubExporter.createMarkDownReport(with: current)
 
             try await repository.add(report: current)
+            try await repository.shutDownDatabaseConnection()
         } catch {
             try? await repository.shutDownDatabaseConnection()
             throw error

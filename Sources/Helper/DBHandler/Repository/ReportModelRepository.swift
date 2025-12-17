@@ -20,9 +20,11 @@ public protocol ReportModelRepository {
 
 struct ReportModelRepositoryImpl {
     let db: any Database
+    let connector: DatabaseConnector
     let logger = Logger(label: "RepositoryImpl")
-    init(db: any Database) {
+    init(db: any Database, connector: DatabaseConnector) {
         self.db = db
+        self.connector = connector
     }
 }
 
@@ -106,7 +108,7 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
     }
 
     func shutDownDatabaseConnection() async throws {
-        try await db.context.eventLoop.shutdownGracefully()
+        try await connector.disconnect()
     }
 
     private func make(_ coverage: CoverageReport, parent: ReportModel.IDValue) async throws {

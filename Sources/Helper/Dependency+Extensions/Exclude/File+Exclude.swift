@@ -14,6 +14,7 @@ extension File {
     }
 
     public func exclude(functions: [String]) -> Self {
+        guard !functions.isEmpty else { return self }
         let globs = functions.globify()
         var filteredFunctions: [Function] = []
         for function in self.functions {

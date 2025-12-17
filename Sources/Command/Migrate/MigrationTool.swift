@@ -23,6 +23,9 @@ class MigrationTool {
     private let excludedTargets: [String]
     private let excludedFiles: [String]
     private let excludedFunctions: [String]
+    private let includedTargets: [String]
+    private let includedFiles: [String]
+    private let includedFunctions: [String]
 
     private let workingDirectory: URL
     private let locationCurrentReport: URL
@@ -41,6 +44,9 @@ class MigrationTool {
          excludedTargets: [String],
          excludedFiles: [String],
          excludedFunctions: [String],
+         includedTargets: [String],
+         includedFiles: [String],
+         includedFunctions: [String],
          workingDirectory: URL,
          locationCurrentReport: URL,
          verbose: Bool = false,
@@ -54,6 +60,9 @@ class MigrationTool {
         self.excludedTargets = excludedTargets
         self.excludedFiles = excludedFiles
         self.excludedFunctions = excludedFunctions
+        self.includedTargets = includedTargets
+        self.includedFiles = includedFiles
+        self.includedFunctions = includedFunctions
         self.workingDirectory = workingDirectory
         self.locationCurrentReport = locationCurrentReport
         self.archiver = archiver
@@ -65,17 +74,19 @@ extension MigrationTool: Runnable {
     func run() async throws {
         do {
             report(text: "setup completed", clearLine: false)
-//            logger.log("setup completed")
 
             let archives = archiver.sortedArchives
 
             var counter: Int = 0
 
             for archive in archives {
-//                logger.log("archive: \(archive)")
                 let report = try archiver.report(for: archive)
 
-                try await repository.add(report: report)
+                // Apply filters to coverage data
+                let filteredCoverage = applyFilters(to: report.coverage)
+                let filteredReport = CoverageMetaReport(fileInfo: report.fileInfo, coverage: filteredCoverage)
+
+                try await repository.add(report: filteredReport)
 
                 try fileHandler.deleteFile(at: archive.url)
                 counter += 1
@@ -99,7 +110,6 @@ private extension MigrationTool {
         ProgressReporterFactory.default
     }
 
-
     func report(percentage: Double) {
         progressReporter.report(percentage: percentage, onReporterWith: Self.reporterId)
     }
@@ -116,5 +126,24 @@ private extension MigrationTool {
         progressReporter.report(text: text, clearLine: clearLine, onReporterWith: Self.reporterId)
     }
 
+    /// Applies exclude and include filters to a coverage report
+    /// - Parameter coverage: The coverage report to filter
+    /// - Returns: Filtered coverage report
+    /// - Note: Filters are applied in order: Exclude → Include
+    func applyFilters(to coverage: CoverageReport) -> CoverageReport {
+        var filtered = coverage
+
+        // Process excluded list first (remove unwanted items)
+        filtered = filtered.exclude(targets: excludedTargets)
+        filtered = filtered.exclude(files: excludedFiles)
+        filtered = filtered.exclude(functions: excludedFunctions)
+
+        // Process included list last (keep only wanted items from what's left)
+        filtered = filtered.include(targets: includedTargets)
+        filtered = filtered.include(files: includedFiles)
+        filtered = filtered.include(functions: includedFunctions)
+
+        return filtered
+    }
 }
 

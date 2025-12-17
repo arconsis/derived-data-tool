@@ -66,7 +66,6 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
             // Setup database
             let repository = try await makeRepository(
                 databasePath: databasePath,
-                workingDirectory: workingDirectory,
                 fileHandler: fileHandler
             )
 
@@ -106,23 +105,30 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
 
     private func makeRepository(
         databasePath: String,
-        workingDirectory: URL,
         fileHandler: FileHandler
     ) async throws -> ReportModelRepository {
-        guard let root = await fileHandler.getGitRootDirectory().value else {
-            throw CoverageError.internalError
+        do {
+            guard let root = await fileHandler.getGitRootDirectory().value else {
+                throw CoverageError.internalError
+            }
+
+            let cleanPath = databasePath.ensureFilePath(defaultFileName: "database.sqlite").relativeString
+            let databaseUrl = root.appending(pathComponent: cleanPath)
+            let urlWithoutFileName = databaseUrl.deletingLastPathComponent()
+
+            try FileManager.default.createDirectory(
+                at: urlWithoutFileName,
+                withIntermediateDirectories: true
+            )
+
+            return try await Repository.makeRepository(with: databaseUrl)
+        } catch {
+            if let covergeError = error as? CoverageError {
+                throw covergeError
+            }
+
+            print(error)
+            throw error
         }
-
-        let cleanPath = databasePath.ensureFilePath(defaultFileName: "database.sqlite").relativeString
-        let databaseUrl = root.appending(pathComponent: cleanPath)
-        let urlWithoutFileName = databaseUrl.deletingLastPathComponent()
-
-        try FileManager.default.createDirectory(
-            at: urlWithoutFileName,
-            withIntermediateDirectories: true
-        )
-
-        let connector = try await Repository.makeConnector(with: databaseUrl)
-        return try await Repository.make(with: connector)
     }
 }

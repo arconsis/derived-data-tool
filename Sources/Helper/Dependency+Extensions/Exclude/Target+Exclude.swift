@@ -15,6 +15,7 @@ public extension Target {
     }
 
     func exclude(files: [String]) -> Self {
+        guard !files.isEmpty else { return self }
         let globs = files.globify()
         var filteredFiles: [File] = []
         for file in self.files {
@@ -31,6 +32,7 @@ public extension Target {
     }
 
     func exclude(functions: [String]) -> Self {
+        guard !functions.isEmpty else { return self }
         var filteredFiles: [File] = []
         for file in files {
             filteredFiles.append(file.exclude(functions: functions))
