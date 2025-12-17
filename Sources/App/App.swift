@@ -32,6 +32,7 @@ struct App: AsyncParsableCommand {
                 CoverageCommand.self,
                 BuildCommand.self,
                 ConfigCommand.self,
+                MigrateCommand.self,
                 ReportCommand.self,
             ]
         #endif

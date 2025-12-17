@@ -127,7 +127,6 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 throw covergeError
             }
 
-            print(error)
             throw error
         }
     }

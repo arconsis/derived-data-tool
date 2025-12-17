@@ -118,7 +118,6 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
             let modelId = try await createCoverageModel(report: parent)
 
             for target in cleanedUpCoverageReport.targets {
-                print(target.name)
                 try await createTargetModel(name: target.name,
                                             executableLines: target.executableLines,
                                             coveredLines: target.coveredLines,
