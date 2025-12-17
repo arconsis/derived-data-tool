@@ -13,14 +13,16 @@ import Shared
 
 public typealias FileHandlerResult = Result<URL, CCCLIError>
 public typealias FileHandlerResults = Result<[URL], CCCLIError>
-public class FileHandler {
-    lazy var fileManager: FileManager = .default
+public final class FileHandler {
+    nonisolated(unsafe) private let fileManager: FileManager = .default
 
-    let bash: Executing = Bash()
+    let bash: Executing
 
     @Injected(\.logger) private var logger: Loggerable
 
-    public init() {}
+    public init() {
+        self.bash = Bash()
+    }
 
     public func getCurrentDirectoryUrl() -> URL {
         URL(with: fileManager.currentDirectoryPath)

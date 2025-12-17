@@ -3,54 +3,17 @@ import Foundation
 
 // MARK: - Logging + Exit Functions
 // MARK: - GitHub Summary Helper
-func updateSummary(_ message: String, logOutput: Bool = true) {
-    if logOutput {
-        if let summaryPath = ProcessInfo.processInfo.environment["GITHUB_STEP_SUMMARY"] {
-            let entry = message + "\n"
-            if let data = entry.data(using: .utf8) {
-                if let handle = try? FileHandle(forWritingTo: URL(fileURLWithPath: summaryPath)) {
-                    handle.seekToEndOfFile()
-                    handle.write(data)
-                    handle.closeFile()
-                } else {
-                    try? entry.write(toFile: summaryPath, atomically: true, encoding: .utf8)
-                }
-            }
-        }
-    }
-}
-func log(_ message: String, logOutput: Bool = true) {
-    print("[add-git-tag] \(message)")
-}
-func writeStandardError(_ message: String) {
-    if let data = (message + "\n").data(using: .utf8) {
-        FileHandle.standardError.write(data)
-    }
-}
-func exitWithError(_ message: String) -> Never {
-    writeStandardError("❌ \(message)")
-    updateSummary("❌ \(message)")
-    exit(1)
-}
+// func updateSummary(_ message: String, logOutput: Bool = true) {
+// Import helpers
+// If running as a script, use: -I../../.github-helpers and then: import helpers
+// Otherwise, you may need to use #include or other Swift scripting import methods
 // MARK: - Argument Parsing
 guard CommandLine.arguments.count == 2 else {
     exitWithError("Usage: \(CommandLine.arguments[0]) <tag>")
 }
 let tag = CommandLine.arguments[1]
+
 // MARK: - Git Tagging
-func runShell(_ command: String, logOutput: Bool = true) {
-    let task = Process()
-    task.executableURL = URL(fileURLWithPath: "/bin/bash")
-    task.arguments = ["-c", command]
-    try? task.run()
-    task.waitUntilExit()
-    if task.terminationStatus == 0 {
-        updateSummary("✅ \(command)", logOutput: logOutput)
-    } else {
-        updateSummary("❌ Command failed: \(command)", logOutput: logOutput)
-        exitWithError("Command failed: \(command)")
-    }
-}
 log("Configuring git user...")
 runShell("git config user.name github-actions", logOutput: false)
 runShell("git config user.email github-actions@github.com", logOutput: false)

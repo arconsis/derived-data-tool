@@ -8,7 +8,7 @@
 import Foundation
 import OSLog
 
-public struct MyLogger: Loggerable {
+public struct MyLogger: Loggerable, Sendable {
     public static func makeLogger(verbose: Bool = false) -> Self {
         MyLogger(verbose: verbose)
     }

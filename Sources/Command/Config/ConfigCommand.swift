@@ -24,6 +24,10 @@ public class ConfigCommand: AsyncParsableCommand {
     @Option(name: [.customShort("g"), .customLong("gitroot")], help: "git root path")
     private var customGitRootpath: String?
 
+    enum CodingKeys: CodingKey {
+        case verbose, customGitRootpath
+    }
+
     func gitRootpath() async -> URL {
         if let customGitRootpath {
             return URL(with: customGitRootpath)
@@ -68,7 +72,7 @@ public class ConfigCommand: AsyncParsableCommand {
 }
 
 extension ConfigCommand {
-    struct ConfigCommandToolWrapper: Codable {
+    struct ConfigCommandToolWrapper {
         var fileHandler: FileHandler {
             get async {
                 FileHandler()

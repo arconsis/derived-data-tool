@@ -8,7 +8,9 @@
 import Foundation
 
 public final class ProgressReporterFactory {
-    public static let `default` = ProgressReporterFactory()
+    public static var `default`: ProgressReporterFactory {
+        ProgressReporterFactory()
+    }
 
     private var reporters: Set<ProgressReporter> = []
 

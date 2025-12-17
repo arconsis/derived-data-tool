@@ -4,7 +4,7 @@ import Shared
 
 public typealias ExecutingResult = Result<String, CCCLIError>
 
-public protocol Executing {
+public protocol Executing: Sendable {
     func run(_ commandName: String, with arguments: [String]) async -> ExecutingResult
 }
 
@@ -19,7 +19,7 @@ enum BashError: Errorable {
     var printsHelp: Bool { false }
 }
 
-public class Bash {
+public actor Bash {
     @Injected(\.logger) private var logger: Loggerable
 
     private var resolvedCommands: [String: String] = [:]
@@ -54,7 +54,6 @@ public class Bash {
         }
     }
 
-    @MainActor
     private func runAsync(_ command: String, arguments: [String] = []) async -> ExecutingResult {
         do {
             log(command, arguments: arguments)

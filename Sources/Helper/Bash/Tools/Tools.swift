@@ -11,14 +11,14 @@ import Shared
 
 
 public typealias ToolsResult = Result<String, CCCLIError>
-public class Tools {
-    var bash: Executing {
-        Bash()
-    }
+public final class Tools {
+    let bash: Executing
 
     @Injected(\.logger) private var logger: Loggerable
 
-    public init() {}
+    public init() {
+        self.bash = Bash()
+    }
 
     public func xccov(filePath: URL) async -> ToolsResult {
         let xccov: PredefinedBashCommands = .xccov(file: filePath)

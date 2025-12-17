@@ -7,10 +7,12 @@
 
 import Foundation
 
-public protocol InjectionKey {
+public protocol InjectionKey: Sendable {
     /// The associated type representing the type of the dependency injection key's value.
-    associatedtype Value
+    associatedtype Value: Sendable
 
     /// The default value for the dependency injection key.
-    static var currentValue: Self.Value { get set }
+    /// This is now used only for providing the initial default value.
+    /// Actual storage is managed by the thread-safe DependencyStorage.
+    static var currentValue: Self.Value { get }
 }

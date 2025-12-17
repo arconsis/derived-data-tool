@@ -1,5 +1,4 @@
-// swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 6.2
 
 import PackageDescription
 
@@ -15,8 +14,10 @@ extension PackageDescription.Target {
     static let migrate = TargetDefinition(name: "Migrate", path: "Sources/Command/Migrate")
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
+    static let shared = TargetDefinition(name: "Shared", path: "Sources/Shared")
 }
 
+@MainActor
 enum ExternalDependencies {
     static let argumentParser = Dependency(package: .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0"),
                                            target: .product(name: "ArgumentParser", package: "swift-argument-parser"))
@@ -24,17 +25,15 @@ enum ExternalDependencies {
     static let swiftHTMLParser = Dependency(package: .package(url: "https://github.com/binarybirds/swift-html.git", from: "1.6.0"),
                                             target: .product(name: "SwiftHtml", package: "swift-html"))
 
-    static let yams = Dependency(package: .package(url: "https://github.com/jpsim/Yams.git", from: "5.0.5"),
+    static let yams = Dependency(package: .package(url: "https://github.com/jpsim/Yams.git", from: "6.2.0"),
                                  target: .product(name: "Yams", package: "yams"))
 
+    // needs to be replaced by https://github.com/davbeck/swift-glob in the future
     static let globPattern = Dependency(package: .package(url: "https://github.com/ChimeHQ/GlobPattern.git", from: "0.1.1"),
                                         target: .product(name: "GlobPattern", package: "GlobPattern"))
 
     static let asyncAlgorithms = Dependency(package: .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "1.0.0"),
                                             target: .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"))
-
-    static let swiftSlash = Dependency(package: .package(url: "https://github.com/tannerdsilva/SwiftSlash", from: "3.4.0"),
-                                       target: .product(name: "SwiftSlash", package: "SwiftSlash"))
 
     static let fluent = Dependency(package: .package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0"),
                                    target: .product(name: "HummingbirdFluent", package: "hummingbird-fluent"))
@@ -48,7 +47,7 @@ typealias MyPackage = PackageDescription.Target
 let package = Package(
     name: "CodeCoverage",
     platforms: [
-        .macOS(.v14),
+        .macOS(.v26),
     ],
     products: [
         .executable(name: "derived-data-tool", targets: [MyPackage.app.name])
@@ -60,7 +59,6 @@ let package = Package(
         ExternalDependencies.sqlDriver.package,
         ExternalDependencies.globPattern.package,
         ExternalDependencies.swiftHTMLParser.package,
-        ExternalDependencies.swiftSlash.package,
         ExternalDependencies.yams.package,
     ],
     targets: [
@@ -88,6 +86,7 @@ let package = Package(
                 ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
+                .shared(),
             ],
             resources: [
                 .process("Resources/input.json"),
@@ -106,6 +105,7 @@ let package = Package(
                 ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
+                .shared(),
             ]
         ),
         MyPackage.config.toTarget(dependencies: [
@@ -126,11 +126,14 @@ let package = Package(
                 ExternalDependencies.argumentParser.target,
                 .dependencyInjection(),
                 .helper(),
+                .shared(),
             ]
         ),
         MyPackage.archive.toTarget(dependencies: [
             ExternalDependencies.argumentParser.target,
+            .dependencyInjection(),
             .helper(),
+            .shared(),
         ]),
 
         MyPackage.migrate.toTarget(dependencies: [
@@ -143,12 +146,12 @@ let package = Package(
         // MARK: HELPER
         MyPackage.helper.toTarget(
             dependencies: [
+                ExternalDependencies.argumentParser.target,
                 ExternalDependencies.asyncAlgorithms.target,
                 ExternalDependencies.fluent.target,
                 ExternalDependencies.sqlDriver.target,
                 ExternalDependencies.globPattern.target,
                 ExternalDependencies.swiftHTMLParser.target,
-                ExternalDependencies.swiftSlash.target,
                 ExternalDependencies.yams.target,
                 .dependencyInjection(),
                 .shared(),
@@ -161,7 +164,11 @@ let package = Package(
 
         // MARK: Shared
 
-        .target(name: "Shared"),
+        MyPackage.shared.toTarget(
+            dependencies: [
+                ExternalDependencies.argumentParser.target,
+            ]
+        ),
 
         // MARK: TESTS
 

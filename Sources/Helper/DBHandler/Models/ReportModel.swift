@@ -46,3 +46,6 @@ final class ReportModel: Model {
     }
 }
 
+// Fluent models are not value-typed or immutable; acknowledge non-thread-safety explicitly.
+extension ReportModel: @unchecked Sendable {}
+

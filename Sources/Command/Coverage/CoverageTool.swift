@@ -178,8 +178,7 @@ private extension CoverageTool {
                                     reportUrl: locationCurrentReport,
                                     archiveUrl: archiveLocation)
 
-            let githubExporter = await GithubExport(fileHandler: fileHandler,
-                                                    config: ghConfig)
+            let githubExporter = GithubExport(fileHandler: fileHandler, config: ghConfig)
 
             await githubExporter.createMarkDownReport(with: current)
 

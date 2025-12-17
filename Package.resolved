@@ -1,4 +1,5 @@
 {
+  "originHash" : "60873c0b45a37b31cfc5357c208dcccd3352a6168706f20d5a2f8b8a480122d2",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -298,23 +299,14 @@
       }
     },
     {
-      "identity" : "swiftslash",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tannerdsilva/SwiftSlash",
-      "state" : {
-        "revision" : "dbcd79125918644c348471853ef5332d650548db",
-        "version" : "3.4.0"
-      }
-    },
-    {
       "identity" : "yams",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jpsim/Yams.git",
       "state" : {
-        "revision" : "3d6871d5b4a5cd519adf233fbb576e0a2af71c17",
-        "version" : "5.4.0"
+        "revision" : "51b5127c7fb6ffac106ad6d199aaa33c5024895f",
+        "version" : "6.2.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

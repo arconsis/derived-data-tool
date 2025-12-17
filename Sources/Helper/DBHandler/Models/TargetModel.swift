@@ -38,3 +38,5 @@ final class TargetModel: Model {
         self.$coverage.id = coverageId
     }
 }
+
+extension TargetModel: @unchecked Sendable {}

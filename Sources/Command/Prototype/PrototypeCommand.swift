@@ -11,27 +11,54 @@ import Foundation
 import Helper
 import Shared
 
-public final class PrototypeCommand: AsyncParsableCommand {
+public final class PrototypeCommand: DerivedDataCommand, QuietErrorHandling {
+    public static let configuration = CommandConfiguration(
+        commandName: "test",
+        abstract: "Playground to test new tools"
+    )
+
+    public var logger: Loggerable {
+        InjectedValues[\.logger]
+    }
+
+    @Flag(help: "activate extra logging")
+    public var verbose: Bool = false
+
     @Flag(help: "suppress failure")
     private var quiet: Bool = false
 
-    private var tools: PrototypeCommandToolWrapper!
+    @Option(name: [.customShort("c"), .customLong("config")])
+    public var configFilePath: String?
 
-    private var logger: Loggerable {
-        InjectedValues[\.logger]
+    @Option(name: [.customShort("g"), .customLong("gitroot")])
+    public var customGitRootpath: String?
+
+    enum CodingKeys: CodingKey {
+        case verbose, quiet, configFilePath, customGitRootpath
     }
 
     public init() {}
 
-    public static let configuration = CommandConfiguration(commandName: "test", abstract: "Playground to test new tools")
-
     public func run() async throws {
-        try await Requirements.check()
-        InjectedValues[\.logger] = MyLogger.makeLogger(verbose: true)
-        let config = try await ConfigFactory.getConfig()
-        tools = try await PrototypeCommandToolWrapper.make(config: config)
         do {
-            let lastReport = try tools.getLastReport()
+            try await Requirements.check()
+
+            // Use protocol methods - note: hardcoded verbose=true for this test command
+            InjectedValues[\.logger] = MyLogger.makeLogger(verbose: true)
+            let config = try await loadConfig()
+            let fileHandler = makeFileHandler()
+            let workingDirectory = await resolveWorkingDirectory(using: fileHandler)
+
+            // Setup archive location
+            guard let archive = config.locations?.archive else {
+                throw PrototypeError.archiveMissing
+            }
+
+            let archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
+            let archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveLocation)
+
+            // Get last report
+            let lastReport = try getLastReport(archiver: archiver)
             let sortedTargets = lastReport.coverage.targets.sorted(by: { $0.coverage > $1.coverage })
 
             let parameters: [String: String] = [
@@ -47,21 +74,43 @@ public final class PrototypeCommand: AsyncParsableCommand {
                 "coverage_5": sortedTargets[4].printableCoverage,
             ]
 
-            let request = try await tools.postRequest(parameters: parameters)
+            let request = try await makePostRequest(parameters: parameters)
 
             let session = URLSession.shared
             _ = try await session.data(for: request)
 
         } catch {
             logger.error("Error: \(error.localizedDescription)")
-            if !quiet {
-                if let errorable = error as? any Errorable, errorable.printsHelp {
-                    print(Self.helpMessage())
-                }
-
-                throw error
-            }
+            try handle(error: error, quietly: quiet, helpMessage: Self.helpMessage())
         }
+    }
+
+    // MARK: - Private Helpers
+
+    private func getLastReport(archiver: Archiver) throws -> CoverageMetaReport {
+        guard let report = try archiver.lastReport() else {
+            throw PrototypeError.reportMissing
+        }
+        return report
+    }
+
+    private func makePostRequest(parameters: [String: Any]) async throws -> URLRequest {
+        guard let webhook = ProcessInfo.processInfo.environment["SLACK_COVERAGE_WEBHOOK"],
+              let url = URL(string: webhook)
+        else {
+            throw PrototypeError.invalidWebhook
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 20
+
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: []) else {
+            throw PrototypeError.invalidPayload
+        }
+        request.httpBody = httpBody
+        return request
     }
 
     func useStandardsForOutputAndErrors() throws {
@@ -102,89 +151,3 @@ extension PrototypeCommand {
     }
 }
 
-extension PrototypeCommand {
-    struct PrototypeCommandToolWrapper: Codable {
-        private let config: Config
-        let fileHandler: FileHandler
-        var archiver: Archiver
-        let workingDirectory: URL
-        var archiveLocation: URL?
-
-        init(config: Config,
-             fileHandler: FileHandler,
-             archiver: Archiver,
-             workingDirectory: URL,
-             archiveLocation: URL?)
-        {
-            self.config = config
-            self.fileHandler = fileHandler
-            self.archiver = archiver
-            self.workingDirectory = workingDirectory
-            self.archiveLocation = archiveLocation
-        }
-
-        init(from _: Decoder) throws {
-            throw PrototypeError.internalError
-        }
-
-        func encode(to _: Encoder) throws {
-            throw PrototypeError.internalError
-        }
-
-        @MainActor
-        static func make(config: Config) async throws -> Self {
-            let fileHandler = FileHandler()
-
-            let workingDirectory: URL = await {
-                if let gitRoot = await fileHandler.getGitRootDirectory().value {
-                    return gitRoot
-                } else {
-                    return fileHandler.getCurrentDirectoryUrl()
-                }
-            }()
-
-            guard let archive = config.locations?.archive else {
-                throw PrototypeError.archiveMissing
-            }
-
-            let archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
-
-            let archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveLocation)
-
-            return .init(config: config,
-                         fileHandler: fileHandler,
-                         archiver: archiver,
-                         workingDirectory: workingDirectory,
-                         archiveLocation: archiveLocation)
-        }
-    }
-}
-
-extension PrototypeCommand.PrototypeCommandToolWrapper {
-    typealias PrototypeError = PrototypeCommand.PrototypeError
-    func getLastReport() throws -> CoverageMetaReport {
-        guard let report = try archiver.lastReport() else {
-            throw PrototypeError.reportMissing
-        }
-        return report
-    }
-
-    func postRequest(parameters: [String: Any]) async throws -> URLRequest {
-        guard let webhook = ProcessInfo.processInfo.environment["SLACK_COVERAGE_WEBHOOK"],
-              let url = URL(string: webhook)
-        else {
-            throw PrototypeError.invalidWebhook
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 20
-
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: []) else {
-            throw PrototypeError.invalidPayload
-        }
-        request.httpBody = httpBody
-        return request
-    }
-}

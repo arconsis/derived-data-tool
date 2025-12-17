@@ -30,3 +30,6 @@ final class CoverageModel: Model {
         self.$report.id = reportId
     }
 }
+
+// Fluent models are not value-typed or immutable; acknowledge non-thread-safety explicitly.
+extension CoverageModel: @unchecked Sendable {}

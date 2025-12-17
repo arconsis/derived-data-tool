@@ -23,7 +23,6 @@ import Shared
 
 public typealias GHConfig = GithubExport.GithubExportConfig
 
-@MainActor
 public class GithubExport {
     public struct GithubExportConfig {
         public let settings: GithubExportSettings

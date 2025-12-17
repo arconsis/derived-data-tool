@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Loggerable: Decodable {
+public protocol Loggerable: Decodable, Sendable {
     static func log(_ level: LogLevel, message: String, fileId: String)
 
     var verbose: Bool { get set }

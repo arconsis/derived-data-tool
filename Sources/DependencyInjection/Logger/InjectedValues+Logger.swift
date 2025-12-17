@@ -15,5 +15,7 @@ public extension InjectedValues {
 }
 
 private struct LoggerKey: InjectionKey {
-    static var currentValue: Loggerable = MyLogger()
+    static var currentValue: Loggerable {
+        MyLogger()
+    }
 }

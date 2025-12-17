@@ -11,20 +11,31 @@ import Foundation
 import Helper
 import Shared
 
-public final class ReportCommand: AsyncParsableCommand {
-    public static let configuration = CommandConfiguration(commandName: "report", abstract: "Handle the reporting of the coverage")
+public final class ReportCommand: DerivedDataCommand, QuietErrorHandling {
+    public static let configuration = CommandConfiguration(
+        commandName: "report",
+        abstract: "Handle the reporting of the coverage"
+    )
 
-    private var tools: ReportCommandToolWrapper!
-
-    private var logger: Loggerable {
+    public var logger: Loggerable {
         InjectedValues[\.logger]
     }
 
     @Flag(help: "activate extra logging")
-    private var verbose: Bool = false
+    public var verbose: Bool = false
 
     @Flag(help: "suppress failure")
     private var quiet: Bool = false
+
+    @Option(name: [.customShort("c"), .customLong("config")])
+    public var configFilePath: String?
+
+    @Option(name: [.customShort("g"), .customLong("gitroot")])
+    public var customGitRootpath: String?
+
+    enum CodingKeys: CodingKey {
+        case verbose, quiet, configFilePath, customGitRootpath
+    }
 
     public init() {}
 
@@ -32,15 +43,29 @@ public final class ReportCommand: AsyncParsableCommand {
     private static let prefixDescription: String = "description_"
 
     public func run() async throws {
-        try await Requirements.check()
-        InjectedValues[\.logger] = MyLogger.makeLogger(verbose: verbose)
-        let config = try await ConfigFactory.getConfig()
-        tools = try await ReportCommandToolWrapper.make(config: config)
         do {
+            try await Requirements.check()
+
+            // Use protocol methods
+            setupLogger()
+            let config = try await loadConfig()
+            let fileHandler = makeFileHandler()
+            let workingDirectory = await resolveWorkingDirectory(using: fileHandler)
+
+            // Setup archive location
+            guard let archive = config.locations?.archive else {
+                throw ReportCommandError.archiveMissing
+            }
+
+            let archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
+            let archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveLocation)
+            try await archiver.setup()
+
+            // Get reports
             let dateComponents = DateComponents(day: 2)
             let tomorrow = Calendar.current.date(byAdding: dateComponents, to: Date())
-            let currentReport = try tools.getLastReport(before: tomorrow)
-            let previousReport = try tools.getLastReport(before: currentReport.fileInfo.date)
+            let currentReport = try getLastReport(archiver: archiver, before: tomorrow)
+            let previousReport = try getLastReport(archiver: archiver, before: currentReport.fileInfo.date)
 
             let compared = ComparingTargets.combine(currentReport, previousReport)
                 .sorted(by: { $0.differenceCoverage > $1.differenceCoverage })
@@ -67,21 +92,44 @@ public final class ReportCommand: AsyncParsableCommand {
             let data = try SingleEncoder.shared.encode(parameters)
             let object = try SingleDecoder.shared.decode(SlackHttpBody.self, from: data)
 
-            let request = try await tools.postRequest(with: object)
+            let request = try await makePostRequest(with: object)
 
             let session = URLSession.shared
             _ = try await session.data(for: request)
 
         } catch {
             logger.error("Error: \(error.localizedDescription)")
-            if !quiet {
-                if let errorable = error as? any Errorable, errorable.printsHelp {
-                    print(Self.helpMessage())
-                }
-
-                throw error
-            }
+            try handle(error: error, quietly: quiet, helpMessage: Self.helpMessage())
         }
+    }
+
+    // MARK: - Private Helpers
+
+    private func getLastReport(archiver: Archiver, before creationDate: Date? = nil) throws -> CoverageMetaReport {
+        guard let report = try archiver.lastReport(before: creationDate ?? Date()) else {
+            throw ReportCommandError.reportMissing
+        }
+        return report
+    }
+
+    private func makePostRequest(with object: Codable) async throws -> URLRequest {
+        guard let webhook = ProcessInfo.processInfo.environment["SLACK_COVERAGE_WEBHOOK"],
+              let url = URL(string: webhook)
+        else {
+            throw ReportCommandError.invalidWebhook
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 20
+
+        guard let body = try? SingleEncoder.shared.encode(object) else {
+            throw ReportCommandError.invalidPayload
+        }
+
+        request.httpBody = body
+        return request
     }
 }
 
@@ -96,94 +144,6 @@ extension ReportCommand {
     }
 }
 
-extension ReportCommand {
-    struct ReportCommandToolWrapper: Codable {
-        private let config: Config
-        let fileHandler: FileHandler
-        var archiver: Archiver
-        let workingDirectory: URL
-        var archiveLocation: URL?
-
-        init(config: Config,
-             fileHandler: FileHandler,
-             archiver: Archiver,
-             workingDirectory: URL,
-             archiveLocation: URL?)
-        {
-            self.config = config
-            self.fileHandler = fileHandler
-            self.archiver = archiver
-            self.workingDirectory = workingDirectory
-            self.archiveLocation = archiveLocation
-        }
-
-        init(from _: Decoder) throws {
-            throw ReportError.internalError
-        }
-
-        func encode(to _: Encoder) throws {
-            throw ReportError.internalError
-        }
-
-        @MainActor
-        static func make(config: Config) async throws -> Self {
-            let fileHandler = FileHandler()
-
-            let workingDirectory: URL = await {
-                if let gitRoot = await fileHandler.getGitRootDirectory().value {
-                    return gitRoot
-                } else {
-                    return fileHandler.getCurrentDirectoryUrl()
-                }
-            }()
-
-            guard let archive = config.locations?.archive else {
-                throw ReportError.archiveMissing
-            }
-
-            let archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
-
-            let archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveLocation)
-            try await archiver.setup()
-
-            return .init(config: config,
-                         fileHandler: fileHandler,
-                         archiver: archiver,
-                         workingDirectory: workingDirectory,
-                         archiveLocation: archiveLocation)
-        }
-    }
-}
-
-extension ReportCommand.ReportCommandToolWrapper {
-    typealias ReportError = ReportCommand.ReportCommandError
-    func getLastReport(before creationDate: Date? = nil) throws -> CoverageMetaReport {
-        guard let report = try archiver.lastReport(before: creationDate ?? Date()) else {
-            throw ReportError.reportMissing
-        }
-        return report
-    }
-
-    func postRequest(with object: Codable) async throws -> URLRequest {
-        guard let webhook = ProcessInfo.processInfo.environment["SLACK_COVERAGE_WEBHOOK"],
-              let url = URL(string: webhook)
-        else {
-            throw ReportError.invalidWebhook
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 20
-
-        guard let body = try? SingleEncoder.shared.encode(object) else {
-            throw ReportError.invalidPayload
-        }
-
-        request.httpBody = body
-        return request
-    }
-}
 
 extension ReportCommand {
     struct SlackHttpBody: Codable {
