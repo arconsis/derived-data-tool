@@ -1,0 +1,25 @@
+excluded:
+  targets:
+    - "Pod_*"
+  files:
+    - "*ViewController.swift"
+  functions:
+    - "deinit"
+
+filter_results:
+  - "TestApp"
+
+locations:
+  currentReport: "Reports/coverage_report.csv"
+  reportType: csv
+  archive: "Reports/Archive/"
+  databasePath: "coverage.db"
+
+tools:
+  - name: archiver
+    settings:
+      limit: "5"
+  - name: githubExporter
+    settings:
+      top: "5"
+      last: "5"
