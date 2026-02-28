@@ -27,7 +27,7 @@ final class DatabaseConnectorTests: XCTestCase {
     }
 
     func testExample() async throws {
-        let sut = ReportModelRepositoryImpl(db: dbConnector.db)
+        let sut = ReportModelRepositoryImpl(db: dbConnector.db, connector: dbConnector)
 
         guard let url = Bundle.module.url(forResource: "TestData", withExtension: "json") else {
             XCTFail("Resource is missing")

@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "014-per-module-coverage-targets",
+  "state": "building",
+  "subtasks": {
+    "completed": 7,
+    "total": 10,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "CI Output & Reporting",
+    "id": null,
+    "total": 2
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 9,
+    "started_at": "2026-02-28T14:09:58.888788"
+  },
+  "last_update": "2026-02-28T14:38:09.178957"
+}

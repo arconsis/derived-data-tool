@@ -38,6 +38,81 @@ To get started with this tool, follow these steps:
 4. **View Reports:**
     The generated reports will be located in the `Reports` folder. Open the latest report in your browser to view the coverage details.
 
+## Configuring Coverage Thresholds
+
+The tool supports configurable coverage thresholds to enforce quality standards across your codebase. You can set different thresholds for different modules, allowing critical business logic to have higher coverage requirements than UI components.
+
+### Configuration File
+
+Create a `.xcrtool.yml` file in your project root to configure coverage thresholds:
+
+```yaml
+thresholds:
+  global: 80.0  # Default threshold for all targets (in %)
+  targets:
+    # Critical modules require higher coverage
+    PAFPaymentServiceCN: 90.0
+    PAFUser: 85.0
+    PAFNetwork: 85.0
+
+    # UI components can have lower thresholds
+    PAFUIComponents: 70.0
+
+    # Common utilities
+    PAFCommon: 75.0
+```
+
+### How Thresholds Work
+
+- **Global Threshold**: The default coverage threshold applied to all targets unless overridden
+- **Per-Target Thresholds**: Override the global threshold for specific modules
+- **Fallback**: Any target without a specific threshold uses the global threshold
+- **Validation**: Invalid thresholds (outside 0-100 range) or redundant configurations will trigger warnings
+
+### Example Use Cases
+
+**Critical Business Logic:**
+```yaml
+thresholds:
+  global: 70.0
+  targets:
+    PaymentProcessing: 95.0  # Payments need thorough testing
+    AuthenticationService: 90.0  # Security-critical code
+```
+
+**Legacy Code Management:**
+```yaml
+thresholds:
+  global: 80.0
+  targets:
+    LegacyModule: 50.0  # Gradual improvement for legacy code
+    NewFeature: 90.0  # High standards for new development
+```
+
+### CI/CD Integration
+
+The tool exits with a non-zero status code if any target fails to meet its threshold, making it perfect for CI/CD pipelines:
+
+```bash
+# In your CI pipeline
+swift run derived-data-tool coverage --config .xcrtool.yml
+
+# Exit code 0: All thresholds met ✓
+# Exit code 1: One or more thresholds failed ✗
+```
+
+The coverage reports will clearly show which targets passed or failed their thresholds with ✓ and ✗ indicators.
+
+### Generating a Config File
+
+Generate a default configuration file with:
+
+```sh
+swift run derived-data-tool config
+```
+
+This creates a `.xcrtool.yml` file with example threshold configurations that you can customize for your project.
+
 ## Where can I get more help, if I need it?
 
 If you need more help, you can:

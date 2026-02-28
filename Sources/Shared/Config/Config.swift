@@ -12,11 +12,12 @@ public struct Config: Codable, CustomStringConvertible {
     public let included: Included?
     public let filterXCResults: [String]?
     public let locations: Locations?
+    public let thresholds: Thresholds?
     private let tools: [Tool]?
 //    public let workflow: Workflow?
 
     enum CodingKeys: String, CodingKey {
-        case excluded, included, archiver, locations, tools
+        case excluded, included, archiver, locations, thresholds, tools
         case filterXCResults = "filter_results"
     }
 
@@ -24,12 +25,14 @@ public struct Config: Codable, CustomStringConvertible {
          included: Config.Included? = nil,
          filterXCResults: [String]? = nil,
          locations: Config.Locations? = nil,
+         thresholds: Config.Thresholds? = nil,
          tools: [Tool]? = nil)
     {
         self.excluded = excluded
         self.included = included
         self.filterXCResults = filterXCResults
         self.locations = locations
+        self.thresholds = thresholds
         self.tools = tools
     }
 
@@ -56,6 +59,7 @@ public struct Config: Codable, CustomStringConvertible {
         included = try container.decodeIfPresent(Included.self, forKey: .included)
         locations = try container.decodeIfPresent(Locations.self, forKey: .locations)
         filterXCResults = try container.decodeIfPresent([String].self, forKey: .filterXCResults)
+        thresholds = try container.decodeIfPresent(Thresholds.self, forKey: .thresholds)
         tools = try container.decodeIfPresent([Tool].self, forKey: .tools)
     }
 
@@ -65,6 +69,7 @@ public struct Config: Codable, CustomStringConvertible {
         try container.encodeIfPresent(excluded, forKey: .excluded)
         try container.encodeIfPresent(locations, forKey: .locations)
         try container.encodeIfPresent(filterXCResults, forKey: .filterXCResults)
+        try container.encodeIfPresent(thresholds, forKey: .thresholds)
         try container.encodeIfPresent(tools, forKey: .tools)
     }
 
@@ -73,6 +78,7 @@ public struct Config: Codable, CustomStringConvertible {
         Excluded: \(excluded?.description ?? "N/A")
         Included: \(included?.description ?? "N/A")
         Locations: \(locations?.description ?? "N/A")
+        Thresholds: \(thresholds?.description ?? "N/A")
         """
     }
 
@@ -87,6 +93,9 @@ public struct Config: Codable, CustomStringConvertible {
                                          reportType: .markdown,
                                          archive: "Reports/Archive/")
 
+        let thresholds: Thresholds = .init(global: 80.0,
+                                           targets: ["MyApp": 85.0, "MyFramework": 75.0])
+
         let tools: [Tool] = [
             Tool(Tool.ToolType.archiver,
                  settingsVault: ["limit": "5"]),
@@ -100,6 +109,7 @@ public struct Config: Codable, CustomStringConvertible {
         return .init(excluded: excluded,
                      filterXCResults: filterXCResults,
                      locations: locations,
+                     thresholds: thresholds,
                      tools: tools)
     }
 }

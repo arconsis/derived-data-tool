@@ -90,6 +90,7 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 workingDirectory: workingDirectory,
                 locationCurrentReport: reportUrl,
                 archiveLocation: archiveLocation,
+                thresholds: config.thresholds,
                 verbose: verbose,
                 quiet: quiet
             )
