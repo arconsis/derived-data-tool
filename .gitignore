@@ -9,3 +9,6 @@ DerivedData/
 .derivedData
 .vscode
 postgresql_data/*
+
+# Auto Claude data directory
+.auto-claude/

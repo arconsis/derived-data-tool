@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "012-coverage-trend-charts",
+  "state": "building",
+  "subtasks": {
+    "completed": 6,
+    "total": 8,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Trend Command Implementation",
+    "id": null,
+    "total": 4
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 8,
+    "started_at": "2026-02-28T15:37:44.248960"
+  },
+  "last_update": "2026-02-28T15:59:51.891823"
+}
