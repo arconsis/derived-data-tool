@@ -30,8 +30,14 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Option(name: [.customShort("g"), .customLong("gitroot")], help: "git root path")
     public var customGitRootpath: String?
 
+    @Option(name: .long, help: "Minimum coverage threshold percentage (overrides config)")
+    public var minCoverage: Double?
+
+    @Option(name: .long, help: "Maximum coverage drop percentage (overrides config)")
+    public var maxDrop: Double?
+
     enum CodingKeys: CodingKey {
-        case verbose, quiet, configFilePath, customGitRootpath
+        case verbose, quiet, configFilePath, customGitRootpath, minCoverage, maxDrop
     }
 
     public required init() {}
