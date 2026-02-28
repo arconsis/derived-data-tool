@@ -25,3 +25,9 @@ test-*.sh
 # Auto-Claude metadata files in root
 .auto-claude-security.json
 .auto-claude-status
+
+# Auto Claude generated files
+.claude_settings.json
+.worktrees/
+.security-key
+logs/security/
