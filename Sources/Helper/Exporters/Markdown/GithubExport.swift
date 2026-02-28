@@ -28,11 +28,13 @@ public class GithubExport {
         public let settings: GithubExportSettings
         public let reportUrl: URL
         public let archiveUrl: URL
+        public let format: String?
 
-        public init(settings: GithubExportSettings, reportUrl: URL, archiveUrl: URL) {
+        public init(settings: GithubExportSettings, reportUrl: URL, archiveUrl: URL, format: String? = nil) {
             self.settings = settings
             self.reportUrl = reportUrl
             self.archiveUrl = archiveUrl
+            self.format = format
         }
     }
 
@@ -41,6 +43,7 @@ public class GithubExport {
     private let reportUrl: URL
     private let archiveUrl: URL
     private let settings: GithubExportSettings
+    private let format: String?
 
     @Injected(\.logger) private var logger: Loggerable
 
@@ -51,6 +54,7 @@ public class GithubExport {
         settings = config.settings
         reportUrl = config.reportUrl
         archiveUrl = config.archiveUrl
+        format = config.format
         archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveUrl)
     }
 
@@ -66,6 +70,10 @@ public class GithubExport {
     }
 
     public func createMarkDownReport(with current: CoverageMetaReport) async {
+        await createReport(with: current)
+    }
+
+    public func createReport(with current: CoverageMetaReport) async {
         do {
             try await setupAndDelete()
 
@@ -88,6 +96,19 @@ public class GithubExport {
     }
 
     private func createFileContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {
+        let selectedFormat = format?.lowercased() ?? "markdown"
+
+        switch selectedFormat {
+        case "csv":
+            return createCSVContent(with: current, previous: previous)
+        case "json", "json-summary":
+            return createJSONContent(with: current, previous: previous)
+        default:
+            return createMarkdownContent(with: current, previous: previous)
+        }
+    }
+
+    private func createMarkdownContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {
         var fileContent = ""
         fileContent += MarkdownEncoderType.header(meta: current).encode()
         fileContent += "\n"
@@ -100,6 +121,40 @@ public class GithubExport {
         fileContent += MarkdownEncoderType.detailed(report: current.coverage).encode()
         fileContent += "\n"
         fileContent += MarkdownEncoderType.compare(current: current.coverage, previous: previous?.coverage).encode()
+        fileContent += "\n"
+        return fileContent
+    }
+
+    private func createCSVContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {
+        var fileContent = ""
+        fileContent += CSVEncoderType.header(meta: current).encode()
+        fileContent += "\n"
+        fileContent += CSVEncoderType.topRanked(amount: settings.top, report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += CSVEncoderType.lastRanked(amount: settings.last, report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += CSVEncoderType.uncovered(report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += CSVEncoderType.detailed(report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += CSVEncoderType.compare(current: current.coverage, previous: previous?.coverage).encode()
+        fileContent += "\n"
+        return fileContent
+    }
+
+    private func createJSONContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {
+        var fileContent = ""
+        fileContent += JSONSummaryEncoderType.header(meta: current).encode()
+        fileContent += "\n"
+        fileContent += JSONSummaryEncoderType.topRanked(amount: settings.top, report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += JSONSummaryEncoderType.lastRanked(amount: settings.last, report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += JSONSummaryEncoderType.uncovered(report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += JSONSummaryEncoderType.detailed(report: current.coverage).encode()
+        fileContent += "\n"
+        fileContent += JSONSummaryEncoderType.compare(current: current.coverage, previous: previous?.coverage).encode()
         fileContent += "\n"
         return fileContent
     }
