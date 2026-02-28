@@ -8,21 +8,21 @@
 import Foundation
 import FluentKit
 
-final class CoverageModel: Model {
+public final class CoverageModel: Model {
     typealias FieldKeyStore = ModelDefinition.Coverage.FieldKeys
 
-    static let schema = ModelDefinition.Coverage.schema
+    public static let schema = ModelDefinition.Coverage.schema
 
     @ID(key: .id)
-    var id: UUID?
+    public var id: UUID?
 
     @Parent(key: FieldKeyStore.report)
-    var report: ReportModel
+    public var report: ReportModel
 
     @Children(for: \.$coverage)
-    var targets: [TargetModel]
+    public var targets: [TargetModel]
 
-    init() {}
+    public init() {}
 
     init(id: UUID? = nil,
          report reportId: ReportModel.IDValue) {
