@@ -5,6 +5,15 @@ locations:
   output_directory_html: HTMLReport/
   output_directory_json: CodeCoverage/
 
+thresholds:
+  global: 80.0
+  targets:
+    PAFPaymentServiceCN: 90.0
+    PAFUser: 85.0
+    PAFNetwork: 85.0
+    PAFUIComponents: 70.0
+    PAFCommon: 75.0
+
 excluded:
   files:
     - *ViewController.swift
