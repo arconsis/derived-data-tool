@@ -22,6 +22,7 @@ class CoverageTool {
     private let filterReports: [String]
     private let excludedPatterns: MatchPatternConfig
     private let includedPatterns: MatchPatternConfig
+    private let thresholdValidator: ThresholdValidator?
 
     private let workingDirectory: URL
     private let locationCurrentReport: URL
@@ -45,6 +46,7 @@ class CoverageTool {
          workingDirectory: URL,
          locationCurrentReport: URL,
          archiveLocation: URL,
+         thresholds: Config.Thresholds? = nil,
          verbose: Bool = false,
          quiet: Bool = false)
     {
@@ -65,6 +67,13 @@ class CoverageTool {
         self.includedPatterns = MatchPatternConfig(targets: includedTargets,
                                                    files: includedFiles,
                                                    functions: includedFunctions)
+
+        // Initialize threshold validator if thresholds are provided
+        if let thresholds = thresholds {
+            self.thresholdValidator = ThresholdValidator(thresholds: thresholds, verbose: verbose)
+        } else {
+            self.thresholdValidator = nil
+        }
     }
 }
 
@@ -173,6 +182,23 @@ private extension CoverageTool {
             let sorted = coverageReports.sorted(by: { $0.fileInfo.date.timeIntervalSince1970 > $1.fileInfo.date.timeIntervalSince1970 })
 
             guard let current = sorted.first else { return }
+
+            // Validate coverage thresholds if configured
+            if let validator = thresholdValidator {
+                logger.log("Running threshold validation")
+                let validationResults = validator.validate(report: current.coverage)
+
+                // Log results
+                let failedTargets = validator.failedTargets(validationResults)
+                if !failedTargets.isEmpty {
+                    logger.log("⚠️  \(failedTargets.count) target(s) failed threshold validation:")
+                    for failure in failedTargets {
+                        logger.log("  • \(failure.targetName): \(String(format: "%.2f", failure.actualCoveragePercentage))% < \(String(format: "%.2f", failure.requiredThreshold))%")
+                    }
+                } else if verbose {
+                    logger.log("✓ All targets passed threshold validation")
+                }
+            }
 
             let ghConfig = GHConfig(settings: githubExporterSetting,
                                     reportUrl: locationCurrentReport,
