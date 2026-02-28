@@ -26,6 +26,7 @@ class CoverageTool {
     private let workingDirectory: URL
     private let locationCurrentReport: URL
     private let archiveLocation: URL
+    private let format: String?
 
     private var logger: Loggerable {
         InjectedValues[\.logger]
@@ -45,6 +46,7 @@ class CoverageTool {
          workingDirectory: URL,
          locationCurrentReport: URL,
          archiveLocation: URL,
+         format: String? = nil,
          verbose: Bool = false,
          quiet: Bool = false)
     {
@@ -57,6 +59,7 @@ class CoverageTool {
         self.workingDirectory = workingDirectory
         self.locationCurrentReport = locationCurrentReport
         self.archiveLocation = archiveLocation
+        self.format = format
         self.repository = repository
         self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
                                                    files: excludedFiles,
@@ -176,11 +179,12 @@ private extension CoverageTool {
 
             let ghConfig = GHConfig(settings: githubExporterSetting,
                                     reportUrl: locationCurrentReport,
-                                    archiveUrl: archiveLocation)
+                                    archiveUrl: archiveLocation,
+                                    format: format)
 
             let githubExporter = GithubExport(fileHandler: fileHandler, config: ghConfig)
 
-            await githubExporter.createMarkDownReport(with: current)
+            await githubExporter.createReport(with: current)
 
             try await repository.add(report: current)
             try await repository.shutDownDatabaseConnection()
