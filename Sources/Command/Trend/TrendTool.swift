@@ -84,7 +84,12 @@ extension TrendTool: Runnable {
                 }
             }
 
+            // Shutdown database connection on success
+            try await repository.shutDownDatabaseConnection()
         } catch {
+            // Shutdown database connection on error
+            try? await repository.shutDownDatabaseConnection()
+
             logger.error("Error: \(error: error)")
             if !quiet {
                 print("❌ Error generating trend chart: \(error.localizedDescription)")

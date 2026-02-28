@@ -1,0 +1,9 @@
+locations:
+  output_directory_html: HTMLReport/
+  output_directory_json: CodeCoverage/
+  database_path: .derived_data_tool.db
+
+excluded:
+  files: []
+  functions: []
+  targets: []
