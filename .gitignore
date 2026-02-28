@@ -12,3 +12,16 @@ postgresql_data/*
 
 # Auto Claude data directory
 .auto-claude/
+
+# Database files
+*.db
+
+# SVG test artifacts
+*.svg
+
+# Test scripts
+test-*.sh
+
+# Auto-Claude metadata files in root
+.auto-claude-security.json
+.auto-claude-status
