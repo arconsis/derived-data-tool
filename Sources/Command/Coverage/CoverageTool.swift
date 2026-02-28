@@ -211,6 +211,20 @@ private extension CoverageTool {
 
             try await repository.add(report: current)
             try await repository.shutDownDatabaseConnection()
+
+            // Check threshold validation results and throw error if any targets failed
+            // (unless quiet mode is enabled)
+            if let validator = thresholdValidator, let results = validationResults {
+                let failedTargets = validator.failedTargets(results)
+                if !failedTargets.isEmpty && !quiet {
+                    let failures = failedTargets.map { result in
+                        (target: result.targetName,
+                         actual: result.actualCoveragePercentage,
+                         required: result.requiredThreshold)
+                    }
+                    throw CoverageError.thresholdValidationFailed(failures: failures)
+                }
+            }
         } catch {
             try? await repository.shutDownDatabaseConnection()
             throw error
