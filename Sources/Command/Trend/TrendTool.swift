@@ -192,7 +192,7 @@ private extension TrendTool {
         return TrendChartData(
             overallTrend: overallDataPoints,
             targetTrends: targetTrends,
-            threshold: threshold
+            threshold: threshold.map { $0 / 100.0 }
         )
     }
 
