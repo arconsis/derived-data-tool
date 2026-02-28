@@ -30,8 +30,11 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Option(name: [.customShort("g"), .customLong("gitroot")], help: "git root path")
     public var customGitRootpath: String?
 
+    @Option(name: [.customShort("f"), .customLong("format")], help: "Output format (json, csv, summary)")
+    public var format: String?
+
     enum CodingKeys: CodingKey {
-        case verbose, quiet, configFilePath, customGitRootpath
+        case verbose, quiet, configFilePath, customGitRootpath, format
     }
 
     public required init() {}
