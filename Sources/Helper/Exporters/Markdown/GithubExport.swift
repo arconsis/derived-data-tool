@@ -65,7 +65,7 @@ public class GithubExport {
         }
     }
 
-    public func createMarkDownReport(with current: CoverageMetaReport) async {
+    public func createMarkDownReport(with current: CoverageMetaReport, validationResults: [ThresholdValidationResult]? = nil) async {
         do {
             try await setupAndDelete()
 
@@ -73,7 +73,7 @@ public class GithubExport {
             let previous: CoverageMetaReport? = try? archiver.lastReport(before: current.fileInfo.date)
 
             // create new file
-            let fileContent = createFileContent(with: current, previous: previous)
+            let fileContent = createFileContent(with: current, previous: previous, validationResults: validationResults)
             try saveReport(content: fileContent, at: reportUrl)
         } catch {
             logger.error(error.localizedDescription)
@@ -87,17 +87,17 @@ public class GithubExport {
         deleteReport()
     }
 
-    private func createFileContent(with current: CoverageMetaReport, previous: CoverageMetaReport?) -> String {
+    private func createFileContent(with current: CoverageMetaReport, previous: CoverageMetaReport?, validationResults: [ThresholdValidationResult]? = nil) -> String {
         var fileContent = ""
-        fileContent += MarkdownEncoderType.header(meta: current).encode()
+        fileContent += MarkdownEncoderType.header(meta: current, validationResults: validationResults).encode()
         fileContent += "\n"
-        fileContent += MarkdownEncoderType.topRanked(amount: settings.top, report: current.coverage).encode()
+        fileContent += MarkdownEncoderType.topRanked(amount: settings.top, report: current.coverage, validationResults: validationResults).encode()
         fileContent += "\n"
-        fileContent += MarkdownEncoderType.lastRanked(amount: settings.last, report: current.coverage).encode()
+        fileContent += MarkdownEncoderType.lastRanked(amount: settings.last, report: current.coverage, validationResults: validationResults).encode()
         fileContent += "\n"
-        fileContent += MarkdownEncoderType.uncovered(report: current.coverage).encode()
+        fileContent += MarkdownEncoderType.uncovered(report: current.coverage, validationResults: validationResults).encode()
         fileContent += "\n"
-        fileContent += MarkdownEncoderType.detailed(report: current.coverage).encode()
+        fileContent += MarkdownEncoderType.detailed(report: current.coverage, validationResults: validationResults).encode()
         fileContent += "\n"
         fileContent += MarkdownEncoderType.compare(current: current.coverage, previous: previous?.coverage).encode()
         fileContent += "\n"

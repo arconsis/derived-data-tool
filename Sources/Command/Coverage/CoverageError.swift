@@ -18,6 +18,7 @@ enum CoverageError: LocalizedError, CustomStringConvertible {
     case noResultsToWorkWith
     case noResultFilesToConvert
     case internalError
+    case thresholdValidationFailed(failures: [(target: String, actual: Double, required: Double)])
 
     /// Retrieve the localized description for this error.
     var localizedDescription: String {
@@ -42,6 +43,11 @@ enum CoverageError: LocalizedError, CustomStringConvertible {
             return "There are no xcresult files to work with"
         case .missingDatabasePath:
             return "No database path provided"
+        case let .thresholdValidationFailed(failures: failures):
+            let failureDescriptions = failures.map { failure in
+                "  • \(failure.target): \(String(format: "%.2f", failure.actual))% < \(String(format: "%.2f", failure.required))%"
+            }.joined(separator: "\n")
+            return "Coverage thresholds not met for \(failures.count) target(s):\n\(failureDescriptions)"
         }
     }
 
