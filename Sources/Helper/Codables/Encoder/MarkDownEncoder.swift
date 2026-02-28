@@ -9,11 +9,11 @@ import Foundation
 import Shared
 
 public enum MarkdownEncoderType {
-    case header(meta: CoverageMetaReport)
-    case detailed(report: CoverageReport)
-    case topRanked(amount: Int, report: CoverageReport)
-    case lastRanked(amount: Int, report: CoverageReport)
-    case uncovered(report: CoverageReport)
+    case header(meta: CoverageMetaReport, validationResults: [ThresholdValidationResult]? = nil)
+    case detailed(report: CoverageReport, validationResults: [ThresholdValidationResult]? = nil)
+    case topRanked(amount: Int, report: CoverageReport, validationResults: [ThresholdValidationResult]? = nil)
+    case lastRanked(amount: Int, report: CoverageReport, validationResults: [ThresholdValidationResult]? = nil)
+    case uncovered(report: CoverageReport, validationResults: [ThresholdValidationResult]? = nil)
     case compare(current: CoverageReport, previous: CoverageReport?)
 }
 
@@ -31,9 +31,9 @@ extension MarkdownEncoderType: CoverageReportEncoding {
             return "Coverage Report"
         case .detailed:
             return "All Target Ranked"
-        case let .topRanked(amount, _):
+        case let .topRanked(amount, _, _):
             return "TOP \(amount)"
-        case let .lastRanked(amount, _):
+        case let .lastRanked(amount, _, _):
             return "Last \(amount)"
         case .uncovered:
             return "!UNCOVERED TARGETS!"
@@ -42,15 +42,51 @@ extension MarkdownEncoderType: CoverageReportEncoding {
         }
     }
 
+    var validationResults: [ThresholdValidationResult]? {
+        switch self {
+        case let .header(_, validationResults):
+            return validationResults
+        case let .detailed(_, validationResults):
+            return validationResults
+        case let .topRanked(_, _, validationResults):
+            return validationResults
+        case let .lastRanked(_, _, validationResults):
+            return validationResults
+        case let .uncovered(_, validationResults):
+            return validationResults
+        case .compare:
+            return nil
+        }
+    }
+
+    private func validationResult(for targetName: String) -> ThresholdValidationResult? {
+        validationResults?.first { $0.targetName == targetName }
+    }
+
+    private func thresholdIndicator(for targetName: String) -> String {
+        guard let result = validationResult(for: targetName) else {
+            return ""
+        }
+        return result.passed ? "✓" : "✗"
+    }
+
+    private func thresholdStatus(for targetName: String) -> String {
+        guard let result = validationResult(for: targetName) else {
+            return "-"
+        }
+        let indicator = result.passed ? "✓" : "✗"
+        return "\(indicator) \(String(format: "%.1f", result.requiredThreshold))%"
+    }
+
     public func encode() -> String {
         switch self {
-        case let .detailed(report):
+        case let .detailed(report, _):
             let relevantReports = report.targets
                 .sorted(by: { $0.coverage > $1.coverage })
 
             return encodeCoverageDetailed(relevantReports)
 
-        case let .topRanked(amount, report):
+        case let .topRanked(amount, report, _):
             let relevantReports = report.targets
                 .filter { $0.coveredLines > 1 }
                 .sorted(by: { $0.coverage > $1.coverage })
@@ -59,7 +95,7 @@ extension MarkdownEncoderType: CoverageReportEncoding {
 
             return encodeCoverageRanked(relevantReports)
 
-        case let .lastRanked(amount, report):
+        case let .lastRanked(amount, report, _):
             let relevantReports = report.targets
                 .filter { $0.coveredLines > 1 }
                 .sorted(by: { $0.coverage < $1.coverage })
@@ -69,7 +105,7 @@ extension MarkdownEncoderType: CoverageReportEncoding {
 
             return encodeCoverageRanked(relevantReports)
 
-        case let .uncovered(report):
+        case let .uncovered(report, _):
             let relevantReports = report.targets
                 .filter { $0.coveredLines < 1 }
                 .sorted(by: { $0.executableLines > $1.executableLines })
@@ -79,7 +115,7 @@ extension MarkdownEncoderType: CoverageReportEncoding {
 
         case let .compare(current, previous):
             return encodeCoverageCompared(current.targets, previous: previous?.targets)
-        case let .header(meta):
+        case let .header(meta, _):
             return encodeCoverageHeader(meta)
         }
     }
@@ -87,8 +123,17 @@ extension MarkdownEncoderType: CoverageReportEncoding {
 
 extension MarkdownEncoderType {
     private func encodeCoverageRanked(_ targets: [Target]) -> String {
-        var result = "# \(title.uppercased())\n| Rank | Target | Coverage |\n"
-        result += "| :--- | :--- | :---: |\n"
+        let hasThresholds = validationResults != nil
+        var result = "# \(title.uppercased())\n"
+
+        if hasThresholds {
+            result += "| Rank | Target | Coverage | Threshold | Status |\n"
+            result += "| :--- | :--- | :---: | :---: | :---: |\n"
+        } else {
+            result += "| Rank | Target | Coverage |\n"
+            result += "| :--- | :--- | :---: |\n"
+        }
+
         for (index, target) in targets.enumerated() {
             result += encodeCoverageRankedSingleLine(index + 1, target: target)
         }
@@ -96,14 +141,28 @@ extension MarkdownEncoderType {
     }
 
     private func encodeCoverageRankedSingleLine(_ rank: Int, target: Target) -> String {
-        "| \(rank). | \(target.name) | \(target.printableCoverage)% |\n"
+        guard validationResults != nil else {
+            return "| \(rank). | \(target.name) | \(target.printableCoverage)% |\n"
+        }
+
+        let status = thresholdStatus(for: target.name)
+        return "| \(rank). | \(target.name) | \(target.printableCoverage)% | \(status) | \(thresholdIndicator(for: target.name)) |\n"
     }
 }
 
 extension MarkdownEncoderType {
     private func encodeCoverageDetailed(_ targets: [Target]) -> String {
-        var result = "# \(title.uppercased())\n| Rank | Target | Executable Lines | Covered Lines | Coverage |\n"
-        result += "| :--- | :--- | :---: | :---: | :---: |\n"
+        let hasThresholds = validationResults != nil
+        var result = "# \(title.uppercased())\n"
+
+        if hasThresholds {
+            result += "| Rank | Target | Executable Lines | Covered Lines | Coverage | Threshold | Status |\n"
+            result += "| :--- | :--- | :---: | :---: | :---: | :---: | :---: |\n"
+        } else {
+            result += "| Rank | Target | Executable Lines | Covered Lines | Coverage |\n"
+            result += "| :--- | :--- | :---: | :---: | :---: |\n"
+        }
+
         for (index, target) in targets.enumerated() {
             result += encodeCoverageDetailedSingleLine(index + 1, target: target)
         }
@@ -111,7 +170,12 @@ extension MarkdownEncoderType {
     }
 
     private func encodeCoverageDetailedSingleLine(_ rank: Int, target: Target) -> String {
-        "| \(rank). | \(target.name) | \(target.executableLines) | \(target.coveredLines) | \(target.printableCoverage)% |\n"
+        guard validationResults != nil else {
+            return "| \(rank). | \(target.name) | \(target.executableLines) | \(target.coveredLines) | \(target.printableCoverage)% |\n"
+        }
+
+        let status = thresholdStatus(for: target.name)
+        return "| \(rank). | \(target.name) | \(target.executableLines) | \(target.coveredLines) | \(target.printableCoverage)% | \(status) | \(thresholdIndicator(for: target.name)) |\n"
     }
 }
 
@@ -154,6 +218,23 @@ extension MarkdownEncoderType {
         let date = DateFormat.fullWeekdayFullMonthNameDayYear.string(from: coverage.fileInfo.date)
         var result = "# \(title.uppercased()) (\(date))\n"
         result += "# \(String(format: "%.1f", percentage))% Overall Coverage\n"
+
+        // Add threshold summary if validation results are available
+        if let validationResults = validationResults {
+            let passed = validationResults.filter(\.passed).count
+            let failed = validationResults.count - passed
+            let allPassed = failed == 0
+
+            result += "\n## Threshold Validation\n"
+            if allPassed {
+                result += "✓ All \(validationResults.count) target(s) passed their coverage thresholds\n"
+            } else {
+                result += "⚠️  \(failed) of \(validationResults.count) target(s) failed their coverage thresholds\n"
+                result += "- Passed: \(passed)\n"
+                result += "- Failed: \(failed)\n"
+            }
+        }
+
         return result
     }
 
@@ -200,8 +281,17 @@ extension MarkdownEncoderType {
 
 extension MarkdownEncoderType {
     private func encodeUncoverageDetailed(_ targets: [Target]) -> String {
-        var result = "# \(title.uppercased())\n| Rank | Target | Covered Lines | Executable Lines |\n"
-        result += "| :--- | :--- | :---: | :---: |\n"
+        let hasThresholds = validationResults != nil
+        var result = "# \(title.uppercased())\n"
+
+        if hasThresholds {
+            result += "| Rank | Target | Covered Lines | Executable Lines | Threshold | Status |\n"
+            result += "| :--- | :--- | :---: | :---: | :---: | :---: |\n"
+        } else {
+            result += "| Rank | Target | Covered Lines | Executable Lines |\n"
+            result += "| :--- | :--- | :---: | :---: |\n"
+        }
+
         for (index, target) in targets.enumerated() {
             result += encodeUncoverageDetailedSingleLine(index + 1, target: target)
         }
@@ -209,6 +299,11 @@ extension MarkdownEncoderType {
     }
 
     private func encodeUncoverageDetailedSingleLine(_ rank: Int, target: Target) -> String {
-        "| \(rank). | \(target.name) | \(target.coveredLines) | \(target.executableLines) |\n"
+        guard validationResults != nil else {
+            return "| \(rank). | \(target.name) | \(target.coveredLines) | \(target.executableLines) |\n"
+        }
+
+        let status = thresholdStatus(for: target.name)
+        return "| \(rank). | \(target.name) | \(target.coveredLines) | \(target.executableLines) | \(status) | \(thresholdIndicator(for: target.name)) |\n"
     }
 }

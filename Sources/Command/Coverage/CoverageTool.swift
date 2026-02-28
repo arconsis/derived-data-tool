@@ -184,12 +184,13 @@ private extension CoverageTool {
             guard let current = sorted.first else { return }
 
             // Validate coverage thresholds if configured
+            var validationResults: [ThresholdValidationResult]?
             if let validator = thresholdValidator {
                 logger.log("Running threshold validation")
-                let validationResults = validator.validate(report: current.coverage)
+                validationResults = validator.validate(report: current.coverage)
 
                 // Log results
-                let failedTargets = validator.failedTargets(validationResults)
+                let failedTargets = validator.failedTargets(validationResults!)
                 if !failedTargets.isEmpty {
                     logger.log("⚠️  \(failedTargets.count) target(s) failed threshold validation:")
                     for failure in failedTargets {
@@ -206,7 +207,7 @@ private extension CoverageTool {
 
             let githubExporter = GithubExport(fileHandler: fileHandler, config: ghConfig)
 
-            await githubExporter.createMarkDownReport(with: current)
+            await githubExporter.createMarkDownReport(with: current, validationResults: validationResults)
 
             try await repository.add(report: current)
             try await repository.shutDownDatabaseConnection()

@@ -9,25 +9,6 @@ import DependencyInjection
 import Foundation
 import Shared
 
-/// Result of validating a single target against its threshold
-public struct ThresholdValidationResult {
-    public let targetName: String
-    public let actualCoverage: Double
-    public let requiredThreshold: Double
-    public let passed: Bool
-
-    public init(targetName: String, actualCoverage: Double, requiredThreshold: Double, passed: Bool) {
-        self.targetName = targetName
-        self.actualCoverage = actualCoverage
-        self.requiredThreshold = requiredThreshold
-        self.passed = passed
-    }
-
-    public var actualCoveragePercentage: Double {
-        actualCoverage * 100.0
-    }
-}
-
 /// Validates coverage reports against configured thresholds
 class ThresholdValidator {
     private let thresholds: Config.Thresholds
