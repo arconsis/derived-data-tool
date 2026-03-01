@@ -29,10 +29,6 @@ enum ExternalDependencies {
     static let yams = Dependency(package: .package(url: "https://github.com/jpsim/Yams.git", from: "6.2.0"),
                                  target: .product(name: "Yams", package: "yams"))
 
-    // needs to be replaced by https://github.com/davbeck/swift-glob in the future
-    static let globPattern = Dependency(package: .package(url: "https://github.com/ChimeHQ/GlobPattern.git", from: "0.1.1"),
-                                        target: .product(name: "GlobPattern", package: "GlobPattern"))
-
     static let asyncAlgorithms = Dependency(package: .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "1.0.0"),
                                             target: .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"))
 
@@ -61,7 +57,6 @@ let package = Package(
         ExternalDependencies.asyncAlgorithms.package,
         ExternalDependencies.fluent.package,
         ExternalDependencies.sqlDriver.package,
-        ExternalDependencies.globPattern.package,
         ExternalDependencies.swiftGlob.package,
         ExternalDependencies.swiftHTMLParser.package,
         ExternalDependencies.yams.package,
@@ -162,7 +157,6 @@ let package = Package(
                 ExternalDependencies.asyncAlgorithms.target,
                 ExternalDependencies.fluent.target,
                 ExternalDependencies.sqlDriver.target,
-                ExternalDependencies.globPattern.target,
                 ExternalDependencies.swiftGlob.target,
                 ExternalDependencies.swiftHTMLParser.target,
                 ExternalDependencies.yams.target,
