@@ -24,6 +24,12 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Flag(help: "suppress failure")
     private var quiet: Bool = false
 
+    @Flag(help: "enable CI-optimized output mode")
+    public var ci: Bool = false
+
+    @Option(name: .long, help: "Path for CI JSON summary output (requires --ci)")
+    public var ciJsonOutput: String?
+
     @Option(name: [.customShort("c"), .customLong("config")], help: "Path to the .xcrtool.yml")
     public var configFilePath: String?
 
@@ -37,7 +43,7 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     public var maxDrop: Double?
 
     enum CodingKeys: CodingKey {
-        case verbose, quiet, configFilePath, customGitRootpath, minCoverage, maxDrop
+        case verbose, quiet, ci, ciJsonOutput, configFilePath, customGitRootpath, minCoverage, maxDrop
     }
 
     public required init() {}
@@ -83,6 +89,9 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
             // Load and merge threshold settings
             let thresholdSettings = try loadThresholdSettings(from: config)
 
+            // Parse CI JSON output path if provided
+            let ciJsonOutputUrl: URL? = ciJsonOutput.map { workingDirectory.appending(pathComponent: $0) }
+
             // Create and run coverage tool
             let coverageTool = CoverageTool(
                 fileHandler: fileHandler,
@@ -101,7 +110,9 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 archiveLocation: archiveLocation,
                 thresholdSettings: thresholdSettings,
                 verbose: verbose,
-                quiet: quiet
+                quiet: quiet,
+                ci: ci,
+                ciJsonOutput: ciJsonOutputUrl
             )
 
             try await coverageTool.run()

@@ -173,6 +173,168 @@ tools:
     per_target_thresholds: '{"PaymentModule": {"minCoverage": 95.0}, "SecurityFramework": {"minCoverage": 95.0}}'
 ```
 
+## CI-Optimized Output Mode
+
+For seamless integration into CI/CD pipelines, DerivedDataTool provides a dedicated `--ci` flag that produces machine-parseable output, GitHub Actions annotations, and structured JSON summaries.
+
+### Why Use CI Mode?
+
+Traditional cloud coverage services (Codecov, Coveralls) can cause CI failures during outages. DerivedDataTool's local execution is inherently reliable, and CI mode provides:
+
+- **Clean, parseable output** for CI logs without visual noise (no emoji or colors)
+- **GitHub Actions annotations** that highlight coverage issues directly in PR checks
+- **Structured JSON export** for downstream CI processing and custom workflows
+- **Machine-parseable summary** for easy integration with monitoring tools
+
+### Basic Usage
+
+Enable CI mode by adding the `--ci` flag:
+
+```sh
+swift run derived-data-tool coverage --ci --min-coverage 80.0
+```
+
+This produces output optimized for CI environments:
+
+```
+COVERAGE: 78.5% | TARGETS: 2/3 PASSED | THRESHOLD: FAIL
+::error file=MyApp,title=Coverage Threshold Not Met::Target 'MyApp' coverage 78.5% is below required 80.0%
+```
+
+### GitHub Actions Integration
+
+Add DerivedDataTool to your GitHub Actions workflow:
+
+```yaml
+name: Coverage Check
+
+on: [pull_request]
+
+jobs:
+  coverage:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run Tests
+        run: xcodebuild test -scheme MyApp -resultBundlePath TestResults.xcresult
+
+      - name: Check Coverage
+        run: |
+          swift run derived-data-tool coverage \
+            --ci \
+            --min-coverage 80.0 \
+            --ci-json-output coverage-summary.json
+
+      - name: Upload Coverage Summary
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-summary
+          path: coverage-summary.json
+```
+
+Coverage failures will appear as annotations in the PR checks tab, making it easy for developers to see exactly which files need attention.
+
+### JSON Export for Downstream Processing
+
+Use the `--ci-json-output` flag to export structured coverage data:
+
+```sh
+swift run derived-data-tool coverage \
+  --ci \
+  --ci-json-output coverage-summary.json \
+  --min-coverage 80.0
+```
+
+The JSON output includes comprehensive coverage metrics:
+
+```json
+{
+  "overallCoverage": 78.5,
+  "thresholdStatus": "FAIL",
+  "targets": [
+    {
+      "name": "MyApp",
+      "coverage": 78.5,
+      "coveredLines": 1570,
+      "executableLines": 2000,
+      "passed": false
+    },
+    {
+      "name": "MyFramework",
+      "coverage": 92.3,
+      "coveredLines": 923,
+      "executableLines": 1000,
+      "passed": true
+    }
+  ],
+  "failures": [
+    {
+      "targetName": "MyApp",
+      "actualCoverage": 78.5,
+      "requiredThreshold": 80.0
+    }
+  ]
+}
+```
+
+### Machine-Parseable Summary
+
+CI mode outputs a single-line summary that's easy to parse programmatically:
+
+```
+COVERAGE: {overall}% | TARGETS: {passed}/{total} PASSED | THRESHOLD: {PASS|FAIL}
+```
+
+Example:
+```
+COVERAGE: 85.2% | TARGETS: 5/5 PASSED | THRESHOLD: PASS
+```
+
+### GitHub Actions Annotations Format
+
+When thresholds fail, CI mode generates annotations following the [GitHub Actions workflow commands format](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions):
+
+```
+::error file={targetName},title=Coverage Threshold Not Met::{message}
+::error file={targetName},title=Coverage Dropped::{message}
+```
+
+These annotations appear inline in the PR "Files changed" tab and in the workflow run summary.
+
+### Combining CI Mode with Thresholds
+
+CI mode works seamlessly with all threshold configurations:
+
+```sh
+# Absolute threshold
+swift run derived-data-tool coverage --ci --min-coverage 80.0
+
+# Relative threshold
+swift run derived-data-tool coverage --ci --max-drop 2.0
+
+# Per-target thresholds (configured in .xcrtool.yml)
+swift run derived-data-tool coverage --ci
+
+# Multiple thresholds with JSON export
+swift run derived-data-tool coverage \
+  --ci \
+  --min-coverage 75.0 \
+  --max-drop 1.5 \
+  --ci-json-output coverage-summary.json
+```
+
+### CI Mode Output Characteristics
+
+When `--ci` is enabled:
+
+- ✅ GitHub Actions annotations for failed thresholds
+- ✅ Single-line machine-parseable summary
+- ✅ Clean output without emoji or colors
+- ✅ Optional structured JSON export via `--ci-json-output`
+- ✅ Exit code 0 for pass, 1 for fail (same as normal mode)
+
 ## Where can I get more help, if I need it?
 
 If you need more help, you can:
