@@ -5,6 +5,30 @@ locations:
   output_directory_html: HTMLReport/
   output_directory_json: CodeCoverage/
 
+# Coverage Thresholds (optional)
+# Uncomment to enforce code coverage standards in CI/CD pipelines
+# tools:
+#   threshold:
+#     # Absolute threshold: require minimum overall coverage percentage
+#     min_coverage: 80.0
+#
+#     # Relative threshold: prevent coverage from dropping compared to previous report
+#     max_drop: 2.0
+#
+#     # Per-target thresholds: enforce different rules for specific targets
+#     # Format: JSON-encoded string mapping target names to threshold configurations
+#     # Each target can have its own minCoverage and/or maxDrop values
+#     per_target_thresholds: '{"MyApp": {"minCoverage": 85.0}, "CriticalFramework": {"minCoverage": 90.0, "maxDrop": 1.0}}'
+#
+# Exit Codes:
+# - 0: All thresholds passed
+# - 1: One or more thresholds failed
+#
+# CLI Overrides:
+# You can override these values with command-line flags:
+#   --min-coverage 80.0
+#   --max-drop 2.0
+
 excluded:
   files:
     - *ViewController.swift

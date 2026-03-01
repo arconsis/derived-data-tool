@@ -15,7 +15,11 @@ enum ReportModelRepositoryError: Error {
 
 public protocol ReportModelRepository {
     func add(report: CoverageMetaReport) async throws
+    func getLatestReport() async throws -> CoverageMetaReport?
     func shutDownDatabaseConnection() async throws
+    func fetchReports(limit: Int) async throws -> [ReportModel]
+    func fetchReports(since date: Date) async throws -> [ReportModel]
+    func fetchReports(between startDate: Date, and endDate: Date) async throws -> [ReportModel]
 }
 
 struct ReportModelRepositoryImpl {
@@ -92,6 +96,37 @@ private extension ReportModelRepositoryImpl {
             throw error
         }
     }
+
+    func reconstructCoverageMetaReport(from reportModel: ReportModel, coverage coverageModel: CoverageModel) throws -> CoverageMetaReport {
+        // Reconstruct XCResultFile by creating a properly formatted URL
+        // The stored url field contains just the filename (e.g., "Run-AppName-2023.05.08_15-14-43-+0200.xcresult")
+        // We need to create a full path URL for the initializer to work
+        let fileURL = URL(fileURLWithPath: "/tmp/\(reportModel.url)")
+        let fileInfo = try XCResultFile(with: fileURL)
+
+        // Reconstruct Target objects from TargetModel
+        // Database only stores target-level coverage data, not file-level details
+        let reconstructedTargets = coverageModel.targets.map { targetModel in
+            // Create a synthetic File to hold the coverage data since DB doesn't store file details
+            let syntheticFunction = Function(
+                name: "coverage",
+                executableLines: targetModel.executableLines,
+                coveredLines: targetModel.coveredLines,
+                lineNumber: 0,
+                executionCount: 0
+            )
+            let syntheticFile = File(
+                name: targetModel.name,
+                path: "",
+                functions: [syntheticFunction]
+            )
+            return Target(name: targetModel.name, files: [syntheticFile])
+        }
+
+        let coverageReport = CoverageReport(targets: reconstructedTargets)
+
+        return CoverageMetaReport(fileInfo: fileInfo, coverage: coverageReport)
+    }
 }
 
 extension ReportModelRepositoryImpl: ReportModelRepository {
@@ -107,8 +142,88 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
         }
     }
 
+    func getLatestReport() async throws -> CoverageMetaReport? {
+        do {
+            // Query for the most recent report by timestamp
+            guard let reportModel = try await reportModelQuery()
+                .sort(\.$timestamp, .descending)
+                .first()
+            else {
+                return nil
+            }
+
+            guard let reportId = reportModel.id else {
+                return nil
+            }
+
+            // Load the coverage model for this report
+            guard let coverageModel = try await coverageModelQuery()
+                .filter(\.$report.$id == reportId)
+                .with(\.$targets)
+                .first()
+            else {
+                return nil
+            }
+
+            // Reconstruct CoverageMetaReport from database models
+            return try reconstructCoverageMetaReport(from: reportModel, coverage: coverageModel)
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
+    }
+
     func shutDownDatabaseConnection() async throws {
         try await connector.disconnect()
+    }
+
+    func fetchReports(limit: Int) async throws -> [ReportModel] {
+        do {
+            return try await reportModelQuery()
+                .with(\.$coverage) { coverage in
+                    coverage.with(\.$targets)
+                }
+                .sort(\.$timestamp, .descending)
+                .limit(limit)
+                .all()
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
+    }
+
+    func fetchReports(since date: Date) async throws -> [ReportModel] {
+        do {
+            let dateString = date.ISO8601Format(.iso8601)
+            return try await reportModelQuery()
+                .with(\.$coverage) { coverage in
+                    coverage.with(\.$targets)
+                }
+                .filter(\.$timestamp >= dateString)
+                .sort(\.$timestamp, .descending)
+                .all()
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
+    }
+
+    func fetchReports(between startDate: Date, and endDate: Date) async throws -> [ReportModel] {
+        do {
+            let startDateString = startDate.ISO8601Format(.iso8601)
+            let endDateString = endDate.ISO8601Format(.iso8601)
+            return try await reportModelQuery()
+                .with(\.$coverage) { coverage in
+                    coverage.with(\.$targets)
+                }
+                .filter(\.$timestamp >= startDateString)
+                .filter(\.$timestamp <= endDateString)
+                .sort(\.$timestamp, .descending)
+                .all()
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
     }
 
     private func make(_ coverage: CoverageReport, parent: ReportModel.IDValue) async throws {

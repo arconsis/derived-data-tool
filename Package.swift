@@ -15,6 +15,7 @@ extension PackageDescription.Target {
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
     static let shared = TargetDefinition(name: "Shared", path: "Sources/Shared")
+    static let trend = TargetDefinition(name: "Trend", path: "Sources/Command/Trend")
 }
 
 @MainActor
@@ -28,10 +29,6 @@ enum ExternalDependencies {
     static let yams = Dependency(package: .package(url: "https://github.com/jpsim/Yams.git", from: "6.2.0"),
                                  target: .product(name: "Yams", package: "yams"))
 
-    // needs to be replaced by https://github.com/davbeck/swift-glob in the future
-    static let globPattern = Dependency(package: .package(url: "https://github.com/ChimeHQ/GlobPattern.git", from: "0.1.1"),
-                                        target: .product(name: "GlobPattern", package: "GlobPattern"))
-
     static let asyncAlgorithms = Dependency(package: .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "1.0.0"),
                                             target: .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"))
 
@@ -40,6 +37,9 @@ enum ExternalDependencies {
 
     static let sqlDriver = Dependency(package: .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0"),
                                       target: .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"))
+
+    static let swiftGlob = Dependency(package: .package(url: "https://github.com/davbeck/swift-glob", from: "1.0.0"),
+                                      target: .product(name: "Glob", package: "swift-glob"))
 }
 
 typealias MyPackage = PackageDescription.Target
@@ -57,7 +57,7 @@ let package = Package(
         ExternalDependencies.asyncAlgorithms.package,
         ExternalDependencies.fluent.package,
         ExternalDependencies.sqlDriver.package,
-        ExternalDependencies.globPattern.package,
+        ExternalDependencies.swiftGlob.package,
         ExternalDependencies.swiftHTMLParser.package,
         ExternalDependencies.yams.package,
     ],
@@ -75,6 +75,7 @@ let package = Package(
                 .build(),
                 .config(),
                 .report(),
+                .trend(),
             ],
             path: MyPackage.app.path
         ),
@@ -142,6 +143,12 @@ let package = Package(
             .helper(),
             .shared(),
         ]),
+        MyPackage.trend.toTarget(dependencies: [
+            ExternalDependencies.argumentParser.target,
+            .dependencyInjection(),
+            .helper(),
+            .shared(),
+        ]),
 
         // MARK: HELPER
         MyPackage.helper.toTarget(
@@ -150,7 +157,7 @@ let package = Package(
                 ExternalDependencies.asyncAlgorithms.target,
                 ExternalDependencies.fluent.target,
                 ExternalDependencies.sqlDriver.target,
-                ExternalDependencies.globPattern.target,
+                ExternalDependencies.swiftGlob.target,
                 ExternalDependencies.swiftHTMLParser.target,
                 ExternalDependencies.yams.target,
                 .dependencyInjection(),
@@ -270,6 +277,11 @@ extension PackageDescription.Target.Dependency {
 
     static func migrate() -> Target.Dependency {
         Target.Dependency.target(name: "Migrate")
+    }
+
+    /// SubCommand: `trend`: command to analyze coverage trends
+    static func trend() -> Target.Dependency {
+        Target.Dependency.target(name: "Trend")
     }
 }
 
