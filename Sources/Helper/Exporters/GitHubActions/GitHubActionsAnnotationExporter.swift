@@ -16,8 +16,8 @@ import Shared
 /// - ::error file={name},line={line}::{message}
 /// - ::warning file={name},line={line}::{message}
 ///
-/// Discussion: File path and line number resolution will be added in subtask-2-3.
-/// For now, annotations use the target name and line=1 as placeholders.
+/// File paths are resolved from the target's first file in the coverage report.
+/// Line numbers use line=1 for file-level annotations.
 public class GitHubActionsAnnotationExporter {
     @Injected(\.logger) private var logger: Loggerable
 
@@ -63,11 +63,12 @@ public class GitHubActionsAnnotationExporter {
     private func createAnnotation(for result: ThresholdValidationResult) -> String {
         let message = formatMessage(for: result)
 
-        // For now, use line=1 as placeholder (file path resolution comes in subtask-2-3)
+        // Use the first file from the target if available, otherwise fall back to target name
+        let fileName = result.filePath ?? result.targetName
+        let lineNumber = 1 // Use line=1 for file-level annotations
+
         // Targets that fail thresholds get ::error annotations
         let annotationType = "error"
-        let fileName = result.targetName // Will be replaced with actual file path in subtask-2-3
-        let lineNumber = 1
 
         return "::\(annotationType) file=\(fileName),line=\(lineNumber)::\(message)"
     }

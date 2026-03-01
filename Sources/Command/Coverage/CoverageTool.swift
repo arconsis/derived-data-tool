@@ -254,11 +254,16 @@ private extension CoverageTool {
                         failingTargets.append((name: targetName, current: details.actual, required: details.expected))
 
                         // Convert to ThresholdValidationResult for GitHub Actions annotations
+                        // Look up the target to get the first file path for the annotation
+                        let target = current.coverage.targets.first { $0.name == targetName }
+                        let firstFilePath = target?.files.first?.path
+
                         let validationResult = ThresholdValidationResult(
                             targetName: targetName,
                             actualCoverage: details.actual / 100.0, // Convert back to decimal
                             requiredThreshold: details.expected,
-                            passed: false
+                            passed: false,
+                            filePath: firstFilePath
                         )
                         validationResults.append(validationResult)
                     }

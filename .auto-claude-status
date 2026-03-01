@@ -3,23 +3,23 @@
   "spec": "008-github-actions-workflow-annotations",
   "state": "building",
   "subtasks": {
-    "completed": 1,
+    "completed": 4,
     "total": 8,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "GitHub Actions Annotation Exporter",
+    "current": "Integration with Coverage Command",
     "id": null,
-    "total": 2
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 3,
+    "number": 6,
     "started_at": "2026-03-01T23:58:42.005556"
   },
-  "last_update": "2026-03-02T00:06:21.508850"
+  "last_update": "2026-03-02T00:12:13.638091"
 }
