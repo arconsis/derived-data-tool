@@ -16,6 +16,9 @@ enum ReportModelRepositoryError: Error {
 public protocol ReportModelRepository {
     func add(report: CoverageMetaReport) async throws
     func shutDownDatabaseConnection() async throws
+    func fetchReports(limit: Int) async throws -> [ReportModel]
+    func fetchReports(since date: Date) async throws -> [ReportModel]
+    func fetchReports(between startDate: Date, and endDate: Date) async throws -> [ReportModel]
 }
 
 struct ReportModelRepositoryImpl {
@@ -109,6 +112,55 @@ extension ReportModelRepositoryImpl: ReportModelRepository {
 
     func shutDownDatabaseConnection() async throws {
         try await connector.disconnect()
+    }
+
+    func fetchReports(limit: Int) async throws -> [ReportModel] {
+        do {
+            return try await reportModelQuery()
+                .with(\.$coverage) { coverage in
+                    coverage.with(\.$targets)
+                }
+                .sort(\.$timestamp, .descending)
+                .limit(limit)
+                .all()
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
+    }
+
+    func fetchReports(since date: Date) async throws -> [ReportModel] {
+        do {
+            let dateString = date.ISO8601Format(.iso8601)
+            return try await reportModelQuery()
+                .with(\.$coverage) { coverage in
+                    coverage.with(\.$targets)
+                }
+                .filter(\.$timestamp >= dateString)
+                .sort(\.$timestamp, .descending)
+                .all()
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
+    }
+
+    func fetchReports(between startDate: Date, and endDate: Date) async throws -> [ReportModel] {
+        do {
+            let startDateString = startDate.ISO8601Format(.iso8601)
+            let endDateString = endDate.ISO8601Format(.iso8601)
+            return try await reportModelQuery()
+                .with(\.$coverage) { coverage in
+                    coverage.with(\.$targets)
+                }
+                .filter(\.$timestamp >= startDateString)
+                .filter(\.$timestamp <= endDateString)
+                .sort(\.$timestamp, .descending)
+                .all()
+        } catch {
+            logger.error(.init(stringLiteral: String(reflecting: error)))
+            throw error
+        }
     }
 
     private func make(_ coverage: CoverageReport, parent: ReportModel.IDValue) async throws {

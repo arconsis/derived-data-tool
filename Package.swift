@@ -15,6 +15,7 @@ extension PackageDescription.Target {
     static let prototype = TargetDefinition(name: "Prototype", path: "Sources/Command/Prototype")
     static let report = TargetDefinition(name: "Report", path: "Sources/Command/Report")
     static let shared = TargetDefinition(name: "Shared", path: "Sources/Shared")
+    static let trend = TargetDefinition(name: "Trend", path: "Sources/Command/Trend")
 }
 
 @MainActor
@@ -75,6 +76,7 @@ let package = Package(
                 .build(),
                 .config(),
                 .report(),
+                .trend(),
             ],
             path: MyPackage.app.path
         ),
@@ -137,6 +139,12 @@ let package = Package(
         ]),
 
         MyPackage.migrate.toTarget(dependencies: [
+            ExternalDependencies.argumentParser.target,
+            .dependencyInjection(),
+            .helper(),
+            .shared(),
+        ]),
+        MyPackage.trend.toTarget(dependencies: [
             ExternalDependencies.argumentParser.target,
             .dependencyInjection(),
             .helper(),
@@ -270,6 +278,11 @@ extension PackageDescription.Target.Dependency {
 
     static func migrate() -> Target.Dependency {
         Target.Dependency.target(name: "Migrate")
+    }
+
+    /// SubCommand: `trend`: command to analyze coverage trends
+    static func trend() -> Target.Dependency {
+        Target.Dependency.target(name: "Trend")
     }
 }
 

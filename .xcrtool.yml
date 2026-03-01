@@ -6,6 +6,9 @@ excluded:
   functions:
   - deinit
 locations:
+  output_directory_html: HTMLReport/
+  output_directory_json: CodeCoverage/
+  database_path: .derived_data_tool.db
   current_report: Reports/last_report.md
   type: markdown
   archive: Reports/Archive/
