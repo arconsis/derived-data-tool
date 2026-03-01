@@ -14,6 +14,8 @@ class CoverageTool {
     private static let reporterId: String = "CoverageTool"
     private let verbose: Bool
     private let quiet: Bool
+    private let ci: Bool
+    private let ciJsonOutput: URL?
     private let fileHandler: FileHandler
     private let cliTools: Tools
     private let githubExporterSetting: GithubExportSettings
@@ -50,10 +52,13 @@ class CoverageTool {
          thresholdSettings: ThresholdSettings? = nil,
          verbose: Bool = false,
          quiet: Bool = false,
-         githubAnnotations: Bool = false)
+         ci: Bool = false,
+         ciJsonOutput: URL? = nil)
     {
         self.verbose = verbose
         self.quiet = quiet
+        self.ci = ci
+        self.ciJsonOutput = ciJsonOutput
         self.fileHandler = fileHandler
         self.cliTools = cliTools
         self.githubExporterSetting = githubExporterSetting
@@ -215,11 +220,23 @@ private extension CoverageTool {
             let result = validator.validateAbsolute(coverage: current.coverage, minCoverage: minCoverage)
             if case .fail(let reason, let details) = result {
                 logger.error(reason)
-                printThresholdFailure(
-                    type: "Absolute Coverage Threshold",
-                    current: details.actual,
-                    required: details.expected
+
+                // Add to validation results for CI formatters
+                let validationResult = ThresholdValidationResult(
+                    targetName: "Overall",
+                    actualCoverage: details.actual / 100.0,
+                    requiredThreshold: details.expected,
+                    passed: false
                 )
+                validationResults.append(validationResult)
+
+                if !ci {
+                    printThresholdFailure(
+                        type: "Absolute Coverage Threshold",
+                        current: details.actual,
+                        required: details.expected
+                    )
+                }
                 hasFailures = true
             }
         }
@@ -232,12 +249,15 @@ private extension CoverageTool {
             let result = validator.validateRelative(current: current.coverage, previous: previousCoverage, maxDrop: maxDrop)
             if case .fail(let reason, let details) = result {
                 logger.error(reason)
-                printRelativeThresholdFailure(
-                    currentCoverage: current.coverage.coverage * 100.0,
-                    previousCoverage: previousCoverage?.coverage ?? 0.0 * 100.0,
-                    maxAllowedDrop: details.expected,
-                    actualDrop: details.actual
-                )
+
+                if !ci {
+                    printRelativeThresholdFailure(
+                        currentCoverage: current.coverage.coverage * 100.0,
+                        previousCoverage: previousCoverage?.coverage ?? 0.0 * 100.0,
+                        maxAllowedDrop: details.expected,
+                        actualDrop: details.actual
+                    )
+                }
                 hasFailures = true
             }
         }
@@ -251,6 +271,15 @@ private extension CoverageTool {
                 if case .fail(let reason, let details) = result {
                     logger.error(reason)
                     if let targetName = details.targetName {
+                        // Add to validation results for CI formatters
+                        let validationResult = ThresholdValidationResult(
+                            targetName: targetName,
+                            actualCoverage: details.actual / 100.0,
+                            requiredThreshold: details.expected,
+                            passed: false
+                        )
+                        validationResults.append(validationResult)
+
                         failingTargets.append((name: targetName, current: details.actual, required: details.expected))
 
                         // Convert to ThresholdValidationResult for GitHub Actions annotations
@@ -271,14 +300,16 @@ private extension CoverageTool {
             }
 
             if !failingTargets.isEmpty {
-                printPerTargetThresholdFailures(targets: failingTargets)
+                if !ci {
+                    printPerTargetThresholdFailures(targets: failingTargets)
+                }
                 hasFailures = true
             }
         }
 
-        // Output GitHub Actions annotations if enabled
-        if shouldOutputGitHubAnnotations() && !validationResults.isEmpty {
-            outputGitHubAnnotations(validationResults: validationResults)
+        // Output CI-formatted results if CI mode is enabled
+        if ci && hasFailures {
+            await outputCIResults(current: current, validationResults: validationResults)
         }
 
         // Throw the first error encountered to maintain exit code behavior
@@ -381,6 +412,26 @@ private extension CoverageTool {
         }
 
         print("💡 Action Required: Add tests for the targets listed above\n")
+    }
+
+    func outputCIResults(current: CoverageMetaReport, validationResults: [ThresholdValidationResult]) async {
+        // Output GitHub Actions annotations
+        let annotationsFormatter = GitHubActionsAnnotations()
+        let annotations = annotationsFormatter.format(results: validationResults)
+        if !annotations.isEmpty {
+            print(annotations)
+        }
+
+        // Output machine-parseable summary
+        let ciFormatter = CIOutputFormatter()
+        let summary = ciFormatter.format(meta: current, validationResults: validationResults)
+        print(summary)
+
+        // Export JSON summary if output path is configured
+        if let jsonOutput = ciJsonOutput {
+            let jsonExporter = CISummaryExporter(fileHandler: fileHandler, outputUrl: jsonOutput)
+            await jsonExporter.export(meta: current, validationResults: validationResults)
+        }
     }
 }
 
