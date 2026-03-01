@@ -18,6 +18,7 @@ class CoverageTool {
     private let cliTools: Tools
     private let githubExporterSetting: GithubExportSettings
     private let repository: ReportModelRepository
+    private let thresholdSettings: ThresholdSettings?
 
     private let filterReports: [String]
     private let excludedPatterns: MatchPatternConfig
@@ -45,6 +46,7 @@ class CoverageTool {
          workingDirectory: URL,
          locationCurrentReport: URL,
          archiveLocation: URL,
+         thresholdSettings: ThresholdSettings? = nil,
          verbose: Bool = false,
          quiet: Bool = false)
     {
@@ -58,6 +60,7 @@ class CoverageTool {
         self.locationCurrentReport = locationCurrentReport
         self.archiveLocation = archiveLocation
         self.repository = repository
+        self.thresholdSettings = thresholdSettings
         self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
                                                    files: excludedFiles,
                                                    functions: excludedFunctions)
@@ -183,10 +186,58 @@ private extension CoverageTool {
             await githubExporter.createMarkDownReport(with: current)
 
             try await repository.add(report: current)
+
+            // Validate thresholds if configured
+            try await validateThresholds(current: current)
+
             try await repository.shutDownDatabaseConnection()
         } catch {
             try? await repository.shutDownDatabaseConnection()
             throw error
+        }
+    }
+
+    func validateThresholds(current: CoverageMetaReport) async throws {
+        guard let settings = thresholdSettings else {
+            // No threshold configuration, skip validation
+            return
+        }
+
+        let validator = ThresholdValidator()
+
+        // Validate absolute threshold if configured
+        if let minCoverage = settings.minCoverage {
+            let result = validator.validateAbsolute(coverage: current.coverage, minCoverage: minCoverage)
+            if case .fail(let reason, let details) = result {
+                logger.error(reason)
+                throw CoverageError.thresholdFailedAbsolute(expected: details.expected, actual: details.actual)
+            }
+        }
+
+        // Validate relative threshold if configured
+        if let maxDrop = settings.maxDrop {
+            let previousReport = try? await repository.getLatestReport()
+            let previousCoverage = previousReport?.coverage
+
+            let result = validator.validateRelative(current: current.coverage, previous: previousCoverage, maxDrop: maxDrop)
+            if case .fail(let reason, let details) = result {
+                logger.error(reason)
+                throw CoverageError.thresholdFailedRelative(maxDrop: details.expected, actualDrop: details.actual)
+            }
+        }
+
+        // Validate per-target thresholds if configured
+        if !settings.perTargetThresholds.isEmpty {
+            let results = validator.validatePerTarget(coverage: current.coverage, thresholds: settings.perTargetThresholds)
+
+            for result in results {
+                if case .fail(let reason, let details) = result {
+                    logger.error(reason)
+                    if let targetName = details.targetName {
+                        throw CoverageError.thresholdFailedPerTarget(target: targetName, expected: details.expected, actual: details.actual)
+                    }
+                }
+            }
         }
     }
 }
