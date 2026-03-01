@@ -18,11 +18,11 @@ class CoverageTool {
     private let cliTools: Tools
     private let githubExporterSetting: GithubExportSettings
     private let repository: ReportModelRepository
+    private let thresholdSettings: ThresholdSettings?
 
     private let filterReports: [String]
     private let excludedPatterns: MatchPatternConfig
     private let includedPatterns: MatchPatternConfig
-    private let thresholdValidator: ThresholdValidator?
 
     private let workingDirectory: URL
     private let locationCurrentReport: URL
@@ -46,7 +46,7 @@ class CoverageTool {
          workingDirectory: URL,
          locationCurrentReport: URL,
          archiveLocation: URL,
-         thresholds: Config.Thresholds? = nil,
+         thresholdSettings: ThresholdSettings? = nil,
          verbose: Bool = false,
          quiet: Bool = false)
     {
@@ -60,6 +60,7 @@ class CoverageTool {
         self.locationCurrentReport = locationCurrentReport
         self.archiveLocation = archiveLocation
         self.repository = repository
+        self.thresholdSettings = thresholdSettings
         self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
                                                    files: excludedFiles,
                                                    functions: excludedFunctions)
@@ -67,13 +68,6 @@ class CoverageTool {
         self.includedPatterns = MatchPatternConfig(targets: includedTargets,
                                                    files: includedFiles,
                                                    functions: includedFunctions)
-
-        // Initialize threshold validator if thresholds are provided
-        if let thresholds = thresholds {
-            self.thresholdValidator = ThresholdValidator(thresholds: thresholds, verbose: verbose)
-        } else {
-            self.thresholdValidator = nil
-        }
     }
 }
 
@@ -183,52 +177,159 @@ private extension CoverageTool {
 
             guard let current = sorted.first else { return }
 
-            // Validate coverage thresholds if configured
-            var validationResults: [ThresholdValidationResult]?
-            if let validator = thresholdValidator {
-                logger.log("Running threshold validation")
-                validationResults = validator.validate(report: current.coverage)
-
-                // Log results
-                let failedTargets = validator.failedTargets(validationResults!)
-                if !failedTargets.isEmpty {
-                    logger.log("⚠️  \(failedTargets.count) target(s) failed threshold validation:")
-                    for failure in failedTargets {
-                        logger.log("  • \(failure.targetName): \(String(format: "%.2f", failure.actualCoveragePercentage))% < \(String(format: "%.2f", failure.requiredThreshold))%")
-                    }
-                } else if verbose {
-                    logger.log("✓ All targets passed threshold validation")
-                }
-            }
-
             let ghConfig = GHConfig(settings: githubExporterSetting,
                                     reportUrl: locationCurrentReport,
                                     archiveUrl: archiveLocation)
 
             let githubExporter = GithubExport(fileHandler: fileHandler, config: ghConfig)
 
-            await githubExporter.createMarkDownReport(with: current, validationResults: validationResults)
+            await githubExporter.createMarkDownReport(with: current)
 
             try await repository.add(report: current)
-            try await repository.shutDownDatabaseConnection()
 
-            // Check threshold validation results and throw error if any targets failed
-            // (unless quiet mode is enabled)
-            if let validator = thresholdValidator, let results = validationResults {
-                let failedTargets = validator.failedTargets(results)
-                if !failedTargets.isEmpty && !quiet {
-                    let failures = failedTargets.map { result in
-                        (target: result.targetName,
-                         actual: result.actualCoveragePercentage,
-                         required: result.requiredThreshold)
-                    }
-                    throw CoverageError.thresholdValidationFailed(failures: failures)
-                }
-            }
+            // Validate thresholds if configured
+            try await validateThresholds(current: current)
+
+            try await repository.shutDownDatabaseConnection()
         } catch {
             try? await repository.shutDownDatabaseConnection()
             throw error
         }
+    }
+
+    func validateThresholds(current: CoverageMetaReport) async throws {
+        guard let settings = thresholdSettings else {
+            // No threshold configuration, skip validation
+            return
+        }
+
+        let validator = ThresholdValidator()
+        var hasFailures = false
+
+        // Validate absolute threshold if configured
+        if let minCoverage = settings.minCoverage {
+            let result = validator.validateAbsolute(coverage: current.coverage, minCoverage: minCoverage)
+            if case .fail(let reason, let details) = result {
+                logger.error(reason)
+                printThresholdFailure(
+                    type: "Absolute Coverage Threshold",
+                    current: details.actual,
+                    required: details.expected
+                )
+                hasFailures = true
+            }
+        }
+
+        // Validate relative threshold if configured
+        if let maxDrop = settings.maxDrop {
+            let previousReport = try? await repository.getLatestReport()
+            let previousCoverage = previousReport?.coverage
+
+            let result = validator.validateRelative(current: current.coverage, previous: previousCoverage, maxDrop: maxDrop)
+            if case .fail(let reason, let details) = result {
+                logger.error(reason)
+                printRelativeThresholdFailure(
+                    currentCoverage: current.coverage.coverage * 100.0,
+                    previousCoverage: previousCoverage?.coverage ?? 0.0 * 100.0,
+                    maxAllowedDrop: details.expected,
+                    actualDrop: details.actual
+                )
+                hasFailures = true
+            }
+        }
+
+        // Validate per-target thresholds if configured
+        if !settings.perTargetThresholds.isEmpty {
+            let results = validator.validatePerTarget(coverage: current.coverage, thresholds: settings.perTargetThresholds)
+
+            var failingTargets: [(name: String, current: Double, required: Double)] = []
+            for result in results {
+                if case .fail(let reason, let details) = result {
+                    logger.error(reason)
+                    if let targetName = details.targetName {
+                        failingTargets.append((name: targetName, current: details.actual, required: details.expected))
+                    }
+                }
+            }
+
+            if !failingTargets.isEmpty {
+                printPerTargetThresholdFailures(targets: failingTargets)
+                hasFailures = true
+            }
+        }
+
+        // Throw the first error encountered to maintain exit code behavior
+        if hasFailures {
+            if let minCoverage = settings.minCoverage {
+                let currentCoveragePercent = current.coverage.coverage * 100.0
+                if currentCoveragePercent < minCoverage {
+                    throw CoverageError.thresholdFailedAbsolute(expected: minCoverage, actual: currentCoveragePercent)
+                }
+            }
+
+            if let maxDrop = settings.maxDrop {
+                let previousReport = try? await repository.getLatestReport()
+                if let previousCoverage = previousReport?.coverage {
+                    let currentCoveragePercent = current.coverage.coverage * 100.0
+                    let previousCoveragePercent = previousCoverage.coverage * 100.0
+                    let actualDrop = previousCoveragePercent - currentCoveragePercent
+                    if actualDrop > maxDrop {
+                        throw CoverageError.thresholdFailedRelative(maxDrop: maxDrop, actualDrop: actualDrop)
+                    }
+                }
+            }
+
+            if !settings.perTargetThresholds.isEmpty {
+                for (targetName, config) in settings.perTargetThresholds {
+                    if let target = current.coverage.targets.first(where: { $0.name == targetName }),
+                       let minCoverage = config.minCoverage {
+                        let targetCoveragePercent = target.coverage * 100.0
+                        if targetCoveragePercent < minCoverage {
+                            throw CoverageError.thresholdFailedPerTarget(target: targetName, expected: minCoverage, actual: targetCoveragePercent)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func printThresholdFailure(type: String, current: Double, required: Double) {
+        if quiet { return }
+
+        print("\n❌ \(type) Failed")
+        print("   Current:  \(String(format: "%.2f", current))%")
+        print("   Required: \(String(format: "%.2f", required))%")
+        print("   Gap:      \(String(format: "%.2f", required - current))%")
+        print("\n💡 Action Required: Add tests to increase coverage by \(String(format: "%.2f", required - current)) percentage points\n")
+    }
+
+    func printRelativeThresholdFailure(currentCoverage: Double, previousCoverage: Double, maxAllowedDrop: Double, actualDrop: Double) {
+        if quiet { return }
+
+        print("\n❌ Relative Coverage Threshold Failed")
+        print("   Previous:        \(String(format: "%.2f", previousCoverage))%")
+        print("   Current:         \(String(format: "%.2f", currentCoverage))%")
+        print("   Drop:            \(String(format: "%.2f", actualDrop))%")
+        print("   Max Allowed:     \(String(format: "%.2f", maxAllowedDrop))%")
+        print("   Exceeded By:     \(String(format: "%.2f", actualDrop - maxAllowedDrop))%")
+        print("\n💡 Action Required: Restore test coverage to previous levels or improve it\n")
+    }
+
+    func printPerTargetThresholdFailures(targets: [(name: String, current: Double, required: Double)]) {
+        if quiet { return }
+
+        print("\n❌ Per-Target Coverage Thresholds Failed")
+        print("   The following targets did not meet their coverage requirements:\n")
+
+        for target in targets {
+            print("   • \(target.name)")
+            print("     Current:  \(String(format: "%.2f", target.current))%")
+            print("     Required: \(String(format: "%.2f", target.required))%")
+            print("     Gap:      \(String(format: "%.2f", target.required - target.current))%")
+            print()
+        }
+
+        print("💡 Action Required: Add tests for the targets listed above\n")
     }
 }
 

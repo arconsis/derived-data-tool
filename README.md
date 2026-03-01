@@ -38,80 +38,140 @@ To get started with this tool, follow these steps:
 4. **View Reports:**
     The generated reports will be located in the `Reports` folder. Open the latest report in your browser to view the coverage details.
 
-## Configuring Coverage Thresholds
+## Coverage Thresholds for CI/CD
 
-The tool supports configurable coverage thresholds to enforce quality standards across your codebase. You can set different thresholds for different modules, allowing critical business logic to have higher coverage requirements than UI components.
+This tool supports configurable coverage thresholds that enable you to enforce code quality standards in your CI/CD pipeline. When coverage falls below your specified thresholds, the tool exits with a non-zero exit code, allowing you to fail builds and prevent merging of code that doesn't meet your testing standards.
 
-### Configuration File
+### Threshold Types
 
-Create a `.xcrtool.yml` file in your project root to configure coverage thresholds:
+#### Absolute Thresholds
+Set a minimum coverage percentage that your code must meet:
 
 ```yaml
-thresholds:
-  global: 80.0  # Default threshold for all targets (in %)
-  targets:
-    # Critical modules require higher coverage
-    PAFPaymentServiceCN: 90.0
-    PAFUser: 85.0
-    PAFNetwork: 85.0
-
-    # UI components can have lower thresholds
-    PAFUIComponents: 70.0
-
-    # Common utilities
-    PAFCommon: 75.0
+tools:
+  threshold:
+    min_coverage: 80.0  # Requires at least 80% code coverage
 ```
 
-### How Thresholds Work
+If overall coverage is below 80%, the tool will exit with code 1 and display:
+```
+❌ Coverage threshold not met
+   Current coverage: 75.5%
+   Required minimum: 80.0%
+   Gap: 4.5%
 
-- **Global Threshold**: The default coverage threshold applied to all targets unless overridden
-- **Per-Target Thresholds**: Override the global threshold for specific modules
-- **Fallback**: Any target without a specific threshold uses the global threshold
-- **Validation**: Invalid thresholds (outside 0-100 range) or redundant configurations will trigger warnings
+   → Add tests to increase coverage by at least 4.5%
+```
+
+#### Relative Thresholds
+Prevent coverage from dropping compared to previous reports:
+
+```yaml
+tools:
+  threshold:
+    max_drop: 2.0  # Coverage cannot drop more than 2%
+```
+
+If coverage drops by 3% compared to the last report, the tool exits with code 1:
+```
+❌ Coverage dropped too much
+   Previous coverage: 82.0%
+   Current coverage: 79.0%
+   Drop: 3.0%
+   Maximum allowed drop: 2.0%
+
+   → Add tests to recover at least 1.0% coverage
+```
+
+#### Per-Target Thresholds
+Enforce different thresholds for specific targets:
+
+```yaml
+tools:
+  threshold:
+    min_coverage: 70.0  # Global minimum
+    per_target_thresholds: '{"MyApp": {"minCoverage": 85.0}, "MyFramework": {"minCoverage": 90.0, "maxDrop": 1.0}}'
+```
+
+The `per_target_thresholds` field accepts a JSON-encoded string mapping target names to threshold configurations.
+
+### Configuration Options
+
+#### In `.xcrtool.yml`
+
+Add a `threshold` section under `tools`:
+
+```yaml
+tools:
+  threshold:
+    min_coverage: 80.0      # Minimum overall coverage (optional)
+    max_drop: 2.0           # Maximum allowed coverage drop (optional)
+    per_target_thresholds: '{"CoreModule": {"minCoverage": 85.0}}'  # Per-target rules (optional)
+```
+
+#### Via CLI Flags
+
+Override configuration values with command-line flags:
+
+```sh
+# Set minimum coverage via CLI
+swift run derived-data-tool coverage --min-coverage 85.0
+
+# Set maximum allowed drop
+swift run derived-data-tool coverage --max-drop 1.5
+
+# Combine both
+swift run derived-data-tool coverage --min-coverage 80.0 --max-drop 2.0
+```
+
+CLI flags take precedence over configuration file values.
+
+### Exit Codes for CI Integration
+
+The tool uses exit codes to signal threshold validation results:
+
+- **Exit 0**: All thresholds passed ✅
+- **Exit 1**: One or more thresholds failed ❌
+
+This makes it easy to integrate into CI/CD pipelines:
+
+```yaml
+# GitHub Actions example
+- name: Run Coverage with Threshold Check
+  run: swift run derived-data-tool coverage --min-coverage 80.0
+  # Build fails if coverage < 80%
+
+# GitLab CI example
+coverage_check:
+  script:
+    - swift run derived-data-tool coverage --min-coverage 80.0
+  # Pipeline fails if coverage < 80%
+```
 
 ### Example Use Cases
 
-**Critical Business Logic:**
+**Prevent Coverage Regression:**
 ```yaml
-thresholds:
-  global: 70.0
-  targets:
-    PaymentProcessing: 95.0  # Payments need thorough testing
-    AuthenticationService: 90.0  # Security-critical code
+tools:
+  threshold:
+    max_drop: 0.0  # Zero-tolerance policy: coverage can never decrease
 ```
 
-**Legacy Code Management:**
+**Gradual Coverage Improvement:**
 ```yaml
-thresholds:
-  global: 80.0
-  targets:
-    LegacyModule: 50.0  # Gradual improvement for legacy code
-    NewFeature: 90.0  # High standards for new development
+tools:
+  threshold:
+    min_coverage: 70.0  # Start at 70%
+    # Increase this value over time to improve code quality
 ```
 
-### CI/CD Integration
-
-The tool exits with a non-zero status code if any target fails to meet its threshold, making it perfect for CI/CD pipelines:
-
-```bash
-# In your CI pipeline
-swift run derived-data-tool coverage --config .xcrtool.yml
-
-# Exit code 0: All thresholds met ✓
-# Exit code 1: One or more thresholds failed ✗
+**Strict Rules for Critical Components:**
+```yaml
+tools:
+  threshold:
+    min_coverage: 60.0  # Lower global threshold
+    per_target_thresholds: '{"PaymentModule": {"minCoverage": 95.0}, "SecurityFramework": {"minCoverage": 95.0}}'
 ```
-
-The coverage reports will clearly show which targets passed or failed their thresholds with ✓ and ✗ indicators.
-
-### Generating a Config File
-
-Generate a default configuration file with:
-
-```sh
-swift run derived-data-tool config
-```
-
-This creates a `.xcrtool.yml` file with example threshold configurations that you can customize for your project.
 
 ## Where can I get more help, if I need it?
 

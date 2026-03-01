@@ -18,7 +18,9 @@ enum CoverageError: LocalizedError, CustomStringConvertible {
     case noResultsToWorkWith
     case noResultFilesToConvert
     case internalError
-    case thresholdValidationFailed(failures: [(target: String, actual: Double, required: Double)])
+    case thresholdFailedAbsolute(expected: Double, actual: Double)
+    case thresholdFailedRelative(maxDrop: Double, actualDrop: Double)
+    case thresholdFailedPerTarget(target: String, expected: Double, actual: Double)
 
     /// Retrieve the localized description for this error.
     var localizedDescription: String {
@@ -43,11 +45,12 @@ enum CoverageError: LocalizedError, CustomStringConvertible {
             return "There are no xcresult files to work with"
         case .missingDatabasePath:
             return "No database path provided"
-        case let .thresholdValidationFailed(failures: failures):
-            let failureDescriptions = failures.map { failure in
-                "  • \(failure.target): \(String(format: "%.2f", failure.actual))% < \(String(format: "%.2f", failure.required))%"
-            }.joined(separator: "\n")
-            return "Coverage thresholds not met for \(failures.count) target(s):\n\(failureDescriptions)"
+        case let .thresholdFailedAbsolute(expected: expected, actual: actual):
+            return "Coverage threshold failed: Expected minimum \(String(format: "%.2f", expected))%, but actual coverage is \(String(format: "%.2f", actual))%"
+        case let .thresholdFailedRelative(maxDrop: maxDrop, actualDrop: actualDrop):
+            return "Coverage drop threshold exceeded: Maximum allowed drop is \(String(format: "%.2f", maxDrop))%, but coverage dropped by \(String(format: "%.2f", actualDrop))%"
+        case let .thresholdFailedPerTarget(target: target, expected: expected, actual: actual):
+            return "Target '\(target)' coverage threshold failed: Expected minimum \(String(format: "%.2f", expected))%, but actual coverage is \(String(format: "%.2f", actual))%"
         }
     }
 
