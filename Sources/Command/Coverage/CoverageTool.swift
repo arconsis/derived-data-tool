@@ -204,13 +204,19 @@ private extension CoverageTool {
         }
 
         let validator = ThresholdValidator()
+        var hasFailures = false
 
         // Validate absolute threshold if configured
         if let minCoverage = settings.minCoverage {
             let result = validator.validateAbsolute(coverage: current.coverage, minCoverage: minCoverage)
             if case .fail(let reason, let details) = result {
                 logger.error(reason)
-                throw CoverageError.thresholdFailedAbsolute(expected: details.expected, actual: details.actual)
+                printThresholdFailure(
+                    type: "Absolute Coverage Threshold",
+                    current: details.actual,
+                    required: details.expected
+                )
+                hasFailures = true
             }
         }
 
@@ -222,7 +228,13 @@ private extension CoverageTool {
             let result = validator.validateRelative(current: current.coverage, previous: previousCoverage, maxDrop: maxDrop)
             if case .fail(let reason, let details) = result {
                 logger.error(reason)
-                throw CoverageError.thresholdFailedRelative(maxDrop: details.expected, actualDrop: details.actual)
+                printRelativeThresholdFailure(
+                    currentCoverage: current.coverage.coverage * 100.0,
+                    previousCoverage: previousCoverage?.coverage ?? 0.0 * 100.0,
+                    maxAllowedDrop: details.expected,
+                    actualDrop: details.actual
+                )
+                hasFailures = true
             }
         }
 
@@ -230,15 +242,94 @@ private extension CoverageTool {
         if !settings.perTargetThresholds.isEmpty {
             let results = validator.validatePerTarget(coverage: current.coverage, thresholds: settings.perTargetThresholds)
 
+            var failingTargets: [(name: String, current: Double, required: Double)] = []
             for result in results {
                 if case .fail(let reason, let details) = result {
                     logger.error(reason)
                     if let targetName = details.targetName {
-                        throw CoverageError.thresholdFailedPerTarget(target: targetName, expected: details.expected, actual: details.actual)
+                        failingTargets.append((name: targetName, current: details.actual, required: details.expected))
+                    }
+                }
+            }
+
+            if !failingTargets.isEmpty {
+                printPerTargetThresholdFailures(targets: failingTargets)
+                hasFailures = true
+            }
+        }
+
+        // Throw the first error encountered to maintain exit code behavior
+        if hasFailures {
+            if let minCoverage = settings.minCoverage {
+                let currentCoveragePercent = current.coverage.coverage * 100.0
+                if currentCoveragePercent < minCoverage {
+                    throw CoverageError.thresholdFailedAbsolute(expected: minCoverage, actual: currentCoveragePercent)
+                }
+            }
+
+            if let maxDrop = settings.maxDrop {
+                let previousReport = try? await repository.getLatestReport()
+                if let previousCoverage = previousReport?.coverage {
+                    let currentCoveragePercent = current.coverage.coverage * 100.0
+                    let previousCoveragePercent = previousCoverage.coverage * 100.0
+                    let actualDrop = previousCoveragePercent - currentCoveragePercent
+                    if actualDrop > maxDrop {
+                        throw CoverageError.thresholdFailedRelative(maxDrop: maxDrop, actualDrop: actualDrop)
+                    }
+                }
+            }
+
+            if !settings.perTargetThresholds.isEmpty {
+                for (targetName, config) in settings.perTargetThresholds {
+                    if let target = current.coverage.targets.first(where: { $0.name == targetName }),
+                       let minCoverage = config.minCoverage {
+                        let targetCoveragePercent = target.coverage * 100.0
+                        if targetCoveragePercent < minCoverage {
+                            throw CoverageError.thresholdFailedPerTarget(target: targetName, expected: minCoverage, actual: targetCoveragePercent)
+                        }
                     }
                 }
             }
         }
+    }
+
+    func printThresholdFailure(type: String, current: Double, required: Double) {
+        if quiet { return }
+
+        print("\n❌ \(type) Failed")
+        print("   Current:  \(String(format: "%.2f", current))%")
+        print("   Required: \(String(format: "%.2f", required))%")
+        print("   Gap:      \(String(format: "%.2f", required - current))%")
+        print("\n💡 Action Required: Add tests to increase coverage by \(String(format: "%.2f", required - current)) percentage points\n")
+    }
+
+    func printRelativeThresholdFailure(currentCoverage: Double, previousCoverage: Double, maxAllowedDrop: Double, actualDrop: Double) {
+        if quiet { return }
+
+        print("\n❌ Relative Coverage Threshold Failed")
+        print("   Previous:        \(String(format: "%.2f", previousCoverage))%")
+        print("   Current:         \(String(format: "%.2f", currentCoverage))%")
+        print("   Drop:            \(String(format: "%.2f", actualDrop))%")
+        print("   Max Allowed:     \(String(format: "%.2f", maxAllowedDrop))%")
+        print("   Exceeded By:     \(String(format: "%.2f", actualDrop - maxAllowedDrop))%")
+        print("\n💡 Action Required: Restore test coverage to previous levels or improve it\n")
+    }
+
+    func printPerTargetThresholdFailures(targets: [(name: String, current: Double, required: Double)]) {
+        if quiet { return }
+
+        print("\n❌ Per-Target Coverage Thresholds Failed")
+        print("   The following targets did not meet their coverage requirements:\n")
+
+        for target in targets {
+            print("   • \(target.name)")
+            print("     Current:  \(String(format: "%.2f", target.current))%")
+            print("     Required: \(String(format: "%.2f", target.required))%")
+            print("     Gap:      \(String(format: "%.2f", target.required - target.current))%")
+            print()
+        }
+
+        print("💡 Action Required: Add tests for the targets listed above\n")
     }
 }
 
