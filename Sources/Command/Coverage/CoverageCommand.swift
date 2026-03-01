@@ -24,6 +24,9 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Flag(help: "suppress failure")
     private var quiet: Bool = false
 
+    @Flag(help: "enable CI-optimized output mode")
+    public var ci: Bool = false
+
     @Option(name: [.customShort("c"), .customLong("config")], help: "Path to the .xcrtool.yml")
     public var configFilePath: String?
 
@@ -37,7 +40,7 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     public var maxDrop: Double?
 
     enum CodingKeys: CodingKey {
-        case verbose, quiet, configFilePath, customGitRootpath, minCoverage, maxDrop
+        case verbose, quiet, ci, configFilePath, customGitRootpath, minCoverage, maxDrop
     }
 
     public required init() {}
