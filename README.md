@@ -38,6 +38,141 @@ To get started with this tool, follow these steps:
 4. **View Reports:**
     The generated reports will be located in the `Reports` folder. Open the latest report in your browser to view the coverage details.
 
+## Coverage Thresholds for CI/CD
+
+This tool supports configurable coverage thresholds that enable you to enforce code quality standards in your CI/CD pipeline. When coverage falls below your specified thresholds, the tool exits with a non-zero exit code, allowing you to fail builds and prevent merging of code that doesn't meet your testing standards.
+
+### Threshold Types
+
+#### Absolute Thresholds
+Set a minimum coverage percentage that your code must meet:
+
+```yaml
+tools:
+  threshold:
+    min_coverage: 80.0  # Requires at least 80% code coverage
+```
+
+If overall coverage is below 80%, the tool will exit with code 1 and display:
+```
+❌ Coverage threshold not met
+   Current coverage: 75.5%
+   Required minimum: 80.0%
+   Gap: 4.5%
+
+   → Add tests to increase coverage by at least 4.5%
+```
+
+#### Relative Thresholds
+Prevent coverage from dropping compared to previous reports:
+
+```yaml
+tools:
+  threshold:
+    max_drop: 2.0  # Coverage cannot drop more than 2%
+```
+
+If coverage drops by 3% compared to the last report, the tool exits with code 1:
+```
+❌ Coverage dropped too much
+   Previous coverage: 82.0%
+   Current coverage: 79.0%
+   Drop: 3.0%
+   Maximum allowed drop: 2.0%
+
+   → Add tests to recover at least 1.0% coverage
+```
+
+#### Per-Target Thresholds
+Enforce different thresholds for specific targets:
+
+```yaml
+tools:
+  threshold:
+    min_coverage: 70.0  # Global minimum
+    per_target_thresholds: '{"MyApp": {"minCoverage": 85.0}, "MyFramework": {"minCoverage": 90.0, "maxDrop": 1.0}}'
+```
+
+The `per_target_thresholds` field accepts a JSON-encoded string mapping target names to threshold configurations.
+
+### Configuration Options
+
+#### In `.xcrtool.yml`
+
+Add a `threshold` section under `tools`:
+
+```yaml
+tools:
+  threshold:
+    min_coverage: 80.0      # Minimum overall coverage (optional)
+    max_drop: 2.0           # Maximum allowed coverage drop (optional)
+    per_target_thresholds: '{"CoreModule": {"minCoverage": 85.0}}'  # Per-target rules (optional)
+```
+
+#### Via CLI Flags
+
+Override configuration values with command-line flags:
+
+```sh
+# Set minimum coverage via CLI
+swift run derived-data-tool coverage --min-coverage 85.0
+
+# Set maximum allowed drop
+swift run derived-data-tool coverage --max-drop 1.5
+
+# Combine both
+swift run derived-data-tool coverage --min-coverage 80.0 --max-drop 2.0
+```
+
+CLI flags take precedence over configuration file values.
+
+### Exit Codes for CI Integration
+
+The tool uses exit codes to signal threshold validation results:
+
+- **Exit 0**: All thresholds passed ✅
+- **Exit 1**: One or more thresholds failed ❌
+
+This makes it easy to integrate into CI/CD pipelines:
+
+```yaml
+# GitHub Actions example
+- name: Run Coverage with Threshold Check
+  run: swift run derived-data-tool coverage --min-coverage 80.0
+  # Build fails if coverage < 80%
+
+# GitLab CI example
+coverage_check:
+  script:
+    - swift run derived-data-tool coverage --min-coverage 80.0
+  # Pipeline fails if coverage < 80%
+```
+
+### Example Use Cases
+
+**Prevent Coverage Regression:**
+```yaml
+tools:
+  threshold:
+    max_drop: 0.0  # Zero-tolerance policy: coverage can never decrease
+```
+
+**Gradual Coverage Improvement:**
+```yaml
+tools:
+  threshold:
+    min_coverage: 70.0  # Start at 70%
+    # Increase this value over time to improve code quality
+```
+
+**Strict Rules for Critical Components:**
+```yaml
+tools:
+  threshold:
+    min_coverage: 60.0  # Lower global threshold
+    per_target_thresholds: '{"PaymentModule": {"minCoverage": 95.0}, "SecurityFramework": {"minCoverage": 95.0}}'
+```
+
 ## Where can I get more help, if I need it?
 
 If you need more help, you can:
