@@ -163,6 +163,7 @@ let package = Package(
                 ExternalDependencies.fluent.target,
                 ExternalDependencies.sqlDriver.target,
                 ExternalDependencies.globPattern.target,
+                ExternalDependencies.swiftGlob.target,
                 ExternalDependencies.swiftHTMLParser.target,
                 ExternalDependencies.yams.target,
                 .dependencyInjection(),
