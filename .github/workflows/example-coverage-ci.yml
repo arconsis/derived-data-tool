@@ -1,0 +1,255 @@
+# Example: Code Coverage Check with DerivedDataTool
+#
+# This workflow demonstrates how to integrate DerivedDataTool's CI mode
+# into your GitHub Actions pipeline for automated coverage checking.
+#
+# Features demonstrated:
+# - Running tests and generating xcresult bundle
+# - Using --ci flag for clean, machine-parseable output
+# - GitHub Actions annotations for coverage failures
+# - JSON export for downstream processing
+# - Multiple threshold configurations
+# - Artifact upload for coverage reports
+
+name: Coverage Check (Example)
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Sources/**'
+      - 'Tests/**'
+      - '.xcrtool.yml'
+
+concurrency:
+  group: coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Basic example: minimum coverage threshold
+  basic-coverage:
+    name: Basic Coverage Check
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme MyApp \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -resultBundlePath TestResults.xcresult \
+            -enableCodeCoverage YES
+
+      - name: Check Coverage
+        run: |
+          swift run derived-data-tool coverage \
+            --ci \
+            --min-coverage 80.0
+
+        # Note: Failures will appear as annotations in PR checks
+
+  # Advanced example: multiple thresholds with JSON export
+  advanced-coverage:
+    name: Advanced Coverage with JSON Export
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme MyApp \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -resultBundlePath TestResults.xcresult \
+            -enableCodeCoverage YES
+
+      - name: Check Coverage with JSON Export
+        run: |
+          swift run derived-data-tool coverage \
+            --ci \
+            --min-coverage 75.0 \
+            --max-drop 2.0 \
+            --ci-json-output coverage-summary.json
+
+      - name: Upload Coverage Summary
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-summary
+          path: coverage-summary.json
+          retention-days: 30
+
+      - name: Process Coverage Results
+        if: always()
+        run: |
+          # Example: Parse JSON for custom downstream processing
+          if [ -f coverage-summary.json ]; then
+            echo "Overall Coverage: $(jq -r '.overallCoverage' coverage-summary.json)%"
+            echo "Threshold Status: $(jq -r '.thresholdStatus' coverage-summary.json)"
+
+            # Extract failed targets
+            jq -r '.failures[] | "❌ \(.targetName): \(.actualCoverage)% (required: \(.requiredThreshold)%)"' coverage-summary.json || true
+          fi
+
+  # Example: Per-target thresholds (configured in .xcrtool.yml)
+  per-target-coverage:
+    name: Per-Target Coverage Check
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Ensure .xcrtool.yml exists with per-target configuration
+      - name: Verify Configuration
+        run: |
+          if [ ! -f .xcrtool.yml ]; then
+            echo "Creating example .xcrtool.yml with per-target thresholds"
+            cat > .xcrtool.yml << 'EOF'
+          tools:
+            threshold:
+              min_coverage: 70.0
+              per_target_thresholds: '{"MyApp": {"minCoverage": 85.0}, "MyFramework": {"minCoverage": 90.0, "maxDrop": 1.0}}'
+          EOF
+          fi
+          cat .xcrtool.yml
+
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme MyApp \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -resultBundlePath TestResults.xcresult \
+            -enableCodeCoverage YES
+
+      - name: Check Per-Target Coverage
+        run: |
+          swift run derived-data-tool coverage \
+            --ci \
+            --ci-json-output per-target-coverage.json
+
+      - name: Upload Per-Target Coverage
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: per-target-coverage
+          path: per-target-coverage.json
+
+  # Example: Coverage with full report generation
+  coverage-with-reports:
+    name: Coverage with HTML/Markdown Reports
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme MyApp \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -resultBundlePath TestResults.xcresult \
+            -enableCodeCoverage YES
+
+      - name: Generate Coverage Reports
+        run: |
+          swift run derived-data-tool coverage \
+            --ci \
+            --min-coverage 80.0 \
+            --ci-json-output coverage-summary.json \
+            --export-markdown coverage-report.md \
+            --export-web coverage-report.html
+
+      - name: Upload All Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports
+          path: |
+            coverage-summary.json
+            coverage-report.md
+            coverage-report.html
+
+      - name: Comment Coverage on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Read the machine-parseable summary from workflow output
+            // or parse from JSON for more detailed comment
+            let comment = '## 📊 Coverage Report\n\n';
+
+            if (fs.existsSync('coverage-summary.json')) {
+              const summary = JSON.parse(fs.readFileSync('coverage-summary.json', 'utf8'));
+
+              comment += `**Overall Coverage:** ${summary.overallCoverage.toFixed(2)}%\n`;
+              comment += `**Status:** ${summary.thresholdStatus === 'PASS' ? '✅ PASS' : '❌ FAIL'}\n\n`;
+
+              if (summary.failures && summary.failures.length > 0) {
+                comment += '### ⚠️ Targets Below Threshold\n\n';
+                summary.failures.forEach(failure => {
+                  comment += `- **${failure.targetName}**: ${failure.actualCoverage.toFixed(2)}% (required: ${failure.requiredThreshold.toFixed(2)}%)\n`;
+                });
+              }
+
+              comment += '\n### 📈 Target Breakdown\n\n';
+              summary.targets.forEach(target => {
+                const icon = target.passed ? '✅' : '❌';
+                comment += `${icon} **${target.name}**: ${target.coverage.toFixed(2)}% (${target.coveredLines}/${target.executableLines} lines)\n`;
+              });
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Example: Matrix testing with coverage
+  matrix-coverage:
+    name: Coverage on Multiple OS/Xcode Versions
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-13, macos-14]
+        xcode: ['15.0', '15.2']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme MyApp \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -resultBundlePath TestResults.xcresult \
+            -enableCodeCoverage YES
+
+      - name: Check Coverage
+        run: |
+          swift run derived-data-tool coverage \
+            --ci \
+            --min-coverage 80.0 \
+            --ci-json-output coverage-${{ matrix.os }}-xcode${{ matrix.xcode }}.json
+
+      - name: Upload Coverage for Matrix
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-matrix-${{ matrix.os }}-xcode${{ matrix.xcode }}
+          path: coverage-${{ matrix.os }}-xcode${{ matrix.xcode }}.json
