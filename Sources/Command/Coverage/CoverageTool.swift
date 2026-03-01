@@ -203,7 +203,7 @@ private extension CoverageTool {
             return
         }
 
-        let validator = ThresholdValidator()
+        let validator = Helper.ThresholdValidator()
         var hasFailures = false
 
         // Validate absolute threshold if configured

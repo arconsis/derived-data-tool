@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import GlobPattern
+import Glob
 import Shared
 
 public extension Collection where Element == Glob.Pattern {
