@@ -36,8 +36,11 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Option(name: .long, help: "Maximum coverage drop percentage (overrides config)")
     public var maxDrop: Double?
 
+    @Flag(help: "output GitHub Actions workflow annotations")
+    public var githubAnnotations: Bool = false
+
     enum CodingKeys: CodingKey {
-        case verbose, quiet, configFilePath, customGitRootpath, minCoverage, maxDrop
+        case verbose, quiet, configFilePath, customGitRootpath, minCoverage, maxDrop, githubAnnotations
     }
 
     public required init() {}
