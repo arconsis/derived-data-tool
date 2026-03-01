@@ -31,6 +31,8 @@ public extension Config {
                 return try? SlackSettings(values: settingsVault)
             case .archiverDB:
                 return try? DBConfig(values: settingsVault)
+            case .threshold:
+                return try? ThresholdSettings(values: settingsVault)
             }
         }
 
@@ -48,6 +50,7 @@ public extension Config.Tool {
         case githubExporter = "github_exporter"
         case htmlExporter = "html_exporter"
         case slack = "slack_reporter"
+        case threshold
 
         fileprivate var acceptedKeys: [String] {
             switch self {
@@ -61,6 +64,8 @@ public extension Config.Tool {
                 return ["format", "webhookVariable"]
             case .archiverDB:
                 return ["hostname", "port", "name", "username", "password"]
+            case .threshold:
+                return ["min_coverage", "max_drop", "per_target_thresholds"]
             }
         }
 

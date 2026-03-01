@@ -33,8 +33,14 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Option(name: [.customShort("f"), .customLong("format")], help: "Output format (json, csv, summary)")
     public var format: String?
 
+    @Option(name: .long, help: "Minimum coverage threshold percentage (overrides config)")
+    public var minCoverage: Double?
+
+    @Option(name: .long, help: "Maximum coverage drop percentage (overrides config)")
+    public var maxDrop: Double?
+
     enum CodingKeys: CodingKey {
-        case verbose, quiet, configFilePath, customGitRootpath, format
+        case verbose, quiet, configFilePath, customGitRootpath, format, minCoverage, maxDrop
     }
 
     public required init() {}
@@ -77,6 +83,9 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 throw CoverageError.internalError
             }
 
+            // Load and merge threshold settings
+            let thresholdSettings = try loadThresholdSettings(from: config)
+
             // Create and run coverage tool
             let coverageTool = CoverageTool(
                 fileHandler: fileHandler,
@@ -94,6 +103,7 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 locationCurrentReport: reportUrl,
                 archiveLocation: archiveLocation,
                 format: format,
+                thresholdSettings: thresholdSettings,
                 verbose: verbose,
                 quiet: quiet
             )
@@ -133,5 +143,47 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
 
             throw error
         }
+    }
+
+    private func loadThresholdSettings(from config: Config) throws -> ThresholdSettings? {
+        // Load threshold settings from config
+        var configSettings: ThresholdSettings?
+        do {
+            configSettings = try config.settings(.threshold) as? ThresholdSettings
+        } catch {
+            // Threshold settings not configured in config file, which is fine
+            configSettings = nil
+        }
+
+        // If we have CLI overrides, merge them with config settings
+        if minCoverage != nil || maxDrop != nil {
+            let configMinCoverage = configSettings?.minCoverage
+            let configMaxDrop = configSettings?.maxDrop
+            let configPerTargetThresholds = configSettings?.perTargetThresholds ?? [:]
+
+            // CLI flags override config values
+            let finalMinCoverage = minCoverage ?? configMinCoverage
+            let finalMaxDrop = maxDrop ?? configMaxDrop
+
+            // Create merged settings
+            var mergedDict: [String: String] = [:]
+            if let min = finalMinCoverage {
+                mergedDict["min_coverage"] = "\(min)"
+            }
+            if let max = finalMaxDrop {
+                mergedDict["max_drop"] = "\(max)"
+            }
+            if !configPerTargetThresholds.isEmpty {
+                let jsonData = try SingleEncoder.shared.encode(configPerTargetThresholds)
+                if let json = String(data: jsonData, encoding: .utf8) {
+                    mergedDict["per_target_thresholds"] = json
+                }
+            }
+
+            return try ThresholdSettings(values: mergedDict)
+        }
+
+        // No CLI overrides, return config settings as-is
+        return configSettings
     }
 }
