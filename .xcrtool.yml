@@ -1,0 +1,35 @@
+excluded:
+  targets:
+  - Pod_*
+  files:
+  - '*ViewController.swift'
+  functions:
+  - deinit
+locations:
+  output_directory_html: HTMLReport/
+  output_directory_json: CodeCoverage/
+  database_path: .derived_data_tool.db
+  current_report: Reports/last_report.md
+  type: markdown
+  archive: Reports/Archive/
+filter_results:
+- ApplicationName
+thresholds:
+  global: 8e+1
+  targets:
+    MyApp: 8.5e+1
+    MyFramework: 7.5e+1
+tools:
+- type: archiver
+  settings:
+    limit: '5'
+- type: github_exporter
+  settings:
+    last: '5'
+    top: '5'
+- type: html_exporter
+  settings:
+    something: '123456'
+- type: slack_reporter
+  settings:
+    format: ''

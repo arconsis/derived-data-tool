@@ -8,30 +8,30 @@
 import Foundation
 import FluentKit
 
-final class ReportModel: Model {
+public final class ReportModel: Model {
     typealias FieldKeyStore = ModelDefinition.Report.FieldKeys
 
-    static let schema = ModelDefinition.Report.schema
+    public static let schema = ModelDefinition.Report.schema
 
     @ID(key: .id)
-    var id: UUID?
+    public var id: UUID?
 
     @Field(key: FieldKeyStore.date)
-    var timestamp: String
+    public var timestamp: String
 
     @Field(key: FieldKeyStore.type)
-    var type: String
+    public var type: String
 
     @Field(key: FieldKeyStore.url)
-    var url: String
+    public var url: String
 
     @Field(key: FieldKeyStore.application)
-    var application: String
+    public var application: String
 
     @OptionalChild(for: \.$report)
-    private var coverageChild: CoverageModel?
+    public var coverage: CoverageModel?
 
-    init() {}
+    public init() {}
 
     init(id: UUID? = nil,
         date: Date,
