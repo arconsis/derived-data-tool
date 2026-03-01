@@ -21,6 +21,10 @@ import Shared
 public class GitHubActionsAnnotationExporter {
     @Injected(\.logger) private var logger: Loggerable
 
+    /// GitHub Actions limits annotations to 10 per workflow run
+    /// https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-error-message
+    private static let maxAnnotations = 10
+
     public init() {}
 
     /// Generates GitHub Actions annotations from threshold validation results
@@ -29,9 +33,21 @@ public class GitHubActionsAnnotationExporter {
     public func formatAnnotations(from results: [ThresholdValidationResult]) -> String {
         var annotations: [String] = []
 
-        for result in results where !result.passed {
+        // Filter failed results and apply GitHub Actions annotation limit
+        let failedResults = results.filter { !$0.passed }
+        let limitedResults = Array(failedResults.prefix(Self.maxAnnotations))
+
+        for result in limitedResults {
             let annotation = createAnnotation(for: result)
             annotations.append(annotation)
+        }
+
+        // If we hit the limit, add a warning annotation about truncated results
+        if failedResults.count > Self.maxAnnotations {
+            let truncatedCount = failedResults.count - Self.maxAnnotations
+            let warningMessage = "⚠️ \(truncatedCount) additional threshold failure(s) not shown (GitHub Actions limit: \(Self.maxAnnotations) annotations)"
+            annotations.append("::warning::\(warningMessage)")
+            logger.log("Truncated \(truncatedCount) annotations due to GitHub Actions limit of \(Self.maxAnnotations)")
         }
 
         if !annotations.isEmpty {

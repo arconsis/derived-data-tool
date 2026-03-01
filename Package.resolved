@@ -1,5 +1,5 @@
 {
-  "originHash" : "b2f77b9218130e79ac96aa55396e0ac6f17128f42dddc09925d250383375b7f5",
+  "originHash" : "c0406ec994d93a8b6c9173a8b10f1c9459d55f1192991ced4fc4b8bd95f22dc8",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -35,15 +35,6 @@
       "state" : {
         "revision" : "73529a63ab11c7fe87da17b5a67a1b1f58c020f8",
         "version" : "4.8.1"
-      }
-    },
-    {
-      "identity" : "globpattern",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ChimeHQ/GlobPattern",
-      "state" : {
-        "revision" : "4ebb9e89e07cc475efa74f87dc6d21f4a9e060f8",
-        "version" : "0.1.1"
       }
     },
     {
