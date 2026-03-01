@@ -104,7 +104,8 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 archiveLocation: archiveLocation,
                 thresholdSettings: thresholdSettings,
                 verbose: verbose,
-                quiet: quiet
+                quiet: quiet,
+                githubAnnotations: githubAnnotations
             )
 
             try await coverageTool.run()

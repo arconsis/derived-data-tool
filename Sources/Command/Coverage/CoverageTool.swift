@@ -19,6 +19,7 @@ class CoverageTool {
     private let githubExporterSetting: GithubExportSettings
     private let repository: ReportModelRepository
     private let thresholdSettings: ThresholdSettings?
+    private let githubAnnotations: Bool
 
     private let filterReports: [String]
     private let excludedPatterns: MatchPatternConfig
@@ -48,7 +49,8 @@ class CoverageTool {
          archiveLocation: URL,
          thresholdSettings: ThresholdSettings? = nil,
          verbose: Bool = false,
-         quiet: Bool = false)
+         quiet: Bool = false,
+         githubAnnotations: Bool = false)
     {
         self.verbose = verbose
         self.quiet = quiet
@@ -61,6 +63,7 @@ class CoverageTool {
         self.archiveLocation = archiveLocation
         self.repository = repository
         self.thresholdSettings = thresholdSettings
+        self.githubAnnotations = githubAnnotations
         self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
                                                    files: excludedFiles,
                                                    functions: excludedFunctions)
@@ -205,6 +208,7 @@ private extension CoverageTool {
 
         let validator = Helper.ThresholdValidator()
         var hasFailures = false
+        var validationResults: [ThresholdValidationResult] = []
 
         // Validate absolute threshold if configured
         if let minCoverage = settings.minCoverage {
@@ -248,6 +252,15 @@ private extension CoverageTool {
                     logger.error(reason)
                     if let targetName = details.targetName {
                         failingTargets.append((name: targetName, current: details.actual, required: details.expected))
+
+                        // Convert to ThresholdValidationResult for GitHub Actions annotations
+                        let validationResult = ThresholdValidationResult(
+                            targetName: targetName,
+                            actualCoverage: details.actual / 100.0, // Convert back to decimal
+                            requiredThreshold: details.expected,
+                            passed: false
+                        )
+                        validationResults.append(validationResult)
                     }
                 }
             }
@@ -256,6 +269,11 @@ private extension CoverageTool {
                 printPerTargetThresholdFailures(targets: failingTargets)
                 hasFailures = true
             }
+        }
+
+        // Output GitHub Actions annotations if enabled
+        if shouldOutputGitHubAnnotations() && !validationResults.isEmpty {
+            outputGitHubAnnotations(validationResults: validationResults)
         }
 
         // Throw the first error encountered to maintain exit code behavior
@@ -290,6 +308,34 @@ private extension CoverageTool {
                     }
                 }
             }
+        }
+    }
+
+    /// Determines if GitHub Actions annotations should be output
+    /// - Returns: True if annotations should be output
+    func shouldOutputGitHubAnnotations() -> Bool {
+        // Check if explicitly enabled via flag
+        if githubAnnotations {
+            return true
+        }
+
+        // Auto-enable if running in GitHub Actions environment
+        if let githubActions = ProcessInfo.processInfo.environment["GITHUB_ACTIONS"],
+           githubActions.lowercased() == "true" {
+            return true
+        }
+
+        return false
+    }
+
+    /// Outputs GitHub Actions workflow annotations for threshold failures
+    /// - Parameter validationResults: Array of validation results to format as annotations
+    func outputGitHubAnnotations(validationResults: [ThresholdValidationResult]) {
+        let exporter = GitHubActionsAnnotationExporter()
+        let annotations = exporter.formatAnnotations(from: validationResults)
+
+        if !annotations.isEmpty {
+            print(annotations)
         }
     }
 
