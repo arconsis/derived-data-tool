@@ -41,6 +41,9 @@ enum ExternalDependencies {
 
     static let sqlDriver = Dependency(package: .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.6.0"),
                                       target: .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"))
+
+    static let swiftGlob = Dependency(package: .package(url: "https://github.com/davbeck/swift-glob", from: "1.0.0"),
+                                      target: .product(name: "Glob", package: "swift-glob"))
 }
 
 typealias MyPackage = PackageDescription.Target
@@ -59,6 +62,7 @@ let package = Package(
         ExternalDependencies.fluent.package,
         ExternalDependencies.sqlDriver.package,
         ExternalDependencies.globPattern.package,
+        ExternalDependencies.swiftGlob.package,
         ExternalDependencies.swiftHTMLParser.package,
         ExternalDependencies.yams.package,
     ],
