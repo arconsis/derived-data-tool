@@ -76,7 +76,18 @@ public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
             let archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
             logger.debug("Archive location: \(archiveLocation.fullPath)")
 
-            // TODO: Load current and previous coverage reports
+            let archiver = Archiver(fileHandler: fileHandler, archiveUrl: archiveLocation)
+            try await archiver.setup()
+
+            // Get reports
+            let dateComponents = DateComponents(day: 2)
+            let tomorrow = Calendar.current.date(byAdding: dateComponents, to: Date())
+            let currentReport = try getLastReport(archiver: archiver, before: tomorrow)
+            let previousReport = try getLastReport(archiver: archiver, before: currentReport.fileInfo.date)
+
+            logger.debug("Current report loaded: \(currentReport.coverage.printableCoverage)%")
+            logger.debug("Previous report loaded: \(previousReport.coverage.printableCoverage)%")
+
             // TODO: Generate PR comment using PRCommentFormatter
             // TODO: Post or update PR comment using GitHubAPIClient
 
@@ -86,6 +97,15 @@ public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
             logger.error("Error: \(error.localizedDescription)")
             try handle(error: error, quietly: quiet, helpMessage: Self.helpMessage())
         }
+    }
+
+    // MARK: - Private Helpers
+
+    private func getLastReport(archiver: Archiver, before creationDate: Date? = nil) throws -> CoverageMetaReport {
+        guard let report = try archiver.lastReport(before: creationDate ?? Date()) else {
+            throw PRCommentError.reportMissing
+        }
+        return report
     }
 }
 
