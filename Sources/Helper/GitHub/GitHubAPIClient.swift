@@ -129,7 +129,98 @@ public class GitHubAPIClient {
         return existingComment
     }
 
+    /// Creates a new comment on a pull request
+    /// - Parameters:
+    ///   - owner: Repository owner (user or organization)
+    ///   - repo: Repository name
+    ///   - prNumber: Pull request number
+    ///   - body: Comment body text (supports markdown)
+    /// - Returns: The created comment
+    /// - Throws: GitHubAPIError on failure
+    public func createComment(
+        owner: String,
+        repo: String,
+        prNumber: Int,
+        body: String
+    ) async throws -> GitHubComment {
+        let endpoint = "/repos/\(owner)/\(repo)/issues/\(prNumber)/comments"
+        let requestBody = CommentBody(body: body)
+        let request = try makeRequest(endpoint: endpoint, method: "POST", body: requestBody)
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw GitHubAPIError.networkError(NSError(domain: "Invalid response", code: -1))
+            }
+
+            guard httpResponse.statusCode == 201 else {
+                let errorMessage = String(data: data, encoding: .utf8)
+                throw GitHubAPIError.httpError(statusCode: httpResponse.statusCode, message: errorMessage)
+            }
+
+            let comment = try SingleDecoder.shared.decode(GitHubComment.self, from: data)
+            logger.debug("Created comment on PR #\(prNumber) (ID: \(comment.id))")
+            return comment
+
+        } catch let error as GitHubAPIError {
+            throw error
+        } catch let error as DecodingError {
+            throw GitHubAPIError.decodingError(error)
+        } catch {
+            throw GitHubAPIError.networkError(error)
+        }
+    }
+
+    /// Updates an existing comment on a pull request
+    /// - Parameters:
+    ///   - owner: Repository owner (user or organization)
+    ///   - repo: Repository name
+    ///   - commentId: The ID of the comment to update
+    ///   - body: New comment body text (supports markdown)
+    /// - Returns: The updated comment
+    /// - Throws: GitHubAPIError on failure
+    public func updateComment(
+        owner: String,
+        repo: String,
+        commentId: Int,
+        body: String
+    ) async throws -> GitHubComment {
+        let endpoint = "/repos/\(owner)/\(repo)/issues/comments/\(commentId)"
+        let requestBody = CommentBody(body: body)
+        let request = try makeRequest(endpoint: endpoint, method: "PATCH", body: requestBody)
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw GitHubAPIError.networkError(NSError(domain: "Invalid response", code: -1))
+            }
+
+            guard httpResponse.statusCode == 200 else {
+                let errorMessage = String(data: data, encoding: .utf8)
+                throw GitHubAPIError.httpError(statusCode: httpResponse.statusCode, message: errorMessage)
+            }
+
+            let comment = try SingleDecoder.shared.decode(GitHubComment.self, from: data)
+            logger.debug("Updated comment ID \(commentId)")
+            return comment
+
+        } catch let error as GitHubAPIError {
+            throw error
+        } catch let error as DecodingError {
+            throw GitHubAPIError.decodingError(error)
+        } catch {
+            throw GitHubAPIError.networkError(error)
+        }
+    }
+
     // MARK: - Models
+
+    /// Request body for creating/updating comments
+    private struct CommentBody: Codable {
+        let body: String
+    }
 
     /// GitHub PR comment response model
     public struct GitHubComment: Codable {
