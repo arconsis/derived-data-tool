@@ -137,7 +137,7 @@ final class ArchiveIntegrityTests: XCTestCase {
 
         // Use the same encoder configuration as CoverageMetaReportCoder
         let encoder = SingleEncoder.shared
-        encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
 
         // Verify the checksum matches the data without checksum
@@ -179,7 +179,7 @@ final class ArchiveIntegrityTests: XCTestCase {
 
             // Use the same encoder configuration as CoverageMetaReportCoder
             let encoder = SingleEncoder.shared
-            encoder.outputFormatting = .prettyPrinted
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
 
             let isValid = try ArchiveIntegrityValidator.verifyChecksum(
@@ -224,9 +224,9 @@ final class ArchiveIntegrityTests: XCTestCase {
                 checksum: nil
             )
 
-            // For compressed files, the encoder doesn't use prettyPrinted
+            // For compressed files, the encoder uses sortedKeys for deterministic output
             let encoder = SingleEncoder.shared
-            encoder.outputFormatting = []
+            encoder.outputFormatting = .sortedKeys
             let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
 
             let isValid = try ArchiveIntegrityValidator.verifyChecksum(
@@ -342,7 +342,7 @@ final class ArchiveIntegrityTests: XCTestCase {
 
             // Re-encode and compress the corrupted data
             let encoder = SingleEncoder.shared
-            encoder.outputFormatting = []
+            encoder.outputFormatting = .sortedKeys
             let corruptedData = try encoder.encode(corruptedReport)
             let recompressedData = try Compressor.compress(corruptedData)
 
@@ -428,8 +428,8 @@ final class ArchiveIntegrityTests: XCTestCase {
 
         // Encode the corrupted report
         let encoder = SingleEncoder.shared
-        encoder.outputFormatting = []
-        let corruptedData = try encoder.encode(corruptedReport)
+        encoder.outputFormatting = .sortedKeys
+        _ = try encoder.encode(corruptedReport)
 
         // Calculate checksum of the modified data (without checksum field)
         let reportWithoutChecksum = CoverageMetaReport(

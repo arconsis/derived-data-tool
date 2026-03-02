@@ -37,7 +37,7 @@ struct CoverageMetaReportCoder {
         SingleDecoder.shared
     }
 
-    private func verifyChecksum(for report: CoverageMetaReport) throws {
+    private func verifyChecksum(for report: CoverageMetaReport, isCompressed: Bool) throws {
         // If no checksum is present, skip verification (legacy files)
         guard let storedChecksum = report.checksum else {
             return
@@ -51,7 +51,13 @@ struct CoverageMetaReportCoder {
         )
 
         // Encode without checksum to calculate expected checksum
+        // Use the same formatting that was used during encoding
         let encoder = SingleEncoder.shared
+        if !isCompressed {
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        } else {
+            encoder.outputFormatting = .sortedKeys
+        }
         let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
 
         // Calculate checksum of the data without checksum field
@@ -108,7 +114,7 @@ struct CoverageMetaReportCoder {
 
             // Verify checksum if present
             if let report = coverageMetaReport {
-                try verifyChecksum(for: report)
+                try verifyChecksum(for: report, isCompressed: false)
             }
 
             return coverageMetaReport
@@ -141,7 +147,7 @@ struct CoverageMetaReportCoder {
 
             // Verify checksum if present
             if let report = coverageMetaReport {
-                try verifyChecksum(for: report)
+                try verifyChecksum(for: report, isCompressed: true)
             }
 
             return coverageMetaReport
@@ -156,7 +162,9 @@ struct CoverageMetaReportCoder {
     func encode(_ report: CoverageMetaReport, compressed: Bool = true) throws -> Data {
         let encoder = SingleEncoder.shared
         if !compressed {
-            encoder.outputFormatting = .prettyPrinted
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        } else {
+            encoder.outputFormatting = .sortedKeys
         }
 
         // First encode without checksum to calculate it
