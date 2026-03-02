@@ -14,7 +14,7 @@ import Shared
 public final class ArchiveCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "archive",
-        abstract: "Work with the created archives"
+        abstract: "Manage and verify archived coverage reports"
     )
 
     public var logger: Loggerable {
