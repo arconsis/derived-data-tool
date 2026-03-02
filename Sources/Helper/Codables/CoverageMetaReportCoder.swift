@@ -120,7 +120,28 @@ struct CoverageMetaReportCoder {
         if !compressed {
             encoder.outputFormatting = .prettyPrinted
         }
-        let data = try encoder.encode(report)
+
+        // First encode without checksum to calculate it
+        let reportWithoutChecksum = CoverageMetaReport(
+            fileInfo: report.fileInfo,
+            coverage: report.coverage,
+            checksum: nil
+        )
+        let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
+
+        // Calculate checksum of the data without checksum field
+        guard let checksum = try? ArchiveIntegrityValidator.calculateChecksum(for: dataWithoutChecksum) else {
+            throw CoverageMetaReportCoderError.checksumCalculationFailed
+        }
+
+        // Create new report with checksum and encode it
+        let reportWithChecksum = CoverageMetaReport(
+            fileInfo: report.fileInfo,
+            coverage: report.coverage,
+            checksum: checksum
+        )
+        let data = try encoder.encode(reportWithChecksum)
+
         if compressed {
             return try Compressor.compress(data)
         } else {
