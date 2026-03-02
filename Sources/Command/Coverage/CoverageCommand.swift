@@ -128,6 +128,8 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
                 locationCurrentReport: reportUrl,
                 archiveLocation: archiveLocation,
                 thresholdSettings: thresholdSettings,
+                githubAnnotations: githubAnnotations,
+                format: format,
                 verbose: verbose,
                 quiet: quiet,
                 ci: ci,

@@ -22,6 +22,7 @@ class CoverageTool {
     private let repository: ReportModelRepository
     private let thresholdSettings: ThresholdSettings?
     private let githubAnnotations: Bool
+    private let format: CoverageCommand.OutputFormat
 
     private let filterReports: [String]
     private let excludedPatterns: MatchPatternConfig
@@ -51,6 +52,7 @@ class CoverageTool {
          archiveLocation: URL,
          thresholdSettings: ThresholdSettings? = nil,
          githubAnnotations: Bool = false,
+         format: CoverageCommand.OutputFormat = .text,
          verbose: Bool = false,
          quiet: Bool = false,
          ci: Bool = false,
@@ -70,6 +72,7 @@ class CoverageTool {
         self.repository = repository
         self.thresholdSettings = thresholdSettings
         self.githubAnnotations = githubAnnotations
+        self.format = format
         self.excludedPatterns = MatchPatternConfig(targets: excludedTargets,
                                                    files: excludedFiles,
                                                    functions: excludedFunctions)
@@ -193,6 +196,18 @@ private extension CoverageTool {
             let githubExporter = GithubExport(fileHandler: fileHandler, config: ghConfig)
 
             await githubExporter.createMarkDownReport(with: current)
+
+            // Generate HTML report if format is set to HTML
+            if format == .html {
+                let htmlReportUrl = locationCurrentReport.deletingPathExtension().appendingPathExtension("html")
+                let htmlContent = HTMLCoverageReportGenerator.generateHTML(from: current)
+                do {
+                    try fileHandler.writeContent(htmlContent, at: htmlReportUrl)
+                    logger.log("HTML coverage report generated at: \(htmlReportUrl.path)")
+                } catch {
+                    logger.error("Failed to write HTML report: \(error.localizedDescription)")
+                }
+            }
 
             try await repository.add(report: current)
 
