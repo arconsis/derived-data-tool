@@ -9,6 +9,11 @@ import ArgumentParser
 import Foundation
 
 public class VersionCommand: AsyncParsableCommand {
+    public static let configuration = CommandConfiguration(
+        commandName: "version",
+        abstract: "Display version information"
+    )
+
     // MARK: - AsyncParsableCommand
     @Flag(name: [.customShort("v"), .customLong("version")], help: "Display Version number")
     private var displayVersion: Bool = false

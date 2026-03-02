@@ -50,6 +50,7 @@ class CoverageTool {
          locationCurrentReport: URL,
          archiveLocation: URL,
          thresholdSettings: ThresholdSettings? = nil,
+         githubAnnotations: Bool = false,
          verbose: Bool = false,
          quiet: Bool = false,
          ci: Bool = false,
@@ -271,15 +272,6 @@ private extension CoverageTool {
                 if case .fail(let reason, let details) = result {
                     logger.error(reason)
                     if let targetName = details.targetName {
-                        // Add to validation results for CI formatters
-                        let validationResult = ThresholdValidationResult(
-                            targetName: targetName,
-                            actualCoverage: details.actual / 100.0,
-                            requiredThreshold: details.expected,
-                            passed: false
-                        )
-                        validationResults.append(validationResult)
-
                         failingTargets.append((name: targetName, current: details.actual, required: details.expected))
 
                         // Convert to ThresholdValidationResult for GitHub Actions annotations
