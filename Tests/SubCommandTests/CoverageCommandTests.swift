@@ -235,6 +235,100 @@ final class CoverageCommandTests: XCTestCase {
         XCTAssertTrue(annotation.contains("threshold"), "Should contain 'threshold' in message")
         XCTAssertTrue(annotation.contains("MyTarget"), "Should contain target name")
     }
+
+    // MARK: - HTML Format Integration Tests
+
+    func testCoverageTool_WithHTMLFormat_GeneratesValidHTML() async throws {
+        // Arrange: Create a coverage report with good coverage
+        let report = Self.makeCoverageMetaReport(appName: "TestApp", coveredLines: 80, executableLines: 100)
+
+        // Act: Generate HTML report (simulating what CoverageTool does when format == .html)
+        let htmlContent = HTMLCoverageReportGenerator.generateHTML(from: report)
+
+        // Assert: Verify HTML structure and content
+        XCTAssertFalse(htmlContent.isEmpty, "HTML content should not be empty")
+        XCTAssertTrue(htmlContent.contains("<!DOCTYPE html>"), "HTML should contain DOCTYPE declaration")
+        XCTAssertTrue(htmlContent.contains("<html>"), "HTML should contain html tag")
+        XCTAssertTrue(htmlContent.contains("</html>"), "HTML should contain closing html tag")
+        XCTAssertTrue(htmlContent.contains("Code Coverage Report"), "HTML should contain report title")
+        XCTAssertTrue(htmlContent.contains("80.00%"), "HTML should display correct coverage percentage")
+        XCTAssertTrue(htmlContent.contains("Overall Coverage"), "HTML should contain overall coverage section")
+        XCTAssertTrue(htmlContent.contains("TestTarget"), "HTML should contain target name")
+    }
+
+    func testCoverageTool_WithHTMLFormat_ContainsInteractiveFeatures() async throws {
+        // Arrange: Create a report with multiple targets
+        let report = Self.makeCoverageMetaReportWithTargets([
+            ("TargetA", 85, 100),
+            ("TargetB", 75, 100)
+        ])
+
+        // Act: Generate HTML report
+        let htmlContent = HTMLCoverageReportGenerator.generateHTML(from: report)
+
+        // Assert: Verify interactive features are present
+        XCTAssertTrue(htmlContent.contains("<script>"), "HTML should contain JavaScript")
+        XCTAssertTrue(htmlContent.contains("sortTable"), "HTML should contain sorting functionality")
+        XCTAssertTrue(htmlContent.contains("toggleExpandable"), "HTML should contain expandable rows functionality")
+        XCTAssertTrue(htmlContent.contains("sortable"), "HTML should have sortable class for table headers")
+        XCTAssertTrue(htmlContent.contains("expandable"), "HTML should have expandable class for target rows")
+    }
+
+    func testCoverageTool_WithHTMLFormat_DisplaysAllTargets() async throws {
+        // Arrange: Create a report with multiple named targets
+        let report = Self.makeCoverageMetaReportWithTargets([
+            ("AppTarget", 90, 100),
+            ("TestTarget", 85, 100),
+            ("FrameworkTarget", 70, 100)
+        ])
+
+        // Act: Generate HTML report
+        let htmlContent = HTMLCoverageReportGenerator.generateHTML(from: report)
+
+        // Assert: Verify all targets are displayed
+        XCTAssertTrue(htmlContent.contains("AppTarget"), "HTML should contain AppTarget")
+        XCTAssertTrue(htmlContent.contains("TestTarget"), "HTML should contain TestTarget")
+        XCTAssertTrue(htmlContent.contains("FrameworkTarget"), "HTML should contain FrameworkTarget")
+        XCTAssertTrue(htmlContent.contains("90.00%"), "HTML should contain AppTarget coverage")
+        XCTAssertTrue(htmlContent.contains("85.00%"), "HTML should contain TestTarget coverage")
+        XCTAssertTrue(htmlContent.contains("70.00%"), "HTML should contain FrameworkTarget coverage")
+    }
+
+    func testCoverageTool_WithHTMLFormat_AppliesCorrectCoverageClasses() async throws {
+        // Arrange: Create reports with different coverage levels
+        let highCoverageReport = Self.makeCoverageMetaReport(appName: "HighCoverageApp", coveredLines: 85, executableLines: 100)
+        let normalCoverageReport = Self.makeCoverageMetaReport(appName: "NormalCoverageApp", coveredLines: 50, executableLines: 100)
+        let lowCoverageReport = Self.makeCoverageMetaReport(appName: "LowCoverageApp", coveredLines: 10, executableLines: 100)
+
+        // Act: Generate HTML for each report
+        let highHtml = HTMLCoverageReportGenerator.generateHTML(from: highCoverageReport)
+        let normalHtml = HTMLCoverageReportGenerator.generateHTML(from: normalCoverageReport)
+        let lowHtml = HTMLCoverageReportGenerator.generateHTML(from: lowCoverageReport)
+
+        // Assert: Verify coverage classes are applied correctly
+        XCTAssertTrue(highHtml.contains("high_coverage"), "High coverage report should have high_coverage class")
+        XCTAssertTrue(normalHtml.contains("normal_coverage"), "Normal coverage report should have normal_coverage class")
+        XCTAssertTrue(lowHtml.contains("low_coverage"), "Low coverage report should have low_coverage class")
+    }
+
+    func testCoverageTool_WithHTMLFormat_HandlesEmptyReport() async throws {
+        // Arrange: Create an empty coverage report
+        let coverage = CoverageReport(targets: [])
+        let dateString = DateFormat.YearMonthDayHoursMinutesSecondsAndTimeZone.string(from: Date())
+        let filename = "Run-EmptyApp-\(dateString).xcresult"
+        let url = URL(fileURLWithPath: "/path/to/\(filename)")
+        let fileInfo = try XCResultFile(with: url)
+        let report = CoverageMetaReport(fileInfo: fileInfo, coverage: coverage)
+
+        // Act: Generate HTML report
+        let htmlContent = HTMLCoverageReportGenerator.generateHTML(from: report)
+
+        // Assert: Verify HTML handles empty report gracefully
+        XCTAssertFalse(htmlContent.isEmpty, "HTML should be generated even for empty reports")
+        XCTAssertTrue(htmlContent.contains("0.00%"), "HTML should show 0% coverage for empty report")
+        XCTAssertTrue(htmlContent.contains("Code Coverage Report"), "HTML should still contain basic structure")
+        XCTAssertTrue(htmlContent.contains("<!DOCTYPE html>"), "HTML should be well-formed")
+    }
 }
 
 // MARK: - Test Helpers
@@ -292,6 +386,23 @@ extension CoverageCommandTests {
 
         // XCResultFile requires a properly formatted filename
         // Format: "Run-ApplicationName-2023.05.08_15-14-43-+0200.xcresult"
+        let dateString = DateFormat.YearMonthDayHoursMinutesSecondsAndTimeZone.string(from: timestamp)
+        let filename = "Run-\(appName)-\(dateString).xcresult"
+        let url = URL(fileURLWithPath: "/path/to/\(filename)")
+
+        let fileInfo = try! XCResultFile(with: url)
+
+        return CoverageMetaReport(fileInfo: fileInfo, coverage: coverage)
+    }
+
+    static func makeCoverageMetaReportWithTargets(
+        _ targets: [(name: String, coveredLines: Int, executableLines: Int)],
+        appName: String = "TestApp",
+        timestamp: Date = Date()
+    ) -> CoverageMetaReport {
+        let coverage = makeCoverageReportWithTargets(targets)
+
+        // XCResultFile requires a properly formatted filename
         let dateString = DateFormat.YearMonthDayHoursMinutesSecondsAndTimeZone.string(from: timestamp)
         let filename = "Run-\(appName)-\(dateString).xcresult"
         let url = URL(fileURLWithPath: "/path/to/\(filename)")

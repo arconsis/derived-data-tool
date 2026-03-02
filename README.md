@@ -335,6 +335,175 @@ When `--ci` is enabled:
 - ✅ Optional structured JSON export via `--ci-json-output`
 - ✅ Exit code 0 for pass, 1 for fail (same as normal mode)
 
+## HTML Coverage Reports
+
+DerivedDataTool can generate rich, interactive HTML coverage reports that provide a visual and user-friendly way to explore your code coverage data. Unlike terminal output, HTML reports offer sortable tables, file-level details, and a persistent artifact you can share with your team or archive for historical analysis.
+
+### Why Use HTML Format?
+
+HTML reports are ideal for:
+
+- **Visual Analysis**: Easy-to-read tables with color-coded coverage percentages
+- **Interactive Exploration**: Click column headers to sort by coverage, lines, or target name
+- **Team Collaboration**: Share a single HTML file via email, Slack, or CI artifacts
+- **Historical Records**: Archive HTML reports to track coverage trends over time
+- **Documentation**: Include coverage reports in project documentation or wikis
+- **Offline Access**: View coverage details without needing to re-run the tool
+
+### Basic Usage
+
+Generate an HTML coverage report by adding the `--format=html` flag:
+
+```sh
+swift run derived-data-tool coverage --format=html
+```
+
+By default, this creates a file named `coverage-report.html` in your current directory. Open it in any web browser:
+
+```sh
+open coverage-report.html
+```
+
+### Custom Output Location
+
+Specify a custom filename or path using the `--output` flag:
+
+```sh
+# Save to a specific directory
+swift run derived-data-tool coverage --format=html --output ./reports/coverage-2024-03-15.html
+
+# Save to CI artifacts directory
+swift run derived-data-tool coverage --format=html --output ./build/coverage/index.html
+```
+
+### HTML Report Features
+
+The generated HTML report includes:
+
+- **Overall Coverage Summary**: Total coverage percentage and line counts displayed prominently
+- **Sortable Target Table**: Click any column header to sort targets by:
+  - Target name (alphabetical)
+  - Coverage percentage (high to low or low to high)
+  - Covered lines count
+  - Executable lines count
+- **Color-Coded Coverage**: Visual indicators for coverage levels:
+  - 🟢 Green: ≥ 80% coverage (excellent)
+  - 🟡 Yellow: 60-79% coverage (good)
+  - 🟠 Orange: 40-59% coverage (needs improvement)
+  - 🔴 Red: < 40% coverage (critical)
+- **File-Level Breakdown**: Expandable file listings for each target showing individual file coverage
+- **Responsive Design**: Works on desktop, tablet, and mobile browsers
+- **Self-Contained**: Single HTML file with embedded CSS (no external dependencies)
+
+### Combining HTML Format with Thresholds
+
+HTML reports work seamlessly with coverage thresholds. The report will visually highlight targets that fail threshold checks:
+
+```sh
+swift run derived-data-tool coverage \
+  --format=html \
+  --output coverage-report.html \
+  --min-coverage 80.0
+```
+
+If thresholds fail:
+- The tool exits with code 1 (as expected for CI integration)
+- The HTML report is still generated with threshold failures highlighted
+- Failed targets are marked with a ⚠️ warning indicator
+
+### Integration with CI/CD Pipelines
+
+HTML reports are perfect for CI artifact collection:
+
+```yaml
+# GitHub Actions example
+- name: Generate HTML Coverage Report
+  run: |
+    swift run derived-data-tool coverage \
+      --format=html \
+      --output coverage-report.html \
+      --min-coverage 80.0
+
+- name: Upload HTML Coverage Report
+  if: always()
+  uses: actions/upload-artifact@v3
+  with:
+    name: coverage-report
+    path: coverage-report.html
+```
+
+Team members can download the HTML report directly from the GitHub Actions run page, making it easy to review coverage without running tests locally.
+
+### GitLab CI Integration
+
+```yaml
+coverage_html:
+  script:
+    - swift run derived-data-tool coverage --format=html --output coverage.html
+  artifacts:
+    paths:
+      - coverage.html
+    expire_in: 30 days
+  only:
+    - merge_requests
+```
+
+The HTML report will be available as a downloadable artifact in the GitLab pipeline.
+
+### Combining HTML and CI Modes
+
+You cannot use `--format=html` and `--ci` together, as they serve different purposes:
+
+- **`--format=html`**: For human-readable reports and archival
+- **`--ci`**: For machine-parseable output and GitHub Actions annotations
+
+Instead, run the tool twice in your CI pipeline if you need both:
+
+```yaml
+# Generate HTML report for human review
+- name: Generate HTML Report
+  run: swift run derived-data-tool coverage --format=html --output coverage.html
+
+# Run CI mode for threshold validation
+- name: Validate Coverage Thresholds
+  run: swift run derived-data-tool coverage --ci --min-coverage 80.0
+```
+
+### Example Use Cases
+
+**Weekly Coverage Report for Team Review:**
+```sh
+swift run derived-data-tool coverage \
+  --format=html \
+  --output "weekly-coverage-$(date +%Y-%m-%d).html"
+```
+
+**Archive Coverage Reports by Git Tag:**
+```sh
+TAG=$(git describe --tags)
+swift run derived-data-tool coverage \
+  --format=html \
+  --output "coverage-${TAG}.html"
+```
+
+**Generate Report and Auto-Open in Browser:**
+```sh
+swift run derived-data-tool coverage --format=html && open coverage-report.html
+```
+
+### HTML vs. Terminal Output
+
+| Feature | Terminal Output | HTML Format |
+|---------|----------------|-------------|
+| **Best for** | Quick checks, CI validation | Detailed analysis, sharing |
+| **Sortable** | ❌ No | ✅ Yes (click headers) |
+| **Persistent** | ❌ No (scrolls away) | ✅ Yes (save & archive) |
+| **Shareable** | ⚠️ Copy/paste only | ✅ Single file |
+| **File Details** | ✅ Yes | ✅ Yes (expandable) |
+| **CI Annotations** | ✅ With `--ci` flag | ❌ No |
+| **Visual Colors** | ✅ In terminal | ✅ In browser |
+| **Offline Access** | ❌ Must re-run | ✅ Open anytime |
+
 ## Where can I get more help, if I need it?
 
 If you need more help, you can:
