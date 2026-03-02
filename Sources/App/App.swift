@@ -5,6 +5,7 @@ import Config
 import Coverage
 import Foundation
 import Migrate
+import PRComment
 import Prototype
 import Report
 import Trend
@@ -33,6 +34,7 @@ struct App: AsyncParsableCommand {
                 ReportCommand.self,
                 CompareCommand.self,
                 MigrateCommand.self,
+                PRCommentCommand.self,
                 TrendCommand.self,
             ]
         #else
@@ -41,6 +43,7 @@ struct App: AsyncParsableCommand {
                 BuildCommand.self,
                 ConfigCommand.self,
                 MigrateCommand.self,
+                PRCommentCommand.self,
                 ReportCommand.self,
                 TrendCommand.self,
             ]

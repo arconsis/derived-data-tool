@@ -114,7 +114,7 @@ public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
                     commentId: existing.id,
                     body: commentBody
                 )
-                logger.info("Successfully updated coverage comment on PR #\(prNumber)")
+                logger.log("Successfully updated coverage comment on PR #\(prNumber)")
             } else {
                 logger.debug("Creating new comment")
                 _ = try await githubClient.createComment(
@@ -123,7 +123,7 @@ public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
                     prNumber: prNumber,
                     body: commentBody
                 )
-                logger.info("Successfully created coverage comment on PR #\(prNumber)")
+                logger.log("Successfully created coverage comment on PR #\(prNumber)")
             }
 
             logger.debug("PR Comment subcommand: completed")
