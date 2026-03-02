@@ -14,7 +14,7 @@ import Shared
 public final class ReportCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "report",
-        abstract: "Handle the reporting of the coverage"
+        abstract: "Post coverage summary with top changes and statistics to Slack"
     )
 
     public var logger: Loggerable {
