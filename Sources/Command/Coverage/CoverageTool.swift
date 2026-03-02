@@ -209,6 +209,14 @@ private extension CoverageTool {
                 }
             }
 
+            // Generate JUnit XML report if format is set to junit
+            if format == .junit {
+                let junitReportUrl = locationCurrentReport.deletingPathExtension().appendingPathExtension("xml")
+                let junitExporter = JUnitXMLExporter(fileHandler: fileHandler, outputUrl: junitReportUrl)
+                await junitExporter.export(meta: current)
+                logger.log("JUnit XML coverage report generated at: \(junitReportUrl.path)")
+            }
+
             try await repository.add(report: current)
 
             // Validate thresholds if configured
