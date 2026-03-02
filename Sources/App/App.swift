@@ -12,7 +12,13 @@ import Trend
 @main
 struct App: AsyncParsableCommand {
     public static let configuration = CommandConfiguration(
-        abstract: "Code coverage tool",
+        abstract: "Xcode code coverage analyzer with trend tracking and CI/CD integration",
+        discussion: """
+            A comprehensive code coverage tool for Xcode projects that analyzes test results, \
+            tracks coverage metrics over time, and validates coverage thresholds. Features include \
+            historical trend visualization, GitHub Actions integration, and configurable filtering \
+            for targets and files.
+            """,
         version: "0.0.0",
         subcommands: Self.subcommands
     )
