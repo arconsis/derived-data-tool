@@ -10,14 +10,21 @@ import Foundation
 import Shared
 
 struct CoverageMetaReportCoder {
-    enum CoverageMetaReportCoderError: Error {
+    enum CoverageMetaReportCoderError: Errorable {
         case decodingFailed
         case decodingFailedWithDetails(String)
+        case checksumMismatch(expected: String, actual: String)
+        case checksumCalculationFailed
+
+        var printsHelp: Bool { false }
+        var errorDescription: String? { localizedDescription }
 
         var localizedDescription: String {
             switch self {
             case .decodingFailed: return "decodingFailed"
             case let .decodingFailedWithDetails(filename): return "decodingFailed: \(filename)"
+            case let .checksumMismatch(expected, actual): return "checksumMismatch: expected \(expected), got \(actual)"
+            case .checksumCalculationFailed: return "checksumCalculationFailed"
             }
         }
     }
@@ -28,6 +35,40 @@ struct CoverageMetaReportCoder {
 
     private var decoder: JSONDecoder {
         SingleDecoder.shared
+    }
+
+    private func verifyChecksum(for report: CoverageMetaReport, isCompressed: Bool) throws {
+        // If no checksum is present, skip verification (legacy files)
+        guard let storedChecksum = report.checksum else {
+            return
+        }
+
+        // Create version without checksum for verification
+        let reportWithoutChecksum = CoverageMetaReport(
+            fileInfo: report.fileInfo,
+            coverage: report.coverage,
+            checksum: nil
+        )
+
+        // Encode without checksum to calculate expected checksum
+        // Use the same formatting that was used during encoding
+        let encoder = SingleEncoder.shared
+        if !isCompressed {
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        } else {
+            encoder.outputFormatting = .sortedKeys
+        }
+        let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
+
+        // Calculate checksum of the data without checksum field
+        guard let calculatedChecksum = try? ArchiveIntegrityValidator.calculateChecksum(for: dataWithoutChecksum) else {
+            throw CoverageMetaReportCoderError.checksumCalculationFailed
+        }
+
+        // Verify checksums match
+        if storedChecksum != calculatedChecksum {
+            throw CoverageMetaReportCoderError.checksumMismatch(expected: storedChecksum, actual: calculatedChecksum)
+        }
     }
 
     func decode(contentOf url: URL) throws -> CoverageMetaReport {
@@ -71,6 +112,11 @@ struct CoverageMetaReportCoder {
                 coverageMetaReport = try decoder.decode(CoverageMetaReport.self, from: data)
             }
 
+            // Verify checksum if present
+            if let report = coverageMetaReport {
+                try verifyChecksum(for: report, isCompressed: false)
+            }
+
             return coverageMetaReport
         } catch {
             logger.error(error.localizedDescription)
@@ -99,6 +145,11 @@ struct CoverageMetaReportCoder {
                 coverageMetaReport = try decoder.decode(CoverageMetaReport.self, from: jsonData)
             }
 
+            // Verify checksum if present
+            if let report = coverageMetaReport {
+                try verifyChecksum(for: report, isCompressed: true)
+            }
+
             return coverageMetaReport
         } catch {
             logger.error(error.localizedDescription)
@@ -111,9 +162,32 @@ struct CoverageMetaReportCoder {
     func encode(_ report: CoverageMetaReport, compressed: Bool = true) throws -> Data {
         let encoder = SingleEncoder.shared
         if !compressed {
-            encoder.outputFormatting = .prettyPrinted
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        } else {
+            encoder.outputFormatting = .sortedKeys
         }
-        let data = try encoder.encode(report)
+
+        // First encode without checksum to calculate it
+        let reportWithoutChecksum = CoverageMetaReport(
+            fileInfo: report.fileInfo,
+            coverage: report.coverage,
+            checksum: nil
+        )
+        let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
+
+        // Calculate checksum of the data without checksum field
+        guard let checksum = try? ArchiveIntegrityValidator.calculateChecksum(for: dataWithoutChecksum) else {
+            throw CoverageMetaReportCoderError.checksumCalculationFailed
+        }
+
+        // Create new report with checksum and encode it
+        let reportWithChecksum = CoverageMetaReport(
+            fileInfo: report.fileInfo,
+            coverage: report.coverage,
+            checksum: checksum
+        )
+        let data = try encoder.encode(reportWithChecksum)
+
         if compressed {
             return try Compressor.compress(data)
         } else {
