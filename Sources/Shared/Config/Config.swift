@@ -100,7 +100,7 @@ public struct Config: Codable, CustomStringConvertible {
             Tool(Tool.ToolType.archiver,
                  settingsVault: ["limit": "5"]),
             Tool(Tool.ToolType.githubExporter,
-                 settingsVault: ["top": "5", "last": "5"]),
+                 settingsVault: ["top": "5", "last": "5", "pr_comment_top_files": "5", "pr_comment_include_untested": "true"]),
             Tool(Tool.ToolType.htmlExporter,
                  settingsVault: ["something": "123456"]),
             Tool(Tool.ToolType.slack,

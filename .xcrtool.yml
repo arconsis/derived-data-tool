@@ -27,6 +27,8 @@ tools:
   settings:
     last: '5'
     top: '5'
+    pr_comment_top_files: 5
+    pr_comment_include_untested: true
 - type: html_exporter
   settings:
     something: '123456'
