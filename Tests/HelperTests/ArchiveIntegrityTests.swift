@@ -256,4 +256,199 @@ final class ArchiveIntegrityTests: XCTestCase {
         XCTAssertEqual(decoded1.checksum, decoded2.checksum,
                       "Checksums should be consistent for identical data")
     }
+
+    // MARK: - Decode with Verification Tests
+
+    func testDecodeWithVerificationCompressed() async throws {
+        let tempUrl = FileManager().temporaryDirectory.appending(pathComponent: "test-decode-verify.zlib")
+
+        do {
+            let testReport = makeTestReport()
+
+            // Encode with checksum (compressed)
+            let compressedData = try coder.encode(testReport, compressed: true)
+
+            // Write to file
+            try fileHandler.writeData(compressedData, at: tempUrl)
+
+            // Decode from file - should verify checksum automatically
+            let decodedReport = try coder.decode(contentOf: tempUrl)
+
+            // Verify the report was decoded correctly
+            XCTAssertNotNil(decodedReport.checksum, "Decoded report should have checksum")
+            XCTAssertEqual(decodedReport.fileInfo.application, testReport.fileInfo.application,
+                          "Decoded report should match original")
+            XCTAssertEqual(decodedReport.coverage.targets.count, testReport.coverage.targets.count,
+                          "Decoded coverage should match original")
+
+            try fileHandler.deleteFile(at: tempUrl)
+        } catch {
+            try? fileHandler.deleteFile(at: tempUrl)
+            throw error
+        }
+    }
+
+    func testDecodeDetectsCorruptionCompressed() async throws {
+        let tempUrl = FileManager().temporaryDirectory.appending(pathComponent: "test-corrupted.zlib")
+
+        do {
+            let testReport = makeTestReport()
+
+            // Encode with checksum (compressed)
+            let compressedData = try coder.encode(testReport, compressed: true)
+
+            // Decompress to manipulate the data
+            let decompressedData = try Compressor.decompress(compressedData)
+            let decodedReport = try jsonDecoder.decode(CoverageMetaReport.self, from: decompressedData)
+
+            // Corrupt the data
+            var corruptedReport = CoverageMetaReport(
+                fileInfo: decodedReport.fileInfo,
+                coverage: decodedReport.coverage,
+                checksum: decodedReport.checksum  // Keep the original checksum
+            )
+
+            if !corruptedReport.coverage.targets.isEmpty {
+                var modifiedTarget = corruptedReport.coverage.targets[0]
+                if !modifiedTarget.files.isEmpty {
+                    var modifiedFile = modifiedTarget.files[0]
+                    if !modifiedFile.functions.isEmpty {
+                        var modifiedFunction = modifiedFile.functions[0]
+                        // Corrupt the data
+                        modifiedFunction = Function(
+                            name: "corruptedFunction",
+                            executableLines: modifiedFunction.executableLines,
+                            coveredLines: modifiedFunction.coveredLines,
+                            lineNumber: modifiedFunction.lineNumber,
+                            executionCount: modifiedFunction.executionCount
+                        )
+                        modifiedFile = File(
+                            name: modifiedFile.name,
+                            path: modifiedFile.path,
+                            functions: [modifiedFunction]
+                        )
+                    }
+                    modifiedTarget = Target(
+                        name: modifiedTarget.name,
+                        files: [modifiedFile]
+                    )
+                }
+                corruptedReport = CoverageMetaReport(
+                    fileInfo: corruptedReport.fileInfo,
+                    coverage: CoverageReport(targets: [modifiedTarget]),
+                    checksum: decodedReport.checksum  // Keep the old checksum
+                )
+            }
+
+            // Re-encode and compress the corrupted data
+            let encoder = SingleEncoder.shared
+            encoder.outputFormatting = []
+            let corruptedData = try encoder.encode(corruptedReport)
+            let recompressedData = try Compressor.compress(corruptedData)
+
+            // Write to file
+            try fileHandler.writeData(recompressedData, at: tempUrl)
+
+            // Try to decode - should fail due to data corruption
+            // The error will be wrapped in decodingFailedWithDetails
+            XCTAssertThrowsError(try coder.decode(contentOf: tempUrl)) { error in
+                // Verify it's a decoding error (checksum mismatch is caught and wrapped)
+                XCTAssertTrue(error is CoverageMetaReportCoder.CoverageMetaReportCoderError,
+                            "Should throw CoverageMetaReportCoderError")
+            }
+
+            try fileHandler.deleteFile(at: tempUrl)
+        } catch {
+            try? fileHandler.deleteFile(at: tempUrl)
+            throw error
+        }
+    }
+
+    func testDecodeLegacyFileWithoutChecksum() async throws {
+        let tempUrl = FileManager().temporaryDirectory.appending(pathComponent: "test-legacy.json")
+
+        do {
+            let testReport = makeTestReport()
+
+            // Encode without checksum (simulating legacy file)
+            let encoder = SingleEncoder.shared
+            encoder.outputFormatting = .prettyPrinted
+            let legacyData = try encoder.encode(testReport)
+
+            // Write to file
+            try fileHandler.writeData(legacyData, at: tempUrl)
+
+            // Decode should succeed for legacy files without checksum
+            let decodedReport = try coder.decode(contentOf: tempUrl)
+
+            // Verify the report was decoded correctly
+            XCTAssertNil(decodedReport.checksum, "Legacy file should not have checksum")
+            XCTAssertEqual(decodedReport.fileInfo.application, testReport.fileInfo.application,
+                          "Decoded report should match original")
+            XCTAssertEqual(decodedReport.coverage.targets.count, testReport.coverage.targets.count,
+                          "Decoded coverage should match original")
+
+            try fileHandler.deleteFile(at: tempUrl)
+        } catch {
+            try? fileHandler.deleteFile(at: tempUrl)
+            throw error
+        }
+    }
+
+    func testChecksumVerificationDetectsModification() async throws {
+        let testReport = makeTestReport()
+
+        // Encode with checksum (compressed to avoid encoder state issues)
+        let compressedData = try coder.encode(testReport, compressed: true)
+        let decompressedData = try Compressor.decompress(compressedData)
+        let decodedReport = try jsonDecoder.decode(CoverageMetaReport.self, from: decompressedData)
+
+        guard let originalChecksum = decodedReport.checksum else {
+            XCTFail("Report should have checksum")
+            return
+        }
+
+        // Modify the coverage data
+        var modifiedCoverage = decodedReport.coverage
+        if !modifiedCoverage.targets.isEmpty {
+            var modifiedTarget = modifiedCoverage.targets[0]
+            modifiedTarget = Target(
+                name: "ModifiedTarget",  // Change the name to corrupt the data
+                files: modifiedTarget.files
+            )
+            modifiedCoverage = CoverageReport(targets: [modifiedTarget])
+        }
+
+        // Create report with modified data but original checksum
+        let corruptedReport = CoverageMetaReport(
+            fileInfo: decodedReport.fileInfo,
+            coverage: modifiedCoverage,
+            checksum: originalChecksum  // Keep original checksum (now invalid)
+        )
+
+        // Encode the corrupted report
+        let encoder = SingleEncoder.shared
+        encoder.outputFormatting = []
+        let corruptedData = try encoder.encode(corruptedReport)
+
+        // Calculate checksum of the modified data (without checksum field)
+        let reportWithoutChecksum = CoverageMetaReport(
+            fileInfo: corruptedReport.fileInfo,
+            coverage: corruptedReport.coverage,
+            checksum: nil
+        )
+        let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
+        let newChecksum = try ArchiveIntegrityValidator.calculateChecksum(for: dataWithoutChecksum)
+
+        // Verify the checksums are different
+        XCTAssertNotEqual(originalChecksum, newChecksum,
+                         "Checksum should change when data is modified")
+
+        // Verify that the original checksum is now invalid
+        let isValid = try ArchiveIntegrityValidator.verifyChecksum(
+            for: dataWithoutChecksum,
+            expectedChecksum: originalChecksum
+        )
+        XCTAssertFalse(isValid, "Original checksum should be invalid after data modification")
+    }
 }
