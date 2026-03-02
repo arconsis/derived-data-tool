@@ -14,7 +14,7 @@ import Shared
 public final class CompareCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "compare",
-        abstract: "Generate and export the process of code coverage over the last reports"
+        abstract: "Compare code coverage across multiple reports"
     )
 
     public var logger: Loggerable {
