@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "008-github-actions-workflow-annotations",
+  "spec": "005-fix-command-documentation-strings",
   "state": "complete",
   "subtasks": {
-    "completed": 8,
-    "total": 8,
+    "completed": 11,
+    "total": 11,
     "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "Testing & Validation",
+    "current": "Fix Command Documentation",
     "id": null,
-    "total": 3
+    "total": 11
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 9,
-    "started_at": "2026-03-01T23:58:42.005556"
+    "number": 12,
+    "started_at": "2026-03-02T01:04:13.666616"
   },
-  "last_update": "2026-03-02T00:26:14.090857"
+  "last_update": "2026-03-02T01:28:33.935612"
 }

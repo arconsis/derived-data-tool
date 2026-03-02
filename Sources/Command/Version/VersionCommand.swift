@@ -11,7 +11,11 @@ import Foundation
 public class VersionCommand: AsyncParsableCommand {
     public static let configuration = CommandConfiguration(
         commandName: "version",
-        abstract: "Display version information"
+        abstract: "Display version information",
+        discussion: """
+            Displays the current version of the derived-data-tool. \
+            Useful for verifying installed version in CI/CD environments.
+            """
     )
 
     // MARK: - AsyncParsableCommand
