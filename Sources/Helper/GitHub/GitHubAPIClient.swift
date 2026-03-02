@@ -64,6 +64,96 @@ public class GitHubAPIClient {
         return request
     }
 
+    // MARK: - Comment Operations
+
+    /// Lists all comments on a pull request
+    /// - Parameters:
+    ///   - owner: Repository owner (user or organization)
+    ///   - repo: Repository name
+    ///   - prNumber: Pull request number
+    /// - Returns: Array of comments on the PR
+    /// - Throws: GitHubAPIError on failure
+    public func listPRComments(owner: String, repo: String, prNumber: Int) async throws -> [GitHubComment] {
+        let endpoint = "/repos/\(owner)/\(repo)/issues/\(prNumber)/comments"
+        let request = try makeRequest(endpoint: endpoint)
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw GitHubAPIError.networkError(NSError(domain: "Invalid response", code: -1))
+            }
+
+            guard httpResponse.statusCode == 200 else {
+                let errorMessage = String(data: data, encoding: .utf8)
+                throw GitHubAPIError.httpError(statusCode: httpResponse.statusCode, message: errorMessage)
+            }
+
+            let comments = try SingleDecoder.shared.decode([GitHubComment].self, from: data)
+            logger.debug("Retrieved \(comments.count) comments from PR #\(prNumber)")
+            return comments
+
+        } catch let error as GitHubAPIError {
+            throw error
+        } catch let error as DecodingError {
+            throw GitHubAPIError.decodingError(error)
+        } catch {
+            throw GitHubAPIError.networkError(error)
+        }
+    }
+
+    /// Finds an existing PR comment containing a specific marker string
+    /// Useful for finding bot-generated comments to update instead of creating duplicates
+    /// - Parameters:
+    ///   - owner: Repository owner (user or organization)
+    ///   - repo: Repository name
+    ///   - prNumber: Pull request number
+    ///   - marker: Unique identifier string to search for in comment bodies
+    /// - Returns: The comment if found, nil otherwise
+    /// - Throws: GitHubAPIError on failure
+    public func findExistingComment(
+        owner: String,
+        repo: String,
+        prNumber: Int,
+        marker: String
+    ) async throws -> GitHubComment? {
+        let comments = try await listPRComments(owner: owner, repo: repo, prNumber: prNumber)
+        let existingComment = comments.first { $0.body.contains(marker) }
+
+        if let comment = existingComment {
+            logger.debug("Found existing comment with marker '\(marker)' (ID: \(comment.id))")
+        } else {
+            logger.debug("No existing comment found with marker '\(marker)'")
+        }
+
+        return existingComment
+    }
+
+    // MARK: - Models
+
+    /// GitHub PR comment response model
+    public struct GitHubComment: Codable {
+        public let id: Int
+        public let body: String
+        public let user: GitHubUser
+        public let createdAt: String
+        public let updatedAt: String
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case body
+            case user
+            case createdAt = "created_at"
+            case updatedAt = "updated_at"
+        }
+    }
+
+    /// GitHub user model
+    public struct GitHubUser: Codable {
+        public let login: String
+        public let id: Int
+    }
+
     // MARK: - Errors
 
     public enum GitHubAPIError: LocalizedError {
