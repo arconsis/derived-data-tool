@@ -497,4 +497,94 @@ public class HTMLCoverageReportGenerator {
             .replacingOccurrences(of: "/", with: "-")
             .lowercased()
     }
+
+    // MARK: - Line-Level Coverage Data Extraction
+
+    /// Represents coverage data for a single line of code
+    struct LineCoverageData {
+        let lineNumber: Int
+        let executionCount: Int
+        let isCovered: Bool
+        let functionName: String?
+
+        init(lineNumber: Int, executionCount: Int, functionName: String? = nil) {
+            self.lineNumber = lineNumber
+            self.executionCount = executionCount
+            self.isCovered = executionCount > 0
+            self.functionName = functionName
+        }
+    }
+
+    /// Extract line-level coverage data from function data
+    /// Initially works with function-level data (Function.lineNumber, Function.executionCount)
+    /// Can be extended to use xccov view --file for more detailed line coverage
+    private func extractLineCoverageData(from functions: [Shared.Function]) -> [LineCoverageData] {
+        var lineCoverageData: [LineCoverageData] = []
+
+        for function in functions {
+            // Create a line coverage entry for the function's starting line
+            let lineData = LineCoverageData(
+                lineNumber: function.lineNumber,
+                executionCount: function.executionCount,
+                functionName: function.name
+            )
+            lineCoverageData.append(lineData)
+
+            // For functions with multiple executable lines, we can infer approximate coverage
+            // This is a simplified representation based on function-level data
+            if function.executableLines > 1 {
+                let avgExecutionCount = function.executionCount
+                let linesPerFunction = function.executableLines
+
+                // Add entries for the executable lines within the function
+                for offset in 1..<linesPerFunction {
+                    let inferredLineData = LineCoverageData(
+                        lineNumber: function.lineNumber + offset,
+                        executionCount: function.coveredLines > offset ? avgExecutionCount : 0,
+                        functionName: nil
+                    )
+                    lineCoverageData.append(inferredLineData)
+                }
+            }
+        }
+
+        return lineCoverageData.sorted { $0.lineNumber < $1.lineNumber }
+    }
+
+    /// Group line coverage data by coverage status for summary statistics
+    private func groupLineCoverageByStatus(_ lineCoverage: [LineCoverageData]) -> (covered: Int, uncovered: Int) {
+        let covered = lineCoverage.filter { $0.isCovered }.count
+        let uncovered = lineCoverage.filter { !$0.isCovered }.count
+        return (covered, uncovered)
+    }
+
+    /// Calculate coverage percentage from line coverage data
+    private func calculateLineCoveragePercentage(_ lineCoverage: [LineCoverageData]) -> Double {
+        guard !lineCoverage.isEmpty else { return 0.0 }
+
+        let covered = lineCoverage.filter { $0.isCovered }.count
+        return Double(covered) / Double(lineCoverage.count)
+    }
+
+    /// Extract line coverage data for a specific file
+    /// This method prepares data for line-by-line coverage display
+    private func extractFileLinesWithCoverage(file: Shared.File) -> [LineCoverageData] {
+        return extractLineCoverageData(from: file.functions)
+    }
+
+    /// Get the most frequently executed lines from coverage data
+    private func getTopExecutedLines(_ lineCoverage: [LineCoverageData], limit: Int = 10) -> [LineCoverageData] {
+        return lineCoverage
+            .filter { $0.executionCount > 0 }
+            .sorted { $0.executionCount > $1.executionCount }
+            .prefix(limit)
+            .map { $0 }
+    }
+
+    /// Get uncovered lines (lines with zero execution count)
+    private func getUncoveredLines(_ lineCoverage: [LineCoverageData]) -> [LineCoverageData] {
+        return lineCoverage
+            .filter { !$0.isCovered }
+            .sorted { $0.lineNumber < $1.lineNumber }
+    }
 }
