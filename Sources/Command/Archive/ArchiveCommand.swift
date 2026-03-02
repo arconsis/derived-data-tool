@@ -65,12 +65,47 @@ public final class ArchiveCommand: DerivedDataCommand, QuietErrorHandling {
 
             logger.log("setup completed")
 
-            // Find archive files
-            let uncompressedArchives = try await fileHandler.findFiles(at: workingDirectory, with: "json").forcedValue()
-            let compessedArchives = try await fileHandler.findFiles(at: workingDirectory, with: "zlib").forcedValue()
-            _ = uncompressedArchives + compessedArchives
+            // Check file integrity
+            let allArchives = archiver.sortedArchives
+            logger.log("Validating integrity of \(allArchives.count) archive file(s)...")
 
-            // TODO: check file integrity
+            var validCount = 0
+            var legacyCount = 0
+            var corruptedCount = 0
+
+            for archivedFile in allArchives {
+                do {
+                    let report = try archiver.report(for: archivedFile)
+                    if report.checksum != nil {
+                        logger.log("✓ \(archivedFile.url.lastPathComponent) - Valid (with checksum)")
+                        validCount += 1
+                    } else {
+                        logger.warn("⚠ \(archivedFile.url.lastPathComponent) - Legacy file (no checksum)")
+                        legacyCount += 1
+                    }
+                } catch {
+                    // Check if it's a checksum mismatch error
+                    let errorString = error.localizedDescription
+                    if errorString.contains("checksumMismatch") {
+                        logger.error("✗ \(archivedFile.url.lastPathComponent) - CORRUPTED (checksum mismatch)")
+                        logger.error("  \(errorString)")
+                        corruptedCount += 1
+                    } else {
+                        logger.error("✗ \(archivedFile.url.lastPathComponent) - Error: \(errorString)")
+                    }
+                }
+            }
+
+            // Summary
+            logger.log("")
+            logger.log("Integrity validation summary:")
+            logger.log("  Valid files: \(validCount)")
+            logger.log("  Legacy files (no checksum): \(legacyCount)")
+            logger.log("  Corrupted files: \(corruptedCount)")
+
+            if corruptedCount > 0 {
+                throw ArchiveError.integrityValidationFailed(corruptedCount: corruptedCount)
+            }
         } catch {
             logger.error("Error: \(error: error)")
             try handle(error: error, quietly: quiet, helpMessage: Self.helpMessage())
@@ -106,6 +141,7 @@ extension ArchiveCommand {
         case noResultsToWorkWith
         case noResultFilesToConvert
         case internalError
+        case integrityValidationFailed(corruptedCount: Int)
 
         /// Retrieve the localized description for this error.
         var localizedDescription: String {
@@ -128,6 +164,8 @@ extension ArchiveCommand {
                 return "This should not happen but it did, wait for an update, please"
             case .noResultFilesToConvert:
                 return "There are no xcresult files to work with"
+            case let .integrityValidationFailed(corruptedCount: count):
+                return "Archive integrity validation failed: \(count) corrupted file(s) detected"
             }
         }
 
