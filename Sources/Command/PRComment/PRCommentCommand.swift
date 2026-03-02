@@ -88,8 +88,43 @@ public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
             logger.debug("Current report loaded: \(currentReport.coverage.printableCoverage)%")
             logger.debug("Previous report loaded: \(previousReport.coverage.printableCoverage)%")
 
-            // TODO: Generate PR comment using PRCommentFormatter
-            // TODO: Post or update PR comment using GitHubAPIClient
+            // Initialize GitHub API client
+            let githubClient = try GitHubAPIClient()
+            logger.debug("GitHub API client initialized")
+
+            // Format PR comment
+            let formatter = PRCommentFormatter()
+            let commentBody = formatter.format(current: currentReport, previous: previousReport)
+            logger.debug("Coverage comment formatted")
+
+            // Check for existing comment to update instead of creating duplicate
+            let existingComment = try await githubClient.findExistingComment(
+                owner: owner,
+                repo: repository,
+                prNumber: prNumber,
+                marker: formatter.marker()
+            )
+
+            // Post or update comment
+            if let existing = existingComment {
+                logger.debug("Updating existing comment (ID: \(existing.id))")
+                _ = try await githubClient.updateComment(
+                    owner: owner,
+                    repo: repository,
+                    commentId: existing.id,
+                    body: commentBody
+                )
+                logger.info("Successfully updated coverage comment on PR #\(prNumber)")
+            } else {
+                logger.debug("Creating new comment")
+                _ = try await githubClient.createComment(
+                    owner: owner,
+                    repo: repository,
+                    prNumber: prNumber,
+                    body: commentBody
+                )
+                logger.info("Successfully created coverage comment on PR #\(prNumber)")
+            }
 
             logger.debug("PR Comment subcommand: completed")
 
