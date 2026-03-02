@@ -10,14 +10,21 @@ import Foundation
 import Shared
 
 struct CoverageMetaReportCoder {
-    enum CoverageMetaReportCoderError: Error {
+    enum CoverageMetaReportCoderError: Errorable {
         case decodingFailed
         case decodingFailedWithDetails(String)
+        case checksumMismatch(expected: String, actual: String)
+        case checksumCalculationFailed
+
+        var printsHelp: Bool { false }
+        var errorDescription: String? { localizedDescription }
 
         var localizedDescription: String {
             switch self {
             case .decodingFailed: return "decodingFailed"
             case let .decodingFailedWithDetails(filename): return "decodingFailed: \(filename)"
+            case let .checksumMismatch(expected, actual): return "checksumMismatch: expected \(expected), got \(actual)"
+            case .checksumCalculationFailed: return "checksumCalculationFailed"
             }
         }
     }
