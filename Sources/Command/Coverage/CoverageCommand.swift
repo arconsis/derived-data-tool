@@ -52,13 +52,14 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     @Flag(help: "output GitHub Actions workflow annotations")
     public var githubAnnotations: Bool = false
 
-    @Option(name: .long, help: "Output format for coverage report (text, json, html)")
+    @Option(name: .long, help: "Output format for coverage report (text, json, html, junit)")
     public var format: OutputFormat = .text
 
     public enum OutputFormat: String, ExpressibleByArgument, CaseIterable {
         case text
         case json
         case html
+        case junit
     }
 
     enum CodingKeys: CodingKey {
