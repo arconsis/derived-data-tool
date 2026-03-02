@@ -25,6 +25,8 @@ public class PRCommentFormatter {
     public func format(current: CoverageMetaReport, previous: CoverageMetaReport? = nil) -> String {
         var content = commentMarker + "\n"
         content += formatCoverageSummary(current: current, previous: previous)
+        content += "\n"
+        content += formatTopChangedFiles(current: current, previous: previous, amount: 5)
         return content
     }
 
@@ -66,6 +68,77 @@ public class PRCommentFormatter {
             let lineDiff = current.coverage.coveredLines - previous.coverage.coveredLines
             let lineDiffStr = lineDiff > 0 ? "+\(lineDiff)" : "\(lineDiff)"
             result += "| Lines Changed | \(lineDiffStr) |\n"
+        }
+
+        result += "\n"
+
+        return result
+    }
+
+    private func formatTopChangedFiles(current: CoverageMetaReport, previous: CoverageMetaReport?, amount: Int) -> String {
+        // If no previous report, skip this section
+        guard let previous = previous else {
+            return ""
+        }
+
+        // Build a map of file path to coverage for quick lookup
+        var previousFileMap: [String: Double] = [:]
+        for target in previous.coverage.targets {
+            for file in target.files {
+                previousFileMap[file.path] = file.coverage
+            }
+        }
+
+        // Calculate coverage changes for all files
+        struct FileChange {
+            let name: String
+            let path: String
+            let currentCoverage: Double
+            let previousCoverage: Double
+            let difference: Double
+        }
+
+        var changes: [FileChange] = []
+        for target in current.coverage.targets {
+            for file in target.files {
+                if let prevCoverage = previousFileMap[file.path] {
+                    let diff = file.coverage - prevCoverage
+                    // Only include files with actual coverage changes
+                    if abs(diff) > 0.0001 {
+                        changes.append(FileChange(
+                            name: file.name,
+                            path: file.path,
+                            currentCoverage: file.coverage,
+                            previousCoverage: prevCoverage,
+                            difference: diff
+                        ))
+                    }
+                }
+            }
+        }
+
+        // Sort by absolute difference (largest changes first)
+        changes.sort { abs($0.difference) > abs($1.difference) }
+
+        // Take top N
+        let topChanges = Array(changes.prefix(amount))
+
+        // If no changes, don't show the section
+        guard !topChanges.isEmpty else {
+            return ""
+        }
+
+        // Format as markdown table
+        var result = "## 📈 Top Changed Files\n\n"
+        result += "| File | Coverage | Change |\n"
+        result += "| :--- | :---: | :---: |\n"
+
+        for change in topChanges {
+            let currentPercentage = String(format: "%.2f%%", change.currentCoverage * 100.0)
+            let diffPercentage = formatDifference(change.difference * 100.0)
+            let emoji = coverageEmoji(for: change.difference * 100.0)
+
+            result += "| `\(change.name)` | \(currentPercentage) | \(diffPercentage) \(emoji) |\n"
         }
 
         result += "\n"
