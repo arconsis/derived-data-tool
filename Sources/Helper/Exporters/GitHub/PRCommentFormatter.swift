@@ -21,13 +21,17 @@ public class PRCommentFormatter {
     /// - Parameters:
     ///   - current: The current coverage report
     ///   - previous: The previous coverage report (optional, for comparison)
+    ///   - topFiles: Number of top changed files to display (default: 5)
+    ///   - includeUntested: Whether to include new untested files section (default: true)
     /// - Returns: Formatted markdown string for the PR comment
-    public func format(current: CoverageMetaReport, previous: CoverageMetaReport? = nil) -> String {
+    public func format(current: CoverageMetaReport, previous: CoverageMetaReport? = nil, topFiles: Int = 5, includeUntested: Bool = true) -> String {
         var content = commentMarker + "\n"
         content += formatCoverageSummary(current: current, previous: previous)
         content += "\n"
-        content += formatTopChangedFiles(current: current, previous: previous, amount: 5)
-        content += formatNewUntestedFiles(current: current, previous: previous)
+        content += formatTopChangedFiles(current: current, previous: previous, amount: topFiles)
+        if includeUntested {
+            content += formatNewUntestedFiles(current: current, previous: previous)
+        }
         return content
     }
 

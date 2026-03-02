@@ -88,14 +88,24 @@ public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
             logger.debug("Current report loaded: \(currentReport.coverage.printableCoverage)%")
             logger.debug("Previous report loaded: \(previousReport.coverage.printableCoverage)%")
 
+            // Get GitHub exporter settings
+            guard let githubExporterSettings = try config.settings(.githubExporter) as? GithubExportSettings else {
+                throw PRCommentError.configError
+            }
+
             // Initialize GitHub API client
             let githubClient = try GitHubAPIClient()
             logger.debug("GitHub API client initialized")
 
-            // Format PR comment
+            // Format PR comment using config settings
             let formatter = PRCommentFormatter()
-            let commentBody = formatter.format(current: currentReport, previous: previousReport)
-            logger.debug("Coverage comment formatted")
+            let commentBody = formatter.format(
+                current: currentReport,
+                previous: previousReport,
+                topFiles: githubExporterSettings.prCommentTopFiles,
+                includeUntested: githubExporterSettings.prCommentIncludeUntested
+            )
+            logger.debug("Coverage comment formatted (top files: \(githubExporterSettings.prCommentTopFiles), include untested: \(githubExporterSettings.prCommentIncludeUntested))")
 
             // Check for existing comment to update instead of creating duplicate
             let existingComment = try await githubClient.findExistingComment(
@@ -150,6 +160,7 @@ extension PRCommentCommand {
         case gitHubTokenMissing
         case reportMissing
         case apiError(String)
+        case configError
 
         public var errorDescription: String? {
             switch self {
@@ -161,6 +172,8 @@ extension PRCommentCommand {
                 return "No coverage report found in archive"
             case .apiError(let message):
                 return "GitHub API error: \(message)"
+            case .configError:
+                return "GitHub exporter settings are missing from configuration"
             }
         }
     }
