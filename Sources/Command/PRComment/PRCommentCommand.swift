@@ -1,0 +1,112 @@
+//
+//  PRCommentCommand.swift
+//
+//
+//  Created by Auto-Claude on 02.03.26.
+//
+
+import ArgumentParser
+import DependencyInjection
+import Foundation
+import Helper
+import Shared
+
+public final class PRCommentCommand: DerivedDataCommand, QuietErrorHandling {
+    public static let configuration = CommandConfiguration(
+        commandName: "pr-comment",
+        abstract: "Post coverage summary as a comment to a GitHub Pull Request",
+        discussion: """
+            Generates and posts a formatted coverage summary as a comment on the specified GitHub Pull Request. \
+            Includes overall coverage percentage, change from base, top files with biggest coverage changes, and \
+            new untested files. Uses GITHUB_TOKEN environment variable for authentication. Updates existing \
+            comment on subsequent runs instead of creating duplicate comments.
+            """
+    )
+
+    public var logger: Loggerable {
+        InjectedValues[\.logger]
+    }
+
+    @Flag(help: "activate extra logging")
+    public var verbose: Bool = false
+
+    @Flag(help: "suppress failure")
+    private var quiet: Bool = false
+
+    @Option(name: [.customShort("c"), .customLong("config")], help: "Path to the .xcrtool.yml")
+    public var configFilePath: String?
+
+    @Option(name: [.customShort("g"), .customLong("gitroot")])
+    public var customGitRootpath: String?
+
+    @Option(name: [.customShort("p"), .customLong("pr-number")], help: "GitHub Pull Request number")
+    private var prNumber: Int
+
+    @Option(name: [.customShort("r"), .customLong("repo")], help: "GitHub repository name (e.g., 'my-repo')")
+    private var repository: String
+
+    @Option(name: [.customShort("o"), .customLong("owner")], help: "GitHub repository owner (e.g., 'my-org' or 'username')")
+    private var owner: String
+
+    enum CodingKeys: CodingKey {
+        case verbose, quiet, configFilePath, customGitRootpath, prNumber, repository, owner
+    }
+
+    public required init() {}
+
+    public func run() async throws {
+        do {
+            // Use protocol methods
+            setupLogger()
+            logger.debug("PR Comment subcommand: started")
+
+            try await Requirements.check()
+            let config = try await loadConfig()
+            let fileHandler = makeFileHandler()
+            let workingDirectory = await resolveWorkingDirectory(using: fileHandler)
+
+            logger.debug("Working directory: \(workingDirectory.fullPath)")
+            logger.debug("PR Number: \(prNumber), Repository: \(owner)/\(repository)")
+
+            // Setup archive location
+            guard let archive = config.locations?.archive else {
+                throw PRCommentError.archiveMissing
+            }
+
+            let archiveLocation = workingDirectory.appending(pathComponent: "\(archive)/")
+            logger.debug("Archive location: \(archiveLocation.fullPath)")
+
+            // TODO: Load current and previous coverage reports
+            // TODO: Generate PR comment using PRCommentFormatter
+            // TODO: Post or update PR comment using GitHubAPIClient
+
+            logger.debug("PR Comment subcommand: completed")
+
+        } catch {
+            logger.error("Error: \(error.localizedDescription)")
+            try handle(error: error, quietly: quiet, helpMessage: Self.helpMessage())
+        }
+    }
+}
+
+extension PRCommentCommand {
+    enum PRCommentError: LocalizedError {
+        case archiveMissing
+        case gitHubTokenMissing
+        case reportMissing
+        case apiError(String)
+
+        public var errorDescription: String? {
+            switch self {
+            case .archiveMissing:
+                return "Archive location is missing from configuration"
+            case .gitHubTokenMissing:
+                return "GITHUB_TOKEN environment variable is not set"
+            case .reportMissing:
+                return "No coverage report found in archive"
+            case .apiError(let message):
+                return "GitHub API error: \(message)"
+            }
+        }
+    }
+}
