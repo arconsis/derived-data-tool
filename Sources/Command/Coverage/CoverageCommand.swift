@@ -12,7 +12,14 @@ import Helper
 import Shared
 
 public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
-    public static let configuration = CommandConfiguration(commandName: "coverage", abstract: "Generate an accumulated JSON for code coverage")
+    public static let configuration = CommandConfiguration(
+        commandName: "coverage",
+        abstract: "Analyze code coverage from test results and track coverage metrics",
+        discussion: """
+            Processes Xcode test coverage reports, stores historical data, and validates coverage against thresholds. \
+            Supports filtering by targets and files, GitHub Actions integration, and CI-optimized output formats.
+            """
+    )
 
     public var logger: Loggerable {
         InjectedValues[\.logger]
@@ -46,7 +53,7 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     public var githubAnnotations: Bool = false
 
     enum CodingKeys: CodingKey {
-        case verbose, quiet, ci, ciJsonOutput, configFilePath, customGitRootpath, minCoverage, maxDrop
+        case verbose, quiet, ci, ciJsonOutput, configFilePath, customGitRootpath, minCoverage, maxDrop, githubAnnotations
     }
 
     public required init() {}

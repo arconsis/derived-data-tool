@@ -14,7 +14,16 @@ import Shared
 public final class PrototypeCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "test",
-        abstract: "Playground to test new tools"
+        abstract: "DEBUG ONLY: Experimental playground for testing new features and tools",
+        discussion: """
+            ⚠️ DEBUG ONLY - NOT FOR PRODUCTION USE
+
+            This command serves as a development playground for prototyping and testing new features \
+            before they are integrated into the main codebase. The implementation is subject to change \
+            without notice and should never be used in production environments or CI/CD pipelines.
+
+            Current prototype: Slack webhook integration for coverage reporting.
+            """
     )
 
     public var logger: Loggerable {
@@ -27,10 +36,10 @@ public final class PrototypeCommand: DerivedDataCommand, QuietErrorHandling {
     @Flag(help: "suppress failure")
     private var quiet: Bool = false
 
-    @Option(name: [.customShort("c"), .customLong("config")])
+    @Option(name: [.customShort("c"), .customLong("config")], help: "Path to the .xcrtool.yml")
     public var configFilePath: String?
 
-    @Option(name: [.customShort("g"), .customLong("gitroot")])
+    @Option(name: [.customShort("g"), .customLong("gitroot")], help: "Path to git root directory")
     public var customGitRootpath: String?
 
     enum CodingKeys: CodingKey {

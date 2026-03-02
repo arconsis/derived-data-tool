@@ -14,7 +14,13 @@ import Shared
 public final class MigrateCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "migrate",
-        abstract: "Migrate from old JSON/zipped JSON to DuckDB database"
+        abstract: "Convert legacy JSON coverage reports to the DuckDB database format",
+        discussion: """
+            Migrates historical coverage reports from JSON or zipped JSON format into the DuckDB database. \
+            Processes archived reports from the configured archive directory, applies configured target and \
+            file filters, and stores normalized data in the database. Essential for transitioning from legacy \
+            file-based storage to the database-backed reporting system.
+            """
     )
 
     public var logger: Loggerable {

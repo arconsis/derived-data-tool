@@ -14,7 +14,12 @@ import Shared
 public final class ReportCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "report",
-        abstract: "Handle the reporting of the coverage"
+        abstract: "Post coverage summary with top changes and statistics to Slack",
+        discussion: """
+            Generates and posts a formatted coverage summary to Slack via webhook. Includes \
+            overall coverage percentage, top coverage changes, and target statistics. Requires \
+            SLACK_COVERAGE_WEBHOOK environment variable.
+            """
     )
 
     public var logger: Loggerable {

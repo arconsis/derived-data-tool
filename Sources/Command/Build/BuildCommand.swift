@@ -14,7 +14,12 @@ import Shared
 public final class BuildCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "build",
-        abstract: "Inspect build process and test results"
+        abstract: "Display build and test information from Xcode result bundles",
+        discussion: """
+            Searches for .xcresult files in the project directory, filters them based on \
+            configuration settings, and displays detailed information from the most recent \
+            build result. Useful for inspecting test results, build logs, and diagnostics.
+            """
     )
 
     public var logger: Loggerable {
