@@ -53,7 +53,7 @@ public final class CoverageCommand: DerivedDataCommand, QuietErrorHandling {
     public var githubAnnotations: Bool = false
 
     enum CodingKeys: CodingKey {
-        case verbose, quiet, ci, ciJsonOutput, configFilePath, customGitRootpath, minCoverage, maxDrop
+        case verbose, quiet, ci, ciJsonOutput, configFilePath, customGitRootpath, minCoverage, maxDrop, githubAnnotations
     }
 
     public required init() {}

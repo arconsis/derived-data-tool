@@ -1,5 +1,5 @@
 //
-//  ConfigCommand.swift
+//  VersionCommand.swift
 //
 //
 //  Created by Moritz Ellerbrock on 15.06.23.
