@@ -14,7 +14,12 @@ import Shared
 public final class TrendCommand: DerivedDataCommand, QuietErrorHandling {
     public static let configuration = CommandConfiguration(
         commandName: "trend",
-        abstract: "Generate coverage trend charts showing coverage evolution over time"
+        abstract: "Generate coverage trend charts showing coverage evolution over time",
+        discussion: """
+            Creates SVG charts visualizing coverage trends from historical reports stored in the database. \
+            Supports filtering by date range or report count, tracking specific targets, and displaying \
+            threshold reference lines. Useful for monitoring coverage progress in CI/CD pipelines.
+            """
     )
 
     public var logger: Loggerable {
