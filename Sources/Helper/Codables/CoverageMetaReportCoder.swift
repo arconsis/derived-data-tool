@@ -37,6 +37,34 @@ struct CoverageMetaReportCoder {
         SingleDecoder.shared
     }
 
+    private func verifyChecksum(for report: CoverageMetaReport) throws {
+        // If no checksum is present, skip verification (legacy files)
+        guard let storedChecksum = report.checksum else {
+            return
+        }
+
+        // Create version without checksum for verification
+        let reportWithoutChecksum = CoverageMetaReport(
+            fileInfo: report.fileInfo,
+            coverage: report.coverage,
+            checksum: nil
+        )
+
+        // Encode without checksum to calculate expected checksum
+        let encoder = SingleEncoder.shared
+        let dataWithoutChecksum = try encoder.encode(reportWithoutChecksum)
+
+        // Calculate checksum of the data without checksum field
+        guard let calculatedChecksum = try? ArchiveIntegrityValidator.calculateChecksum(for: dataWithoutChecksum) else {
+            throw CoverageMetaReportCoderError.checksumCalculationFailed
+        }
+
+        // Verify checksums match
+        if storedChecksum != calculatedChecksum {
+            throw CoverageMetaReportCoderError.checksumMismatch(expected: storedChecksum, actual: calculatedChecksum)
+        }
+    }
+
     func decode(contentOf url: URL) throws -> CoverageMetaReport {
         logger.log("Looking into file at path:", url.lastPathComponent)
         do {
@@ -78,6 +106,11 @@ struct CoverageMetaReportCoder {
                 coverageMetaReport = try decoder.decode(CoverageMetaReport.self, from: data)
             }
 
+            // Verify checksum if present
+            if let report = coverageMetaReport {
+                try verifyChecksum(for: report)
+            }
+
             return coverageMetaReport
         } catch {
             logger.error(error.localizedDescription)
@@ -104,6 +137,11 @@ struct CoverageMetaReportCoder {
             var coverageMetaReport = try? decoder.decode(CoverageMetaReport.self, from: jsonSerializedData)
             if coverageMetaReport == nil {
                 coverageMetaReport = try decoder.decode(CoverageMetaReport.self, from: jsonData)
+            }
+
+            // Verify checksum if present
+            if let report = coverageMetaReport {
+                try verifyChecksum(for: report)
             }
 
             return coverageMetaReport
