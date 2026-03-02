@@ -16,12 +16,15 @@ public class ConfigCommand: AsyncParsableCommand {
 
     // MARK: - AsyncParsableCommand
 
-    public static let configuration = CommandConfiguration(commandName: "config", abstract: "Creates initial Config-file")
+    public static let configuration = CommandConfiguration(
+        commandName: "config",
+        abstract: "Create initial .xcrtool.yml configuration file with default settings"
+    )
 
     @Flag(help: "activate extra logging")
     private var verbose: Bool = false
 
-    @Option(name: [.customShort("g"), .customLong("gitroot")], help: "git root path")
+    @Option(name: [.customShort("g"), .customLong("gitroot")], help: "Path to the git root directory where config file will be created")
     private var customGitRootpath: String?
 
     enum CodingKeys: CodingKey {
